@@ -122,7 +122,6 @@ public class valcolegiosActivity extends AppCompatActivity {
 
                     }
 
-
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 
@@ -192,13 +191,6 @@ public class valcolegiosActivity extends AppCompatActivity {
 
                                 Intent i = new Intent(valcolegiosActivity.this, valcolegiosActivity.class);
                                  startActivity(i);
-
-
-
-
-
-
-
 
                             } catch (UnsupportedEncodingException e) {
                                 e.printStackTrace();

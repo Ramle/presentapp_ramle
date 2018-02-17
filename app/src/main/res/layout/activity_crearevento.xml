@@ -47,9 +47,9 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="82dp"
+        android:layout_width="0dp"
         android:layout_height="33dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
         android:text="Hasta"
@@ -65,8 +65,9 @@
 
     <TextView
         android:id="@+id/textView4"
-        android:layout_width="82dp"
+        android:layout_width="0dp"
         android:layout_height="36dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
         android:inputType="date"
@@ -83,9 +84,9 @@
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="84dp"
+        android:layout_width="0dp"
         android:layout_height="32dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
         android:text="Nombre"
@@ -166,6 +167,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_editor_absoluteX="257dp"
         app:layout_editor_absoluteY="481dp" />
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="24dp"
+        android:text="Evento todo el dia"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fechafin" />
 
 
 </android.support.constraint.ConstraintLayout>

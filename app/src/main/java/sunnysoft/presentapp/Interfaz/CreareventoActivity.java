@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.FragmentManager;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -30,6 +32,7 @@ import cz.msebera.android.httpclient.client.methods.HttpPost;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import cz.msebera.android.httpclient.message.BasicHeader;
 import cz.msebera.android.httpclient.protocol.HTTP;
+import sunnysoft.presentapp.Datos.DatabaseHelper;
 import sunnysoft.presentapp.Datos.MyAsyncTask;
 import sunnysoft.presentapp.R;
 
@@ -44,6 +47,10 @@ public class CreareventoActivity extends AppCompatActivity implements View.OnCli
     String post_url;
     String urlv;
     Button enviodataevento;
+    CheckBox checkbox;
+    private DatabaseHelper midb;
+    String email;
+    String token;
     @Override
     public void onBackPressed() {
         Toast.makeText(CreareventoActivity.this, "El botón retroceder se ha deshabilitado", Toast.LENGTH_LONG).show();
@@ -65,6 +72,12 @@ public class CreareventoActivity extends AppCompatActivity implements View.OnCli
             }
         });
 
+        midb = new DatabaseHelper(this);
+
+        Cursor Resultados = midb.Session();
+        token =Resultados.getString(Resultados.getColumnIndex("token"));
+        email =Resultados.getString(Resultados.getColumnIndex("user"));
+
         //TextView
 
         fechacomienzo = (EditText) findViewById(R.id.fechacomienzo);
@@ -77,6 +90,9 @@ public class CreareventoActivity extends AppCompatActivity implements View.OnCli
 
         enviodataevento = (Button) findViewById(R.id.enviodataevento);
         enviodataevento.setOnClickListener(this);
+
+        checkbox = (CheckBox) findViewById(R.id.checkBox);
+        checkbox.setOnClickListener(this);
 
         //Tooblar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -107,6 +123,9 @@ public class CreareventoActivity extends AppCompatActivity implements View.OnCli
                 break;
             case R.id.fechafin:
                 showDatePickerDialog_fin();
+                break;
+            case R.id.checkBox:
+                showDatePickerDialogTodoDia();
                 break;
             case R.id.enviodataevento:
                 Parsearjson();
@@ -149,6 +168,25 @@ public class CreareventoActivity extends AppCompatActivity implements View.OnCli
             }
         });
         newFragment.show(fm, "datePicker");
+
+    }
+
+    private void showDatePickerDialogTodoDia() {
+        FragmentManager fm = getFragmentManager();
+
+        DatePickerFragment newFragment = DatePickerFragment.newInstance(new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                // +1 because january is zero
+                selectedDate = twoDigits(year) + "-" + twoDigits(month+1) + "-" + twoDigits(day);
+                selectedDatefin = twoDigits(year) + "-" + twoDigits(month+1) + "-" + twoDigits(day + 1);
+                fechacomienzo.setText(selectedDate + " " + "00" + ":" + "00" + ":00");
+                fechafin.setText(selectedDatefin + " " + "00" + ":" + "00" + ":00");
+                //fechacomienzo.setText(selectedDate);
+            }
+        });
+        newFragment.show(fm, "datePicker");
+
 
     }
 
@@ -196,11 +234,14 @@ public class CreareventoActivity extends AppCompatActivity implements View.OnCli
             JSONObject j = new JSONObject();
             //j.put("key","users_ids");
             j.put("title",String.valueOf(nombreevento.getText()));
+
             j.put("start",String.valueOf(fechacomienzo.getText()));
             j.put("end",String.valueOf(fechafin.getText()));
+
+
             j.put("ad",true);
-            j.put("token","$2y$10$CUR8/fvGJKaIFUESg5its.snr0DdZkAl3YcPIpbGtgrNa94caWgta");
-            j.put("email","admin@dc.co");
+            j.put("token",token);
+            j.put("email",email);
             Log.d("On real"+j.toString(), "NN");
 
             StringEntity stringEntity = new StringEntity( j.toString());

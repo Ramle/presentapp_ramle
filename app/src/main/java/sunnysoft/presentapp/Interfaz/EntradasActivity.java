@@ -1,16 +1,13 @@
 package sunnysoft.presentapp.Interfaz;
 
-import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,24 +16,13 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.view.LayoutInflater;
@@ -55,7 +41,9 @@ import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.text.DateFormat;
@@ -64,9 +52,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.HttpEntity;
+import cz.msebera.android.httpclient.HttpResponse;
+import cz.msebera.android.httpclient.client.HttpClient;
+import cz.msebera.android.httpclient.client.methods.HttpGet;
 import cz.msebera.android.httpclient.entity.StringEntity;
+import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 import sunnysoft.presentapp.Datos.DatabaseHelper;
 import sunnysoft.presentapp.Interfaz.adapter.EntradasAdapter;
 
@@ -319,7 +313,6 @@ public class EntradasActivity extends AppCompatActivity {
         private int currentPage = PAGE_START;
         ProgressBar progressBar;
 
-
         private static final String ARG_SECTION_NUMBER = "section_number";
         RecyclerView recyclerEntradas;
         EntradasAdapter adapter;
@@ -348,7 +341,7 @@ public class EntradasActivity extends AppCompatActivity {
                                  Bundle savedInstanceState) {
             rootView = inflater.inflate(R.layout.fragment_entradas, container, false);
             recyclerEntradas = (RecyclerView) rootView.findViewById(R.id.recycler_entradas);
-            EntradasList = new ArrayList<>();
+
             List<String> urls_fragment = new ArrayList<>();
             //progressBar = (ProgressBar) rootView.findViewById(R.id.main_progress);
 
@@ -358,14 +351,9 @@ public class EntradasActivity extends AppCompatActivity {
             final String email= extras.getString("email");
             final String token= extras.getString("token");
             //Log.i("On Errno 2000 "+urls_fragment, "NN");
-           // Log.e("DataDescribe", "Data: "+ urls_fragment.size());
+            // Log.e("DataDescribe", "Data: "+ urls_fragment.size());
 
             //   Toast.makeText(getContext(), urls_fragment.get(0), Toast.LENGTH_LONG).show();
-
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
-            recyclerEntradas.setLayoutManager(linearLayoutManager);
 
             //scroll view
 
@@ -374,29 +362,86 @@ public class EntradasActivity extends AppCompatActivity {
             String url = urls.get(contador-1);
             url += "?token="+token;
             url += "&email="+ email;
-            Log.e("Data: ", "Data contador " + urls.size());
+            // Log.e("Data: ", "Data contador " + urls.size());
 
-            Contenido(contador,url, email, token);
+            try{
+
+                // GetEntradasData getEntradasData = new GetEntradasData(url);
+                ExecuteTask executeTask = new ExecuteTask();
+                executeTask.execute(url);
+
+                JSONObject JsonDataEntrada = new JSONObject(executeTask.get());
+                //Log.i("Goood", "onCreateView : "+JsonDataEntrada);
+                // JSONObject dataEntradas = getEntradasData.getResponse();
+
+                EntradasList = Contenido(contador,JsonDataEntrada);
+
+                //Log.i("", "onCreateView: "+EntradasList);
+                // Inicializar el adaptador con la fuente de datos.
+                adapter = new EntradasAdapter(getContext(), EntradasList);
+                recyclerEntradas.setAdapter(adapter);
+
+            }catch (Exception e){
+
+                Log.e("Exception", "onCreateView: "+ e);
+
+            }
+            Log.i("URL", "onCreateView: "+url);
+
+            final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            //linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
+            recyclerEntradas.setLayoutManager(linearLayoutManager);
 
             EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+
                 @Override
                 public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-
-                    final int curSize = adapter.getItemCount();
 
                     String url = urls.get(contador-1);
                     url += "&token="+token;
                     url += "&email="+ email;
-                    Log.e("Data: ", "Data contador " + urls.size());
+                    // Log.e("Data: ", "Data contador " + urls.size());
 
-                    Contenido(contador,url, email, token);
 
-                    view.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            adapter.notifyItemRangeInserted(curSize, EntradasList.size() - 1);
+                    if (!url.equals("null"+"&token="+token+"&email="+ email)){
+
+                        ExecuteTask executeTask = new ExecuteTask();
+                        executeTask.execute(url);
+
+                        JSONObject JsonDataEntrada = null;
+                        try {
+                            JsonDataEntrada = new JSONObject(executeTask.get());
+                            //Log.i("", "onLoadMore Data good: "+JsonDataEntrada );
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.e("", "onLoadMore JSONException: "+e );
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                            Log.e("", "onLoadMore InterruptedException: "+e );
+                        } catch (ExecutionException e) {
+                            Log.e("", "onLoadMore ExecutionException: "+e );
+                            e.printStackTrace();
                         }
-                    });
+                        //Log.i("Goood", "onCreateView : "+JsonDataEntrada);
+                        // JSONObject dataEntradas = getEntradasData.getResponse();
+
+                        final int curSize = adapter.getItemCount();
+                        List<Entradas> EntradasMoreList = Contenido(contador,JsonDataEntrada);
+                        // adapter.notifyItemInserted(EntradasList.size() - 1);
+                        EntradasList.addAll(EntradasMoreList);
+                        Handler handler = new Handler();
+
+                        final Runnable r = new Runnable() {
+                            public void run() {
+                                adapter.notifyItemRangeInserted(curSize,EntradasList.size() -1);
+                            }
+                        };
+
+                        handler.post(r);
+
+                    }
+
                 }
             };
 
@@ -414,128 +459,157 @@ public class EntradasActivity extends AppCompatActivity {
             return rootView;
         }
 
+        public List<Entradas> Contenido(final int contador, JSONObject responseEntradas){
 
-        public void Contenido(final int contador, String urls_param, String email, String token){
+            List<Entradas> EntradasList_Contenido = new ArrayList<>();
 
-            AsyncHttpClient client = new AsyncHttpClient();
-            JSONObject jsonParams = new JSONObject();
-            StringEntity entity = null;
-           // String url = "http://serverprueba.present.com.co/api/entradas/2?email=daniela@dc.co&token=$2y$10$xeziClDwuVYHjpTcQB6ziufL.6/RYpP2pBjJpyBhQO1Qdqn1GKL4.";
-            // urls.size();
+            String id = null;
+            String user_name = null;
+            String curso_grupo = null;
+            String created_at = null;
+            String proceso_name = null;
+            String detalles = null;
+            String img_persona = null;
+            String name = null;
+            String url_entrada_detail = null;
 
-            // llamado del servicio
-            RequestHandle post  = client.get(urls_param, new AsyncHttpResponseHandler() {
+            try {
 
-                @Override
-                public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] responseBody) {
+                DateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-                    // called when response HTTP status is "200 OK"
-                    String responseStr = null;
-                    String id = null;
-                    String user_name = null;
-                    String curso_grupo = null;
-                    String created_at = null;
-                    String proceso_name = null;
-                    String detalles = null;
-                    String img_persona = null;
-                    String name = null;
-                    String url_entrada_detail = null;
+
+                String urlnextpage = responseEntradas.getString("next_page_url");
+                JSONArray jsonarray = new JSONArray(responseEntradas.getString("data"));
+                JSONArray jsonarray_tags;
+
+                for(int i=0; i < jsonarray.length(); i++) {
+
+                    JSONObject jsonobject_data = jsonarray.getJSONObject(i);
+
+                    id   = jsonobject_data.getString("id");
+                    user_name   = jsonobject_data.getString("user_name");
+                    curso_grupo = jsonobject_data.getString("curso_grupo");
+                    created_at  = jsonobject_data.getString("created_at");
+                    img_persona  = jsonobject_data.getString("user_image");
+                    proceso_name = jsonobject_data.getString("proceso_name");
+                    url_entrada_detail = jsonobject_data.getString("url_entrada_detail");
+
+                    Date date = originalFormat.parse(created_at);
+                    String dateref = originalFormat.format(date);
+
+                    detalles = curso_grupo + " " + created_at;
+                    jsonarray_tags = new JSONArray(jsonobject_data.getString("tags"));
+
+                    String [] tags = new String [jsonarray_tags.length()];
+                    for(int j=0; j < jsonarray_tags.length(); j++) {
+
+                        JSONObject jsonobject_tags = jsonarray_tags.getJSONObject(j);
+                        name       = jsonobject_tags.getString("name");
+                        //tags.add(name);
+                        tags[j] = name;
+                        //Toast.makeText(VerEntradas.this, "Bien por "+name, Toast.LENGTH_LONG).show();
+
+                    }
 
                     try {
 
-                        responseStr = new String(responseBody, "UTF-8");
-                        JSONObject jsonobject = new JSONObject(responseStr);
-                        DateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        // Log.i("Good", "onCreateView: "+ proceso_name);
 
-                        //JSONObject entradas = new JSONObject(jsonobject.getString("entradas"));
+                        EntradasList_Contenido.add(new Entradas(proceso_name,dateref,tags,url_entrada_detail));
 
-                        String urlnextpage = jsonobject.getString("next_page_url");
-                        JSONArray jsonarray = new JSONArray(jsonobject.getString("data"));
-                        JSONArray jsonarray_tags;
-                        Entradas entrada_1;
-
-                        for(int i=0; i < jsonarray.length(); i++) {
-
-                            JSONObject jsonobject_data = jsonarray.getJSONObject(i);
-
-                            id   = jsonobject_data.getString("id");
-                            user_name   = jsonobject_data.getString("user_name");
-                            curso_grupo = jsonobject_data.getString("curso_grupo");
-                            created_at  = jsonobject_data.getString("created_at");
-                            img_persona  = jsonobject_data.getString("user_image");
-                            proceso_name = jsonobject_data.getString("proceso_name");
-                            url_entrada_detail = jsonobject_data.getString("url_entrada_detail");
-
-                            Date date = originalFormat.parse(created_at);
-                            String dateref = originalFormat.format(date);
-
-                            detalles = curso_grupo + " " + created_at;
-                            jsonarray_tags = new JSONArray(jsonobject_data.getString("tags"));
-
-                            String [] tags = new String [jsonarray_tags.length()];
-                            for(int j=0; j < jsonarray_tags.length(); j++) {
-
-                                JSONObject jsonobject_tags = jsonarray_tags.getJSONObject(j);
-                                name       = jsonobject_tags.getString("name");
-                                //tags.add(name);
-                                tags[j] = name;
-                                //Toast.makeText(VerEntradas.this, "Bien por "+name, Toast.LENGTH_LONG).show();
-
-                            }
-
-                            try {
-
-                                //final ProcesoEntradasAdapter mProcesoEntradasAdapter;
-
-                                //entrada_1 = new Entradas(user_name, detalles, i + 1);
-
-                                EntradasList.add(new Entradas(proceso_name,dateref,tags,url_entrada_detail));
-
-                                // Toast.makeText(VerEntradas.this, "Bien por "+entrada_1.getIndice(), Toast.LENGTH_LONG).show();
-
-                                // Inicializar el adaptador con la fuente de datos.
-                                adapter = new EntradasAdapter(getContext(), EntradasList);
-                                recyclerEntradas.setAdapter(adapter);
-
-                            }catch (Exception e){
-                                Toast.makeText(getContext(), "Fallo por "+e, Toast.LENGTH_LONG).show();
-                                Log.i("WSUsuarios","Fallo por "+e);
-                            }
-
-                            TextView tituloentradasuser = (TextView) rootView.findViewById(R.id.tituloentradasuser);
-                            TextView detalleentradasuser = (TextView) rootView.findViewById(R.id.detalleentradasuser);
-                            ImageView imgPersona  = (ImageView) rootView.findViewById(R.id.img_persona);
-                            tituloentradasuser.setText(user_name);
-                            detalleentradasuser.setText(curso_grupo);
-
-                            Picasso.with(getContext())
-                                    .load(img_persona)
-                                    .error(R.drawable.logo)
-                                    .into(imgPersona);
-
-                        }
-
-                        urls.set(contador-1, urlnextpage);
-
-                        Log.e("Data: ", "Data Url " + urls.get(contador - 1));
+                        // Toast.makeText(VerEntradas.this, "Bien por "+entrada_1.getIndice(), Toast.LENGTH_LONG).show();
 
 
-                    } catch (UnsupportedEncodingException e1) {
-                        e1.printStackTrace();
-                        Toast.makeText(getContext(), "Fallo por a", Toast.LENGTH_LONG).show();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    }catch (Exception e){
                         Toast.makeText(getContext(), "Fallo por "+e, Toast.LENGTH_LONG).show();
-                    } catch (ParseException e) {
-                        e.printStackTrace();
+                        Log.i("entradasError","Fallo por "+e);
                     }
+
+                    TextView tituloentradasuser = (TextView) rootView.findViewById(R.id.tituloentradasuser);
+                    TextView detalleentradasuser = (TextView) rootView.findViewById(R.id.detalleentradasuser);
+                    ImageView imgPersona  = (ImageView) rootView.findViewById(R.id.img_persona);
+                    tituloentradasuser.setText(user_name);
+                    detalleentradasuser.setText(curso_grupo);
+
+                    Picasso.with(getContext())
+                            .load(img_persona)
+                            .error(R.drawable.logo)
+                            .into(imgPersona);
+
                 }
 
-                @Override
-                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                urls.set(contador-1, urlnextpage);
 
+                //Log.e("Data: ", "Data Url " + urls.get(contador - 1));
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), "Fallo por "+e, Toast.LENGTH_LONG).show();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
+            return EntradasList_Contenido;
+        }
+
+        class ExecuteTask extends AsyncTask<String, Integer, String>
+        {
+
+            @Override
+            protected String doInBackground(String... params) {
+
+                String res=PostData(params);
+                //  Log.i("", "doInBackground: "+res);
+
+                return res;
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+                super.onPostExecute(result);
+            }
+
+        }
+
+        public String PostData(String[] valuse) {
+            String s="";
+            try
+            {
+                HttpClient httpClient=new DefaultHttpClient();
+                HttpGet httpGet=new HttpGet(valuse[0]);
+
+                HttpResponse httpResponse=  httpClient.execute(httpGet);
+
+                HttpEntity httpEntity=httpResponse.getEntity();
+
+                s= readResponse(httpResponse);
+
+            }
+            catch(Exception exception)  {}
+            return s;
+
+        }
+
+        public String readResponse(HttpResponse res) {
+            InputStream is=null;
+            String return_text="";
+            try {
+                is=res.getEntity().getContent();
+                BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(is));
+                String line="";
+                StringBuffer sb=new StringBuffer();
+                while ((line=bufferedReader.readLine())!=null)
+                {
+                    sb.append(line);
                 }
-            });
+                return_text=sb.toString();
+            } catch (Exception e)
+            {
+
+            }
+            return return_text;
 
         }
 

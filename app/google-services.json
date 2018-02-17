@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "17143258056",
+    "firebase_url": "https://presentapp-179eb.firebaseio.com",
+    "project_id": "presentapp-179eb",
+    "storage_bucket": "presentapp-179eb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:17143258056:android:c88e3a6cb679212f",
+        "android_client_info": {
+          "package_name": "sunnysoft.presentapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "17143258056-jtihd4spt54ifl7ec742fsov4ecviq6f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "sunnysoft.presentapp",
+            "certificate_hash": "256bc9f6d05a256b5ef9d888b70d9e9cce7d0452"
+          }
+        },
+        {
+          "client_id": "17143258056-l3fmlg9ke8c82j6lv3ek64sjrdt9vn03.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGCEvvfcRgHpT3dJP9dm3-59LwycBChhU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "17143258056-l3fmlg9ke8c82j6lv3ek64sjrdt9vn03.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

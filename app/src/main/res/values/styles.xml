@@ -33,6 +33,14 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <style name="botones_secundarios">
+        <item name="android:layout_width">@dimen/ancho_inputs</item>
+        <item name="android:layout_height">@dimen/alto_inputs</item>
+        <item name="android:background">@drawable/botones_secundarios</item>
+        <item name="android:textColor">@color/color_letra_btn_prim</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
     <style name="botones_ter">
         <item name="android:layout_width">@dimen/ancho_inputs2</item>
         <item name="android:layout_height">@dimen/alto_inputs2</item>

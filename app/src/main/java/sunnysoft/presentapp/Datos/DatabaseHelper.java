@@ -13,9 +13,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
     // variables
 
-    private static final String DATABASE_NOM = "Present.db";
+    private static final String DATABASE_NOM = "Present4.db";
     private static final String TABLE1_NOM = "login";
-    private static final int DATABASE_VER = 2;
+    private static final String TABLE2_NOM = "token";
+    private static final int DATABASE_VER = 1;
 
     // campos tablas
     public static final String t1_user = "user";
@@ -26,9 +27,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String t1_logo = "logo";
     public static final String t1_subdomain = "subdomain";
 
-
-
-
+    public static final String t2_token = "token";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NOM, null, DATABASE_VER);
@@ -41,15 +40,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE "+TABLE1_NOM+" ("+t1_user+" TEXT PRIMARY KEY, "+t1_user_name+" TEXT,"+t1_user_image+" TEXT ," + t1_token
                 +" TEXT, "+t1_logo + " TEXT, " +t1_user_type + " TEXT, "+t1_subdomain + " )");
 
+        db.execSQL("CREATE TABLE "+TABLE2_NOM+" ("+t2_token+" TEXT )");
 
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
         db.execSQL("DROP TABLE IF EXISTS "+TABLE1_NOM);
+        db.execSQL("DROP TABLE IF EXISTS "+TABLE2_NOM);
 
     }
-
 
 
     //almacena en la BD los usuarios y contraseñas de la aplicacion principal
@@ -71,6 +71,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public boolean registrartoken(String token){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(t2_token, token);
+        long resultado = db.insert(TABLE2_NOM,null,values);
+        if (resultado == -1){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    public Cursor Gettoken (){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.query(TABLE2_NOM,null,null,null,null,null,null);
+        if (cursor != null){
+            cursor.moveToFirst();
+        }
+        return cursor;
+    }
+
+
     //muestra el detalle del pedido recibido por parametro retorna un cursor para recorrerlo
 
 
@@ -87,6 +109,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void logouth() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL ("DROP TABLE IF EXISTS "+ TABLE1_NOM);
+        db.execSQL ("DROP TABLE IF EXISTS "+ TABLE2_NOM);
         onCreate(db);
     }
 
@@ -94,6 +117,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("CREATE TABLE "+TABLE1_NOM+" ("+t1_user+" TEXT PRIMARY KEY, "+t1_user_name+" TEXT,"+t1_user_image+" TEXT ," + t1_token
                 +" TEXT, "+t1_logo + " TEXT, " +t1_user_type + " TEXT, "+t1_subdomain + " )");
+
+        db.execSQL("CREATE TABLE "+TABLE2_NOM+" ("+t2_token+" TEXT )");
     }
 
 

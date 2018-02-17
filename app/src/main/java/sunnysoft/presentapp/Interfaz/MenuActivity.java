@@ -14,6 +14,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestHandle;
+import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,6 +41,7 @@ import cz.msebera.android.httpclient.entity.StringEntity;
 import sunnysoft.presentapp.Datos.DatabaseHelper;
 import sunnysoft.presentapp.Interfaz.adapter.AdapterMenu;
 import sunnysoft.presentapp.R;
+import sunnysoft.presentapp.firebase.MyFirebaseInstanceIDService;
 
 public class MenuActivity extends AppCompatActivity {
 
@@ -56,6 +59,7 @@ public class MenuActivity extends AppCompatActivity {
     String nombremenu;
     String nombremenu2;
     int notification_count;
+    MyFirebaseInstanceIDService MF;
 
     // declaracion de BD
     private DatabaseHelper midb;
@@ -139,7 +143,10 @@ public class MenuActivity extends AppCompatActivity {
         //setear menu
         crearmenu(url);
 
+        MF = new MyFirebaseInstanceIDService(MenuActivity.this);
+        MF.onTokenRefresh();
 
+        sendRegistrationToServer();
 
     }
     @Override
@@ -453,6 +460,68 @@ public class MenuActivity extends AppCompatActivity {
             return null;
         }
     }
+
+    public void sendRegistrationToServer(){
+        RequestParams params = new RequestParams();
+        // se realiza consulta en bd
+        //Cursor validacion = mImpuestosClientesDbHelper.Session();
+        Cursor token_firebase = midb.Gettoken();
+        String iduser = null;
+        String refreshedToken = null;
+
+        /*if (validacion.moveToFirst()) {
+
+            iduser = validacion.getString(validacion.getColumnIndex("id"));
+
+        }*/
+
+        if (token_firebase.moveToFirst()) {
+
+            refreshedToken = token_firebase.getString(token_firebase.getColumnIndex("token"));
+
+        }
+        //iduser = "5";
+        params.put("token_firebase", refreshedToken);
+        String urlpost = "http://"+subdomain;
+        urlpost += ".present.com.co/api/notificacion/token/store";
+        urlpost += "?token="+token;
+        urlpost += "&email="+ email;
+        Log.i("", "sendRegistrationToServer: "+urlpost);
+
+        AsyncHttpClient client = new AsyncHttpClient();
+
+        client.post(urlpost, params, new AsyncHttpResponseHandler() {
+
+            final ProgressDialog[] progressDialog = new ProgressDialog[1];
+
+            @Override
+            public void onStart() {
+                super.onStart();
+                progressDialog[0] = ProgressDialog.show(
+                        MenuActivity.this, "Por favor espere", "Procesando...");
+            }
+
+            @Override
+            public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] responseBody) {
+
+                System.out.println("statusCode "+statusCode);//statusCode 200
+                //Toast.makeText(MenuActivity.this, "Bienvenido", Toast.LENGTH_LONG).show();
+                //Log.e("onFailure: ", "Bienvenido");
+                progressDialog[0].dismiss();
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] responseBody, Throwable error) {
+
+                progressDialog[0].dismiss();
+                Log.e("onFailure: ", "Error al enviar Token, por favor comunicarlo al equipo de ");
+                Toast.makeText(MenuActivity.this, "Error al enviar Token, por favor comunicarlo al equipo de ", Toast.LENGTH_LONG).show();
+
+            }
+        });
+    }
+
 
 
 }

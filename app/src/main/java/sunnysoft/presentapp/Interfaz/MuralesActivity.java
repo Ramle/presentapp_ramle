@@ -4,7 +4,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -30,13 +32,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.HttpEntity;
+import cz.msebera.android.httpclient.HttpResponse;
+import cz.msebera.android.httpclient.client.HttpClient;
+import cz.msebera.android.httpclient.client.methods.HttpGet;
 import cz.msebera.android.httpclient.entity.StringEntity;
+import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 import sunnysoft.presentapp.Datos.DatabaseHelper;
 import sunnysoft.presentapp.Interfaz.adapter.MuralesAdapter;
 import sunnysoft.presentapp.Interfaz.pojo.Murales;
@@ -308,8 +319,6 @@ public class MuralesActivity extends AppCompatActivity {
 
     }
 
-
-
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -364,246 +373,272 @@ public class MuralesActivity extends AppCompatActivity {
             final String email= extras.getString("email");
             final String token= extras.getString("token");
 
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-            recyclerMurales.setLayoutManager(linearLayoutManager);
-
             String url = urls.get(contador-1);
             url += "?token="+token;
             url += "&email="+ email;
-            Log.e("Data: ", "Data contador " + urls.size());
+            //Log.e("Data: ", "Data contador " + urls.size());
 
-            Contenido(contador,url, email, token);
+            try{
+
+                // GetEntradasData getEntradasData = new GetEntradasData(url);
+                ExecuteTask executeTask = new ExecuteTask();
+                executeTask.execute(url);
+
+                JSONObject JsonDataMurales = new JSONObject(executeTask.get());
+                //Log.i("Goood", "onCreateView : "+JsonDataEntrada);
+                // JSONObject dataEntradas = getEntradasData.getResponse();
+
+                muralesList = Contenido(contador,JsonDataMurales);
+
+                // Inicializar el adaptador con la fuente de datos.
+                adapter = new MuralesAdapter(getContext(), muralesList);
+                recyclerMurales.setAdapter(adapter);
+
+            }catch (Exception e){
+
+                Log.e("Exception", "onCreateView: "+ e);
+
+            }
+
+            final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            //linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
+            //Log.i("", "onCreateViewList: "+ muralesList.get(0).getTotal());
+            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            recyclerMurales.setLayoutManager(linearLayoutManager);
 
             EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
                 @Override
                 public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
 
-                    final int curSize = adapter.getItemCount();
-
                     String url = urls.get(contador-1);
                     url += "&token="+token;
                     url += "&email="+ email;
-                    Log.e("Data: ", "Data contador " + urls.size());
+                    Log.e("Data: ", "Data contador " + linearLayoutManager.getItemCount());
+                    Log.e("Data: ", "Data contador " + url);
+                    // Toast.makeText(getContext(), linearLayoutManager.getItemCount(), Toast.LENGTH_LONG).show();
 
-                    Contenido(contador,url, email, token);
+                    if (!url.equals("null"+"&token="+token+"&email="+ email)){
 
-                    view.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            adapter.notifyItemRangeInserted(curSize, muralesList.size() - 1);
+
+                        ExecuteTask executeTask = new ExecuteTask();
+                        executeTask.execute(url);
+
+                        JSONObject JsonDataEntrada = null;
+                        try {
+                            JsonDataEntrada = new JSONObject(executeTask.get());
+                            //Log.i("", "onLoadMore Data good: "+JsonDataEntrada );
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.e("", "onLoadMore JSONException: "+e );
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                            Log.e("", "onLoadMore InterruptedException: "+e );
+                        } catch (ExecutionException e) {
+                            Log.e("", "onLoadMore ExecutionException: "+e );
+                            e.printStackTrace();
                         }
-                    });
+                        //Log.i("Goood", "onCreateView : "+JsonDataEntrada);
+                        // JSONObject dataEntradas = getEntradasData.getResponse();
+
+                        final int curSize = adapter.getItemCount();
+                        List<Murales> MuralesMoreList = Contenido(contador,JsonDataEntrada);
+                        // adapter.notifyItemInserted(EntradasList.size() - 1);
+
+
+                        muralesList.addAll(MuralesMoreList);
+                        Handler handler = new Handler();
+
+                        final Runnable r = new Runnable() {
+                            public void run() {
+                                adapter.notifyItemRangeInserted(curSize,muralesList.size() -1);
+                            }
+                        };
+
+                        handler.post(r);
+
+                    }
+
+
                 }
+
             };
 
             recyclerMurales.addOnScrollListener(scrollListener);
             // mocking network delay for API call
-            /*new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    loadFirstPage();
-                }
-            }, 1000);*/
 
             // fin scroll view
 
             return rootView;
         }
 
-        public void Contenido(final int contador, String urls_param, String email, String token){
+        public List<Murales> Contenido(final int contador, JSONObject responseMurales){
 
-            AsyncHttpClient client = new AsyncHttpClient();
 
-            final Boolean[] archivo = new Boolean[1];
-            final Boolean[] photos = new Boolean[1];
+            List<Murales> MuralesList_Contenido = new ArrayList<>();
 
-            //String url = "http://serverprueba.present.com.co/api/mural/institucional/posts?email=daniela@dc.co&token=$2y$10$xeziClDwuVYHjpTcQB6ziufL.6/RYpP2pBjJpyBhQO1Qdqn1GKL4.";
-           /* String url = urls.get(contador-1);
-            url += "?token="+token;
-            url += "&email="+ email;*/
 
             // llamado del servicio
 
-            RequestHandle post  = client.get(urls_param, new AsyncHttpResponseHandler() {
+            // Declaracion de variables
+            String responseStr = null;
+            Boolean isfiles = false;
+            Boolean isphotos = false;
 
-                final ProgressDialog[] progressDialog = new ProgressDialog[1];
+            try {
 
-                @Override
-                public void onStart(){
+                // Se obtiene valores del objeto
+                String valorLlave = responseMurales.getString("comunicados");
 
-                    super.onStart();
+                JSONObject segundoobj = new JSONObject(valorLlave);
+
+                String urlnextpage = segundoobj.getString("next_page_url");
+
+                String total = segundoobj.getString("total");
+                String to = segundoobj.getString("to");
+
+                String valordata = segundoobj.getString("data");
+
+                JSONArray items = new JSONArray(valordata);
+
+                // Toast.makeText(getContext(), urlnextpage, Toast.LENGTH_LONG).show();
+
+                for (int i = 0; i < items.length(); i++) {
+
+                    String item = items.getString(i);
+
+                    JSONObject valores = new JSONObject(item);
+
+                    String user_namedata = valores.getString("user_name");
+                    String created_atdata = valores.getString("created_at");
+                    String contentdata = valores.getString("content");
+                    String user_photo = valores.getString("user_photo");
+                    String read_more = valores.getString("read_more");
+                    String url_detalle = valores.getString("detail_url");
+
+                    String file = valores.getString("files");
+                    String phoos = valores.getString("photos");
+                    //String read_more = "false";
+
+                    HashMap<String,String> archivos2 = new HashMap<>();
+                    HashMap<String,String> photos2 = new HashMap<>();
+
+                    JSONArray fle = new JSONArray(file);
+                    for (int a = 0; a < fle.length(); a++) {
+                        String fles = fle.getString(a);
+
+                        JSONObject its = new JSONObject(fles);
+
+                        //archivos.add(new files(its.getString("original_name"), its.getString("url")));
+                        archivos2.put(its.getString("original_name"),its.getString("url"));
+
+                    }
+
+                    JSONArray fle2 = new JSONArray(phoos);
+                    for (int b = 0; b < fle2.length(); b++) {
+                        String fles2 = fle2.getString(b);
+                        JSONObject its2 = new JSONObject(fles2);
+                        photos2.put(its2.getString("original_name"),its2.getString("url"));
+
+                    }
+
+                    if(archivos2.isEmpty()){
+                        isfiles = false;
+                    }  else {
+                        isfiles = true;
+                    }
+
+                    if(photos2.isEmpty()){
+                        isphotos = false;
+                    }  else {
+                        isphotos = true;
+
+                    }
+
+                    MuralesList_Contenido.add(new Murales(user_namedata, created_atdata, contentdata,user_photo, read_more, isfiles, isphotos, archivos2, photos2, url_detalle));
+
+                    archivos2 = null;
+                    photos2 = null;
 
                 }
 
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                urls.set(contador-1, urlnextpage);
 
-                    // Declaracion de variables
-                    String responseStr = null;
-                    Boolean isfiles = false;
-                    Boolean isphotos = false;
+                // Log.e("Data: ", "Data Url " + urls.get(contador - 1));
 
-                    try {
-
-                        //respuesta del servicio
-                        responseStr = new String(responseBody, "UTF-8");
-                        // manejo del primer nivel de objetos
-                        JSONObject comunicados = new JSONObject(responseStr);
-                        // Se obtiene valores del objeto
-                        String valorLlave = comunicados.getString("comunicados");
-
-                        JSONObject segundoobj = new JSONObject(valorLlave);
-
-                        String urlnextpage = segundoobj.getString("next_page_url");
-
-                        String valordata = segundoobj.getString("data");
-
-                        JSONArray items = new JSONArray(valordata);
-
-                       // Toast.makeText(getContext(), urlnextpage, Toast.LENGTH_LONG).show();
-
-                        for (int i = 0; i < items.length(); i++) {
-
-                            String item = items.getString(i);
-
-                            JSONObject valores = new JSONObject(item);
-
-                            String user_namedata = valores.getString("user_name");
-                            String created_atdata = valores.getString("created_at");
-                            String contentdata = valores.getString("content");
-                            String user_photo = valores.getString("user_photo");
-                            String read_more = valores.getString("read_more");
-                            String url_detalle = valores.getString("detail_url");
-
-                            String file = valores.getString("files");
-                            String phoos = valores.getString("photos");
-                            //String read_more = "false";
-
-                            HashMap<String,String> archivos2 = new HashMap<>();
-                            HashMap<String,String> photos2 = new HashMap<>();
-
-                            JSONArray fle = new JSONArray(file);
-                            for (int a = 0; a < fle.length(); a++) {
-                                String fles = fle.getString(a);
-
-                                JSONObject its = new JSONObject(fles);
-
-                                //archivos.add(new files(its.getString("original_name"), its.getString("url")));
-                                archivos2.put(its.getString("original_name"),its.getString("url"));
-
-                            }
-
-                            JSONArray fle2 = new JSONArray(phoos);
-                            for (int b = 0; b < fle2.length(); b++) {
-                                String fles2 = fle2.getString(b);
-                                JSONObject its2 = new JSONObject(fles2);
-                                photos2.put(its2.getString("original_name"),its2.getString("url"));
-
-                            }
-
-                            if(archivos2.isEmpty()){
-                                isfiles = false;
-                            }  else {
-                                isfiles = true;
-                            }
-
-                            if(photos2.isEmpty()){
-                                isphotos = false;
-                            }  else {
-                                isphotos = true;
-
-                            }
-
-                            muralesList.add(new Murales(user_namedata, created_atdata, contentdata,user_photo, read_more, isfiles, isphotos, archivos2, photos2, url_detalle));
-                            adapter = new MuralesAdapter(getContext(), muralesList);
-                            recyclerMurales.setAdapter(adapter);
-                            archivos2 = null;
-                            photos2 = null;
-
-                        }
-
-                        urls.set(contador-1, urlnextpage);
-
-                       // Log.e("Data: ", "Data Url " + urls.get(contador - 1));
-
-                    }  catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    adapter = new MuralesAdapter(getContext(),muralesList);
-                    recyclerMurales.setAdapter(adapter);
-
-                    //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-                    //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));*/
-                    //return rootView;
-                    //return rootView;
-                }
-                //public void vistamural(){
-     /*   public void vistamural(){
+            }   catch (JSONException e) {
+                e.printStackTrace();
+            }
 
 
-                }*/
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
-                    if (statusCode == 421) {
-                        //declaracion de variables
-                        String responseStr = null;
-
-                        try {
-                            // respuesta del servicio
-                            responseStr = new String(responseBody, "UTF-8");
-                            // manejo de primer nivel de objetos del json
-                            JSONObject errorx = new JSONObject(responseStr);
-                            // se obtiene los valores del json
-                            String valorLlave = errorx.getString("errors");
-                            // manejo del segundo nivel de valores de json
-                            JSONObject errorxa = new JSONObject(valorLlave);
-                            // se obtiene los valores que contiene el objeto
-                            String msgerror = errorxa.getString("login");
-                            // se maneja el array json
-                            JSONArray jsonarray = new JSONArray(msgerror);
-
-                            //se obtiene cada uno de los mensajes que se encuentran dentro del json
-                            for(int i=0; i < jsonarray.length(); i++) {
-                                String mensaje = jsonarray.getString(i);
-                                Toast.makeText(getContext(), mensaje, Toast.LENGTH_LONG).show();
-                            }
-
-                            //midb.logouth();
-                            //midb.oncreateusers();
-                            //Intent i = new Intent(MuralesActivity.this, InicioActivity.class);
-                            //startActivity(i);
-
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    // When Http response code is '500'
-                    else if (statusCode == 500) {
-
-                        Toast.makeText(getContext(), "Erros Statuscode = 500", Toast.LENGTH_LONG).show();
-                    }
-                    // When Http response code other than 404, 500
-                    else {
-                        Log.i("On Failure", "NN");
-                        Toast.makeText(getContext(), "On Failure ", Toast.LENGTH_LONG).show();
-
-                        //Institución no valida.
-                    }
-
-
-                }
-
-            });
+            //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+            //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));*/
+            //return rootView;
+            //return rootView;
+            return MuralesList_Contenido;
 
         }
+
+        class ExecuteTask extends AsyncTask<String, Integer, String>
+        {
+
+            @Override
+            protected String doInBackground(String... params) {
+
+                String res=PostData(params);
+                //  Log.i("", "doInBackground: "+res);
+
+                return res;
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+                super.onPostExecute(result);
+            }
+
+        }
+
+        public String PostData(String[] valuse) {
+            String s="";
+            try
+            {
+                HttpClient httpClient=new DefaultHttpClient();
+                HttpGet httpGet=new HttpGet(valuse[0]);
+
+                HttpResponse httpResponse=  httpClient.execute(httpGet);
+
+                HttpEntity httpEntity=httpResponse.getEntity();
+
+                s= readResponse(httpResponse);
+
+            }
+            catch(Exception exception)  {}
+            return s;
+
+        }
+
+        public String readResponse(HttpResponse res) {
+            InputStream is=null;
+            String return_text="";
+            try {
+                is=res.getEntity().getContent();
+                BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(is));
+                String line="";
+                StringBuffer sb=new StringBuffer();
+                while ((line=bufferedReader.readLine())!=null)
+                {
+                    sb.append(line);
+                }
+                return_text=sb.toString();
+            } catch (Exception e)
+            {
+
+            }
+
+            return return_text;
+
+        }
+
     }
 
     /**

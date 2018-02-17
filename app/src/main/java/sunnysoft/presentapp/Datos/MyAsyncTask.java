@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import cz.msebera.android.httpclient.client.methods.HttpPost;
+import sunnysoft.presentapp.Interfaz.CreareventoActivity;
 import sunnysoft.presentapp.Interfaz.CreateentradaActivity;
 
 /**
@@ -22,6 +23,7 @@ public class MyAsyncTask extends AsyncTask<String,Void,String> {
     String proceso;
     String urlv;
     String nombre;
+    Intent i;
 
 
     /**Constructor de clase */
@@ -48,6 +50,10 @@ public class MyAsyncTask extends AsyncTask<String,Void,String> {
 
                     resultado = myRestFulGP.enviardatos(httppost);
                 break;
+                case "Crear Evento":
+
+                    resultado = myRestFulGP.enviardatos(httppost);
+                    break;
                 default:
                      resultado = null;
                     break;
@@ -76,11 +82,26 @@ public class MyAsyncTask extends AsyncTask<String,Void,String> {
     protected void onPostExecute(String resul) {
         progressDialog.dismiss();
 
-        Toast.makeText(context, "La entrada se ha registrado", Toast.LENGTH_LONG).show();
-        Intent i = new Intent(context, CreateentradaActivity.class);
-        i.putExtra("url", urlv);
-        i.putExtra("nombre", nombre);
-        context.startActivity(i);
+
+        switch (proceso){
+            case "Crear Entrada":
+
+                Toast.makeText(context, "La entrada se ha registrado", Toast.LENGTH_LONG).show();
+                i = new Intent(context, CreateentradaActivity.class);
+                i.putExtra("url", urlv);
+                i.putExtra("nombre", nombre);
+                context.startActivity(i);
+                break;
+
+            case "Crear Evento":
+
+                Toast.makeText(context, "La evento se ha registrado", Toast.LENGTH_LONG).show();
+                i = new Intent(context, CreareventoActivity.class);
+
+                context.startActivity(i);
+                break;
+
+        }
 
     }
 

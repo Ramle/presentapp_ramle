@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="sunnysoft.presentapp.Interfaz.VerEntradas">
+    tools:context="sunnysoft.presentapp.Interfaz.VerEntradas"
+    android:background="@color/white">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -38,11 +39,28 @@
 
     <include layout="@layout/content_ver_entradas" />
 
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
+        android:layout_width="60dp"
+        android:layout_height="71dp"
+        android:layout_gravity="bottom|start"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+
+        android:clickable="true"
+        app:backgroundTint="#DC9233"
+        app:layout_anchorGravity="right|bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.095"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.941"
+        app:srcCompat="@drawable/icono_menu" />
+
+
 </android.support.design.widget.CoordinatorLayout>

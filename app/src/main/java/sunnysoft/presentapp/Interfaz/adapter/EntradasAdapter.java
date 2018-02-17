@@ -53,6 +53,7 @@ public class EntradasAdapter extends RecyclerView.Adapter<EntradasAdapter.ViewHo
         holder.titulo.setText(entradasList.get(position).getNombre());
         holder.detalle.setText(entradasList.get(position).getFecha());
         holder.mTagGroup.setTags(entradasList.get(position).getTags());
+        Log.e("", "onBindViewHolder: "+ entradasList.get(position).getNombre());
 
     }
 

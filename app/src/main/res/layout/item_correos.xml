@@ -6,6 +6,7 @@
     android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
+        android:id="@+id/card_correos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
@@ -25,28 +26,32 @@
 
             <TextView
                 android:id="@+id/txv_asunto"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:layout_marginStart="8dp"
-                android:textSize="10sp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:text="asunto"
                 android:textColor="@color/color_letra_btn_prim"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.041"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/txv_hora"
                 app:layout_constraintStart_toEndOf="@+id/imagen"
-                app:layout_constraintTop_toBottomOf="@+id/txv_nombre" />
+                app:layout_constraintTop_toBottomOf="@+id/txv_nombre"
+                app:layout_constraintVertical_bias="0.0" />
 
             <TextView
                 android:id="@+id/txv_nombre"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
+                android:layout_marginEnd="5dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="10dp"
+                android:text="nombre"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintEnd_toStartOf="@+id/txv_fecha"
                 app:layout_constraintStart_toEndOf="@+id/imagen"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -54,62 +59,60 @@
                 android:id="@+id/txv_fecha"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="10dp"
+                android:text="fecha"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.973"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/txv_hora"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="10dp"
+                android:text="hora"
                 android:textSize="10sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.928"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txv_fecha" />
+                app:layout_constraintTop_toBottomOf="@+id/txv_fecha"
+                app:layout_constraintVertical_bias="0.0" />
 
             <android.support.v7.widget.CardView
                 android:id="@+id/imagen"
-                android:layout_width="48dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="8dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
                 app:cardCornerRadius="25dp"
-                app:cardElevation="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                  <android.support.constraint.ConstraintLayout
+                <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
                     <ImageView
                         android:id="@+id/img_persona"
-                        android:layout_width="50dp"
-                        android:layout_height="40dp"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
                         android:scaleType="centerInside"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="1.0"
+                        app:layout_constraintVertical_bias="0.0"
                         app:srcCompat="@drawable/personlogin" />
                 </android.support.constraint.ConstraintLayout>
             </android.support.v7.widget.CardView>
 
-             </android.support.constraint.ConstraintLayout>
+        </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
 
 

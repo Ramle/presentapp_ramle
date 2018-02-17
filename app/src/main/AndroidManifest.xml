@@ -77,6 +77,24 @@
             android:name=".Interfaz.VerEntradas"
             android:label="@string/title_activity_ver_entradas"
             android:theme="@style/AppTheme"></activity>
+
+        <!-- SERVICIO DE NOTIFICACIONES -->
+
+        <service
+            android:name=".firebase.MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+
+
+        <service
+            android:name=".firebase.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

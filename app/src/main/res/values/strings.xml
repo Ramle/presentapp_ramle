@@ -154,6 +154,9 @@
     </string>
     <string name="title_activity_detail_evento">DetailEvento</string>
     <string name="title_activity_ver_entradas">VerEntradas</string>
+    <string name="btn_responder">Responder</string>
+    <string name="btn_responder_todos">Responder a todos</string>
+    <string name="btn_reenviar">Reenviar</string>
     <color name="white">#FFFFFF</color>
 
 </resources>

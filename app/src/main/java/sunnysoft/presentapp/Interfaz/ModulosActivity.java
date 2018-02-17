@@ -115,8 +115,6 @@ public class ModulosActivity extends AppCompatActivity {
     }
 
 
-
-
     private void setearmodulos(String url){
 
         AsyncHttpClient client = new AsyncHttpClient();

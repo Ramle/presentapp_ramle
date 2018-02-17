@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,8 +19,6 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -59,7 +56,7 @@ public class BandejaCorreosActivity extends AppCompatActivity {
     String subdomain;
     public String email;
     String url;
-    String nombremural;
+    String nombreMenuCorreo;
     int notification_count;
     String mural_url;
 
@@ -120,7 +117,7 @@ public class BandejaCorreosActivity extends AppCompatActivity {
         // construir url de servicio de tabs
 
         url = "http://" + subdomain;
-        url += ".present.com.co//api/murales/names";
+        url += ".present.com.co//api/email/menu";
         url += "?token=" + token;
         url += "&email=" + email;
 
@@ -131,6 +128,7 @@ public class BandejaCorreosActivity extends AppCompatActivity {
         // funcion que crea los tabs
         //
         seteartabs(url);
+        Log.i("URL",url);
 
         //Tooblar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -198,7 +196,7 @@ public class BandejaCorreosActivity extends AppCompatActivity {
                     // manejo del primer nivel de objetos
                     JSONObject user = new JSONObject(responseStr);
                     // Se obtiene valores del objeto
-                    String valorLlave = user.getString("murales");
+                    String valorLlave = user.getString("menu");
 
                     JSONArray items = new JSONArray(valorLlave);
 
@@ -207,14 +205,14 @@ public class BandejaCorreosActivity extends AppCompatActivity {
 
                         JSONObject valores = new JSONObject(item);
 
-                        nombremural = valores.getString("name");
+                        nombreMenuCorreo = valores.getString("name");
                         notification_count = valores.getInt("notificaciones_count");
                         mural_url = valores.getString("mural_url");
 
-                        Log.e("mural", mural_url);
+                        Log.e("correo menu", mural_url);
 
                         urls.add(mural_url);
-                        nomes.add(nombremural);
+                        nomes.add(nombreMenuCorreo);
 
                     }
 
@@ -378,7 +376,7 @@ public class BandejaCorreosActivity extends AppCompatActivity {
                     String url = urls.get(contador-1);
                     url += "&token="+token;
                     url += "&email="+ email;
-                 //   Log.e("Data: ", "Data contador " + urls.size());
+                    //   Log.e("Data: ", "Data contador " + urls.size());
 
                     Contenido(contador,url, email, token);
 
@@ -399,7 +397,7 @@ public class BandejaCorreosActivity extends AppCompatActivity {
         public void Contenido(final int contador, String urls_param, String email, String token){
 
             AsyncHttpClient client = new AsyncHttpClient();
-               // llamado del servicio
+            // llamado del servicio
 
             RequestHandle post  = client.get(urls_param, new AsyncHttpResponseHandler() {
 
@@ -427,7 +425,7 @@ public class BandejaCorreosActivity extends AppCompatActivity {
                         // manejo del primer nivel de objetos
                         JSONObject comunicados = new JSONObject(responseStr);
                         // Se obtiene valores del objeto
-                        String valorLlave = comunicados.getString("comunicados");
+                        String valorLlave = comunicados.getString("emails");
 
                         JSONObject segundoobj = new JSONObject(valorLlave);
 
@@ -444,24 +442,17 @@ public class BandejaCorreosActivity extends AppCompatActivity {
 
                             JSONObject valores = new JSONObject(item);
 
-                            String user_namedata = valores.getString("user_name");
-                            String created_atdata = valores.getString("created_at");
-                            String contentdata = valores.getString("content");
-                            String user_photo = valores.getString("user_photo");
-                            String read_more = valores.getString("read_more");
-                            String url_detalle = valores.getString("detail_url");
+                            String date = valores.getString("date");
+                            String time = valores.getString("time");
+                            String subject = valores.getString("subject");
+                            String url_detail = valores.getString("url_email_detail");
+                            String participants = valores.getString("participants");
+                            String user_image = valores.getString("user_image");
+                            String isread = valores.getString("is_read");
 
-                            String file = valores.getString("files");
-                            String phoos = valores.getString("photos");
-                            //String read_more = "false";
 
-                            HashMap<String,String> archivos2 = new HashMap<>();
-                            HashMap<String,String> photos2 = new HashMap<>();
 
-                            String hora = null;
-                            String asunto = null;
-
-                            muralesList.add(new Correos("Martín Felipe Días Rodríguez", "15/10/17", "12:35 pm",user_photo, "Reporte notas semanal(4)" ,url_detalle));
+                            muralesList.add(new Correos(participants, date, time, user_image, subject,url_detail));
 
 
 

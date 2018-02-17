@@ -3,13 +3,18 @@ package sunnysoft.presentapp.Interfaz;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,27 +23,39 @@ import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestHandle;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
+import cz.msebera.android.httpclient.HttpEntity;
+import cz.msebera.android.httpclient.HttpResponse;
+import cz.msebera.android.httpclient.client.HttpClient;
+import cz.msebera.android.httpclient.client.methods.HttpGet;
 import cz.msebera.android.httpclient.entity.StringEntity;
+import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 import sunnysoft.presentapp.Datos.DatabaseHelper;
 import sunnysoft.presentapp.Interfaz.adapter.EventosAdapter;
 import sunnysoft.presentapp.Interfaz.adapter.ProcesoEntradasAdapter;
 import sunnysoft.presentapp.Interfaz.pojo.Entradas;
 import sunnysoft.presentapp.Interfaz.pojo.Eventos;
 import sunnysoft.presentapp.R;
+import sunnysoft.presentapp.utils.EndlessRecyclerViewScrollListener;
 
 public class VerEntradas extends AppCompatActivity {
 
@@ -54,7 +71,10 @@ public class VerEntradas extends AppCompatActivity {
     private Toolbar secundaria;
 
 
-    private HashMap<String, Entradas> entradas = new HashMap<>();
+    RecyclerView recyclerEntradas;
+    ProcesoEntradasAdapter mProcesoEntradasAdapter;
+    List<Entradas> EntradasList;
+    //private HashMap<String, Entradas> entradas = new HashMap<>();
 
     @Override
     public void onBackPressed() {
@@ -67,14 +87,13 @@ public class VerEntradas extends AppCompatActivity {
         setContentView(R.layout.activity_ver_entradas);
 
 
-        final ListView mProcesoEntradasList;
-        String View_all_url = getIntent().getStringExtra("View_all_url");
+      //  final ListView mProcesoEntradasList;
+        final String View_all_url = getIntent().getStringExtra("View_all_url");
 
-        mProcesoEntradasList = (ListView) findViewById(R.id.entradas_list);
+        recyclerEntradas = (RecyclerView) findViewById(R.id.entradas_list);
+      //  mProcesoEntradasList = (ListView) findViewById(R.id.entradas_list);
 
         midb = new DatabaseHelper(this);
-
-
 
         // llamado de datos de base de datos
 
@@ -84,9 +103,11 @@ public class VerEntradas extends AppCompatActivity {
         token =Resultados.getString(Resultados.getColumnIndex("token"));
         email =Resultados.getString(Resultados.getColumnIndex("user"));
 
+
         url = View_all_url;
         url += "?token="+token;
         url += "&email="+ email;
+        // Log.e("Data: ", "Data contador " + urls.size());
 
         //Tooblar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -106,150 +127,249 @@ public class VerEntradas extends AppCompatActivity {
         });
 
 
-        //traer datos de ws
-        AsyncHttpClient client = new AsyncHttpClient();
-        JSONObject jsonParams = new JSONObject();
-        StringEntity entity = null;
+
+        try{
+
+            // GetEntradasData getEntradasData = new GetEntradasData(url);
+            ExecuteTask executeTask = new ExecuteTask();
+            executeTask.execute(url);
+
+            JSONObject JsonDataEntrada = new JSONObject(executeTask.get());
+            // JSONObject dataEntradas = getEntradasData.getResponse();
+
+            EntradasList = Contenido(JsonDataEntrada);
+           // Log.i("Goood", "onCreateView : "+EntradasList);
+
+            //Log.i("", "onCreateView: "+EntradasList);
+            // Inicializar el adaptador con la fuente de datos.
+            mProcesoEntradasAdapter = new ProcesoEntradasAdapter(VerEntradas.this,EntradasList);
+            Log.e("Exception", "DatoNombre: "+ EntradasList.get(0).getNombre());
+
+            recyclerEntradas.setAdapter(mProcesoEntradasAdapter);
+
+        }catch (Exception e){
+
+            Log.e("Exception", "onCreateView: "+ e);
+
+        }
+        Log.i("URL", "onCreateView: "+url);
+
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(VerEntradas.this);
+        //linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
+        recyclerEntradas.setLayoutManager(linearLayoutManager);
 
 
-        // Invoke RESTful Web Service with Http parameters
-        RequestHandle post = client.get(VerEntradas.this, url, entity, "application/json", new AsyncHttpResponseHandler() {
+        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
 
             @Override
-            public void onStart() {
-                //mydb.borrar_Users();
-                //mydb.oncreateusers();
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+
+                /*String url = urls.get(contador-1);
+                url += "&token="+token;
+                url += "&email="+ email;*/
+
+                url = View_all_url;
+                url += "?token="+token;
+                url += "&email="+ email;
+                // Log.e("Data: ", "Data contador " + urls.size());
+
+
+                if (!url.equals("null"+"&token="+token+"&email="+ email)){
+
+                    ExecuteTask executeTask = new ExecuteTask();
+                    executeTask.execute(url);
+
+                    JSONObject JsonDataEntrada = null;
+                    try {
+                        JsonDataEntrada = new JSONObject(executeTask.get());
+                        //Log.i("", "onLoadMore Data good: "+JsonDataEntrada );
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.e("", "onLoadMore JSONException: "+e );
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        Log.e("", "onLoadMore InterruptedException: "+e );
+                    } catch (ExecutionException e) {
+                        Log.e("", "onLoadMore ExecutionException: "+e );
+                        e.printStackTrace();
+                    }
+                    //Log.i("Goood", "onCreateView : "+JsonDataEntrada);
+                    // JSONObject dataEntradas = getEntradasData.getResponse();
+
+                    // Inicializar el adaptador con la fuente de datos.
+
+                    //Relacionando la lista con el adaptador
+
+                    final int curSize = mProcesoEntradasAdapter.getItemCount();
+                    List<Entradas> EntradasMoreList = Contenido(JsonDataEntrada);
+                    // adapter.notifyItemInserted(EntradasList.size() - 1);
+                    EntradasList.addAll(EntradasMoreList);
+                    Handler handler = new Handler();
+
+                    final Runnable r = new Runnable() {
+                        public void run() {
+                            mProcesoEntradasAdapter.notifyItemRangeInserted(curSize,EntradasList.size() -1);
+                        }
+                    };
+
+                    handler.post(r);
+
+                }
 
             }
+        };
 
-            @Override
-            public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] responseBody) {
+       recyclerEntradas.addOnScrollListener(scrollListener);
 
-                Event ev1 = null;
-                // called when response HTTP status is "200 OK"
-                String responseStr = null;
-                String id = null;
-                String user_name = null;
-                String curso_grupo = null;
-                String created_at = null;
-                String detalles = null;
-                String img_persona = null;
-                String name = null;
+    }
 
+    public List<Entradas> Contenido(JSONObject responseEntradas){
+
+        List<Entradas> ProcesoEntradasList_Contenido = new ArrayList<>();
+
+        Event ev1 = null;
+        // called when response HTTP status is "200 OK"
+        String responseStr = null;
+        String id = null;
+        String user_name = null;
+        String curso_grupo = null;
+        String created_at = null;
+        String detalles = null;
+        String img_persona = null;
+        String name = null;
+
+        try {
+
+            JSONObject entradas = new JSONObject(responseEntradas.getString("entradas"));
+
+            JSONObject proceso = new JSONObject(responseEntradas.getString("proceso"));
+
+            String procesoname = proceso.getString("name");
+
+            ///////////////////////segunda toolbar /////////////////////
+            secundaria = (Toolbar) findViewById(R.id.toolbar_secundaria);
+            secundaria.setNavigationIcon(R.drawable.arrow_back);
+            TextView titulo_secundaria = (TextView) secundaria.findViewById(R.id.toolbar_secundaria_title);
+            titulo_secundaria.setText(procesoname);
+            secundaria.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(VerEntradas.this, ModulosActivity.class);
+                    startActivity(i);
+                }
+            });
+
+
+            JSONArray jsonarray = new JSONArray(entradas.getString("data"));
+            JSONArray jsonarray_tags;
+
+            for(int i=0; i < jsonarray.length(); i++) {
+
+                JSONObject jsonobject_data = jsonarray.getJSONObject(i);
+
+                id   = jsonobject_data.getString("id");
+                user_name   = jsonobject_data.getString("user_name");
+                curso_grupo = jsonobject_data.getString("curso_grupo");
+                created_at  = jsonobject_data.getString("created_at");
+                img_persona  = jsonobject_data.getString("user_image");
+                detalles = curso_grupo + " " + created_at;
+                jsonarray_tags = new JSONArray(jsonobject_data.getString("tags"));
+
+                String [] tags = new String [jsonarray_tags.length()];
+                for(int j=0; j < jsonarray_tags.length(); j++) {
+
+                    JSONObject jsonobject_tags = jsonarray_tags.getJSONObject(j);
+                    name       = jsonobject_tags.getString("name");
+                    //tags.add(name);
+                    tags[j] = name;
+                    //Toast.makeText(VerEntradas.this, "Bien por "+name, Toast.LENGTH_LONG).show();
+
+                }
 
                 try {
 
-                    responseStr = new String(responseBody, "UTF-8");
-                    JSONObject jsonobject = new JSONObject(responseStr);
+                    //entrada_1 = new Entradas(user_name, detalles, i + 1);
 
-                    JSONObject entradas = new JSONObject(jsonobject.getString("entradas"));
-                    JSONObject proceso = new JSONObject(jsonobject.getString("proceso"));
+                  //  Log.e("Data: ", "Data Url " + detalles);
+                    ProcesoEntradasList_Contenido.add(new Entradas(user_name, detalles, i + 1,img_persona,tags));
+                    //saveEntrada(new Entradas(user_name, detalles, i + 1,img_persona,tags));
 
-                    String procesoname = proceso.getString("name");
+                    // Toast.makeText(VerEntradas.this, "Bien por "+entrada_1.getIndice(), Toast.LENGTH_LONG).show();
+;
 
-                    ///////////////////////segunda toolbar /////////////////////
-                    secundaria = (Toolbar) findViewById(R.id.toolbar_secundaria);
-                    secundaria.setNavigationIcon(R.drawable.arrow_back);
-                    TextView titulo_secundaria = (TextView) secundaria.findViewById(R.id.toolbar_secundaria_title);
-                    titulo_secundaria.setText(procesoname);
-                    secundaria.setNavigationOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent i = new Intent(VerEntradas.this, ModulosActivity.class);
-                            startActivity(i);
-                        }
-                    });
-
-
-                    JSONArray jsonarray = new JSONArray(entradas.getString("data"));
-                    JSONArray jsonarray_tags;
-                    Entradas entrada_1;
-
-                    for(int i=0; i < jsonarray.length(); i++) {
-
-                        JSONObject jsonobject_data = jsonarray.getJSONObject(i);
-
-                        id   = jsonobject_data.getString("id");
-                        user_name   = jsonobject_data.getString("user_name");
-                        curso_grupo = jsonobject_data.getString("curso_grupo");
-                        created_at  = jsonobject_data.getString("created_at");
-                        img_persona  = jsonobject_data.getString("user_image");
-                        detalles = curso_grupo + " " + created_at;
-                        jsonarray_tags = new JSONArray(jsonobject_data.getString("tags"));
-
-
-
-
-
-                        String [] tags = new String [jsonarray_tags.length()];
-                        for(int j=0; j < jsonarray_tags.length(); j++) {
-
-                            JSONObject jsonobject_tags = jsonarray_tags.getJSONObject(j);
-                            name       = jsonobject_tags.getString("name");
-                            //tags.add(name);
-                            tags[j] = name;
-                            //Toast.makeText(VerEntradas.this, "Bien por "+name, Toast.LENGTH_LONG).show();
-
-                        }
-
-                        try {
-
-                            final ProcesoEntradasAdapter mProcesoEntradasAdapter;
-
-                            //entrada_1 = new Entradas(user_name, detalles, i + 1);
-                            saveEntrada(new Entradas(user_name, detalles, i + 1,img_persona,tags));
-
-                            // Toast.makeText(VerEntradas.this, "Bien por "+entrada_1.getIndice(), Toast.LENGTH_LONG).show();
-
-                            // Inicializar el adaptador con la fuente de datos.
-                            mProcesoEntradasAdapter = new ProcesoEntradasAdapter(VerEntradas.this,getEntradas());
-
-                            //Relacionando la lista con el adaptador
-                            mProcesoEntradasList.setAdapter(mProcesoEntradasAdapter);
-
-                        }catch (Exception e){
-                            Toast.makeText(VerEntradas.this, "Fallo por "+e, Toast.LENGTH_LONG).show();
-                            Log.i("WSUsuarios","Fallo por "+e);
-                        }
-                    }
-
-                } catch (UnsupportedEncodingException e1) {
-                    e1.printStackTrace();
-                    Toast.makeText(VerEntradas.this, "Fallo por a", Toast.LENGTH_LONG).show();
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                }catch (Exception e){
                     Toast.makeText(VerEntradas.this, "Fallo por "+e, Toast.LENGTH_LONG).show();
+                    Log.i("WSUsuarios","Fallo por "+e);
                 }
             }
-            @Override
-            public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] responseBody, Throwable error) {
 
-                if (statusCode == 404) {
-                    Log.i("On Failure", "404");
-                    Toast.makeText(VerEntradas.this, "Fallo por 404 ", Toast.LENGTH_LONG).show();
-                }
-                // When Http response code is '500'
-                else if (statusCode == 500) {
-                    Log.i("On Failure", "500");
-                    Toast.makeText(VerEntradas.this, "Fallo por 500 ", Toast.LENGTH_LONG).show();
-                }
-                // When Http response code other than 404, 500
-                else {
-                    Log.i("On Failure", "NN");
-                    Toast.makeText(VerEntradas.this, "Fallo por NN ", Toast.LENGTH_LONG).show();
-                }
 
-            }
-        });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        return ProcesoEntradasList_Contenido;
+    }
+
+    class ExecuteTask extends AsyncTask<String, Integer, String>
+    {
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String res=PostData(params);
+            //  Log.i("", "doInBackground: "+res);
+
+            return res;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+        }
 
     }
 
-    private void saveEntrada(Entradas entrada) {
-        entradas.put(String.valueOf(entrada.getIndice()), entrada);
+    public String PostData(String[] valuse) {
+        String s="";
+        try
+        {
+            HttpClient httpClient=new DefaultHttpClient();
+            HttpGet httpGet=new HttpGet(valuse[0]);
+
+            HttpResponse httpResponse=  httpClient.execute(httpGet);
+
+            HttpEntity httpEntity=httpResponse.getEntity();
+
+            s= readResponse(httpResponse);
+
+        }
+        catch(Exception exception)  {}
+        return s;
+
     }
 
-    public List<Entradas> getEntradas() {
-        return new ArrayList<>(entradas.values());
+    public String readResponse(HttpResponse res) {
+        InputStream is=null;
+        String return_text="";
+        try {
+            is=res.getEntity().getContent();
+            BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(is));
+            String line="";
+            StringBuffer sb=new StringBuffer();
+            while ((line=bufferedReader.readLine())!=null)
+            {
+                sb.append(line);
+            }
+            return_text=sb.toString();
+        } catch (Exception e)
+        {
+
+        }
+        return return_text;
+
     }
 
 }

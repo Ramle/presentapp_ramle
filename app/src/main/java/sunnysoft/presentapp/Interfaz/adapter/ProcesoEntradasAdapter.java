@@ -1,7 +1,10 @@
 package sunnysoft.presentapp.Interfaz.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,69 +26,81 @@ import sunnysoft.presentapp.R;
  * Created by esantopc on 19/12/17.
  */
 
-public class ProcesoEntradasAdapter extends ArrayAdapter<Entradas> {
+public class ProcesoEntradasAdapter extends RecyclerView.Adapter<ProcesoEntradasAdapter.ViewHolder> {
 
     Context context;
+    List<Entradas>entradasList;
+    private boolean isLoadingAdded = false;
 
-    public ProcesoEntradasAdapter(Context context, List<Entradas> objects) {
+    public ProcesoEntradasAdapter(Context context, List<Entradas> entradasList) {
 
-        super(context, 0, objects);
         this.context = context;
+        this.entradasList = entradasList;
+
+    }
+
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        final View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_items_verentradas, parent, false);
+        final ViewHolder viewHolder = new ViewHolder(itemView);
+        return viewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+
+        holder.titulo.setText(entradasList.get(position).getNombre());
+        holder.detalle.setText(entradasList.get(position).getDetalle());
+
+        Picasso.with(context)
+                .load(entradasList.get(position).getImage_persona())
+                .error(R.drawable.logo)
+                .into(holder.imgPersona);
+
+        holder.mTagGroup.setTags(entradasList.get(position).getNomtags());
 
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        // Obtener inflater.
-        LayoutInflater inflater = (LayoutInflater) getContext()
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        ViewHolder holder;
-
-        // ¿Ya se infló este view?
-        if (null == convertView) {
-            //Si no existe, entonces inflarlo con image_list_view.xml
-            convertView = inflater.inflate(
-                    R.layout.list_items_verentradas,
-                    parent,
-                    false);
-
-            holder = new ViewHolder();
-            holder.titulo = (TextView) convertView.findViewById(R.id.tituloverentradas);
-            holder.detalle = (TextView) convertView.findViewById(R.id.detalleverentradas);
-            holder.imgPersona = (ImageView)convertView.findViewById(R.id.img_persona);
-            holder.mTagGroup = (TagGroup)convertView.findViewById(R.id.tag_group_entradas);
-
-            convertView.setTag(holder);
-
-        } else {
-
-            holder = (ViewHolder) convertView.getTag();
-
-        }
-
-        // Actual.
-        Entradas entrada = getItem(position);
-        // Setup.
-
-        holder.titulo.setText(entrada.getNombre());
-        holder.detalle.setText(entrada.getDetalle());
-
-        Picasso.with(context)
-                .load(entrada.getImage_persona())
-                .error(R.drawable.logo)
-                .into(holder.imgPersona);
-
-        holder.mTagGroup.setTags(entrada.getNomtags());
-
-        return convertView;
+    public int getItemCount() {
+        return entradasList.size();
     }
 
-    static class ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener{
 
         TagGroup mTagGroup;
         TextView titulo;
         TextView detalle;
         ImageView imgPersona;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+
+            itemView.setOnClickListener(this);
+
+            titulo = (TextView) itemView.findViewById(R.id.tituloverentradas);
+            detalle = (TextView) itemView.findViewById(R.id.detalleverentradas);
+            imgPersona = (ImageView)itemView.findViewById(R.id.img_persona);
+            mTagGroup = (TagGroup)itemView.findViewById(R.id.tag_group_entradas);
+
+
+        }
+        @Override
+        public void onClick(View view) {
+
+        }
+       /* @Override
+        public void onClick(View view) {
+
+            Log.e("Data clicked", "onClick " +  entradasList.get(getPosition()).getUrl_entrada_detail());
+
+            Intent i = new Intent(context, VereventoActivity.class);
+            i.putExtra("DetailUrl",  entradasList.get(getPosition()).getUrl_entrada_detail());
+            context.startActivity(i);
+
+        }*/
     }
+
 }

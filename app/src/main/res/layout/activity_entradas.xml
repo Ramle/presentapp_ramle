@@ -37,8 +37,9 @@
         android:id="@+id/viewpagerent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:background="@color/white"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     </android.support.v4.view.ViewPager>
@@ -47,14 +48,16 @@
         android:id="@+id/fab"
         android:layout_width="60dp"
         android:layout_height="71dp"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="@dimen/fab_margin"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+
         android:clickable="true"
         app:backgroundTint="#DC9233"
-        app:layout_anchor="@+id/viewpagerent"
-        app:layout_anchorGravity="left|bottom"
+        app:layout_anchorGravity="right|bottom"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.095"

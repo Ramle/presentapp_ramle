@@ -1,53 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-
-    <TextView
-        android:id="@+id/tituloverentradas"
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_entradas"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:layout_marginTop="8dp"
-        android:text="fdfdf"
-        android:textColor="@color/cardview_dark_background"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/tag_group_entradas"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        tools:layout_editor_absoluteX="16dp" />
-
-    <TextView
-        android:id="@+id/detalleverentradas"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/tituloverentradas"
-        android:layout_below="@+id/tituloverentradas"
-        android:layout_marginBottom="21dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="8dp"
-        android:text="dfdfdf"
-        android:textSize="22sp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tituloverentradas"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="32dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="16dp"
+                android:text="NombreEntrada"
+                android:textColor="@color/cardview_dark_background"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/tag_group_entradas"
+                app:layout_constraintEnd_toStartOf="@+id/detalleverentradas"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <TextView
+                android:id="@+id/detalleverentradas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/tituloverentradas"
+                android:layout_below="@+id/tituloverentradas"
+                android:layout_marginBottom="21dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="16dp"
+                android:text="fecha"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
 
 
-    <me.gujun.android.taggroup.TagGroup
-        android:id="@+id/tag_group_entradas"
-        style="@style/TagGroup"
-        android:layout_below="@+id/detalleverentradas"
-        android:layout_marginTop="15dp"
-        app:atg_borderColor="@color/color_inputs_primarios"
-        app:atg_checkedBackgroundColor="@color/color_inputs_primarios"
-        app:atg_checkedBorderColor="@color/color_inputs_primarios"
-        app:atg_textColor="@color/color_letra_btn_prim"
-        app:layout_constraintTop_toBottomOf="@+id/detalleverentradas"
-        tools:layout_editor_absoluteX="47dp" />
+            <me.gujun.android.taggroup.TagGroup
+                android:id="@+id/tag_group_entradas"
+                style="@style/TagGroup"
+                android:layout_below="@+id/detalleverentradas"
+                android:layout_marginEnd="32dp"
+                android:layout_marginStart="32dp"
+                app:atg_borderColor="@color/color_inputs_primarios"
+                app:atg_checkedBackgroundColor="@color/color_inputs_primarios"
+                app:atg_checkedBorderColor="@color/color_inputs_primarios"
+                app:atg_textColor="@color/color_letra_btn_prim"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/detalleverentradas" />
 
-</android.support.constraint.ConstraintLayout>
+
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>
