@@ -142,8 +142,7 @@ public class VerEntradas extends AppCompatActivity {
 
             //Log.i("", "onCreateView: "+EntradasList);
             // Inicializar el adaptador con la fuente de datos.
-            mProcesoEntradasAdapter = new ProcesoEntradasAdapter(VerEntradas.this,EntradasList);
-            Log.e("Exception", "DatoNombre: "+ EntradasList.get(0).getNombre());
+            mProcesoEntradasAdapter = new ProcesoEntradasAdapter(getApplicationContext(),EntradasList);
 
             recyclerEntradas.setAdapter(mProcesoEntradasAdapter);
 
@@ -152,37 +151,37 @@ public class VerEntradas extends AppCompatActivity {
             Log.e("Exception", "onCreateView: "+ e);
 
         }
-        Log.i("URL", "onCreateView: "+url);
 
-        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(VerEntradas.this);
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         //linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
         recyclerEntradas.setLayoutManager(linearLayoutManager);
-
 
         EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
 
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
 
-                /*String url = urls.get(contador-1);
-                url += "&token="+token;
-                url += "&email="+ email;*/
+                String url_local = url;
+                url_local += "&token="+token;
+                url_local += "&email="+ email;
+                Log.e("Data: ", "Data contador " + url_local);
 
-                url = View_all_url;
+               /* url = View_all_url;
                 url += "?token="+token;
-                url += "&email="+ email;
+                url += "&email="+ email;*/
                 // Log.e("Data: ", "Data contador " + urls.size());
 
-
-                if (!url.equals("null"+"&token="+token+"&email="+ email)){
+                if (!url_local.equals("null"+"&token="+token+"&email="+ email)){
 
                     ExecuteTask executeTask = new ExecuteTask();
-                    executeTask.execute(url);
+                    executeTask.execute(url_local);
+
 
                     JSONObject JsonDataEntrada = null;
                     try {
                         JsonDataEntrada = new JSONObject(executeTask.get());
+                        Log.e("", "Ver: "+JsonDataEntrada );
                         //Log.i("", "onLoadMore Data good: "+JsonDataEntrada );
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -225,7 +224,6 @@ public class VerEntradas extends AppCompatActivity {
     }
 
     public List<Entradas> Contenido(JSONObject responseEntradas){
-
         List<Entradas> ProcesoEntradasList_Contenido = new ArrayList<>();
 
         Event ev1 = null;
@@ -243,7 +241,9 @@ public class VerEntradas extends AppCompatActivity {
 
             JSONObject entradas = new JSONObject(responseEntradas.getString("entradas"));
 
+            String urlnextpage = entradas.getString("next_page_url");
             JSONObject proceso = new JSONObject(responseEntradas.getString("proceso"));
+            Log.e("", "Contenido: "+urlnextpage );
 
             String procesoname = proceso.getString("name");
 
@@ -259,7 +259,6 @@ public class VerEntradas extends AppCompatActivity {
                     startActivity(i);
                 }
             });
-
 
             JSONArray jsonarray = new JSONArray(entradas.getString("data"));
             JSONArray jsonarray_tags;
@@ -304,6 +303,7 @@ public class VerEntradas extends AppCompatActivity {
                 }
             }
 
+            url = urlnextpage;
 
         } catch (JSONException e) {
             e.printStackTrace();

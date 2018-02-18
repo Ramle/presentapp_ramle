@@ -91,6 +91,12 @@ public class ProcesoEntradasAdapter extends RecyclerView.Adapter<ProcesoEntradas
         public void onClick(View view) {
 
         }
+
+
+        public Entradas getItem(int position) {
+            return entradasList.get(position);
+        }
+
        /* @Override
         public void onClick(View view) {
 

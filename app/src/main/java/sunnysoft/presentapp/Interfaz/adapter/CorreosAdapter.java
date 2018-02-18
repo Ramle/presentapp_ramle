@@ -2,6 +2,7 @@ package sunnysoft.presentapp.Interfaz.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -62,6 +63,12 @@ public class CorreosAdapter  extends RecyclerView.Adapter<sunnysoft.presentapp.I
                 .load(correosList.get(position).getImagen_persona())
                 .error(R.drawable.logo)
                 .into(holder.imgPersona);
+
+        if (!correosList.get(position).getIsread().equals("true")){
+
+            holder.cardCorreo.setCardBackgroundColor(Color.parseColor("#F2F2F2"));
+
+        }
 
         holder.cardCorreo.setOnClickListener(new CorreosAdapter.IntemClickListener(correosList.get(position).getUrl_detalle()));
 
