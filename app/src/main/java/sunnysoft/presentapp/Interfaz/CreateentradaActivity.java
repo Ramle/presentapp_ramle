@@ -569,12 +569,11 @@ public class CreateentradaActivity extends AppCompatActivity implements MultiSel
                     et = new EditText(this);
                     et.setBackgroundResource(R.drawable.inputs_secundarios);
                     et.setId(codigocampo);
-                    ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(520, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    //ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(520, ViewGroup.LayoutParams.WRAP_CONTENT);
 
                     LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
                     param.setMargins(0,50,0,0);
                     et.setLayoutParams(param);
-                    et.setLayoutParams(params);
 
                     layout.addView(txtcamp);
                     layout.addView(et);
@@ -680,36 +679,44 @@ public class CreateentradaActivity extends AppCompatActivity implements MultiSel
 
     }
 
-    public void Parsearjson() {
+    public Boolean Parsearjson() {
 
         httppost = new HttpPost(post_url);
         httppost.addHeader("Content-Type", "application/json");
+
         try {
             //forma el JSON y tipo de contenido
+            if (users_ids == null){
+                return false;
+            }else{
+                JSONArray mJSONArrayusersid = new JSONArray(Arrays.asList(users_ids));
+                JSONArray mJSONArraytagsid = new JSONArray(Arrays.asList(tags_ids));
+                JSONArray mJSONArraysfieldsid = new JSONArray(Arrays.asList(fields_ids));
+                JSONArray mJSONArraysfieldscontent = new JSONArray(Arrays.asList(fields_content));
 
-            JSONArray mJSONArrayusersid = new JSONArray(Arrays.asList(users_ids));
-            JSONArray mJSONArraytagsid = new JSONArray(Arrays.asList(tags_ids));
-            JSONArray mJSONArraysfieldsid = new JSONArray(Arrays.asList(fields_ids));
-            JSONArray mJSONArraysfieldscontent = new JSONArray(Arrays.asList(fields_content));
-            JSONObject j = new JSONObject();
-            //j.put("key","users_ids");
-            j.put("users_ids",mJSONArrayusersid);
-            j.put("tags_ids",mJSONArraytagsid);
-            j.put("fields_ids",mJSONArraysfieldsid);
-            j.put("fields_content",mJSONArraysfieldscontent);
+                JSONObject j = new JSONObject();
+                //j.put("key","users_ids");
+                j.put("users_ids", mJSONArrayusersid);
+                j.put("tags_ids", mJSONArraytagsid);
+                j.put("fields_ids", mJSONArraysfieldsid);
+                j.put("fields_content", mJSONArraysfieldscontent);
 
-            StringEntity stringEntity = new StringEntity( j.toString());
-            stringEntity.setContentType( (Header) new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-            httppost.setEntity(stringEntity);
+                StringEntity stringEntity = new StringEntity(j.toString());
+                stringEntity.setContentType((Header) new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                httppost.setEntity(stringEntity);
+                return true;
+            }
 
-    } catch (JSONException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
+            return false;
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
+            return false;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
-
 
     }
 
@@ -728,10 +735,14 @@ public class CreateentradaActivity extends AppCompatActivity implements MultiSel
                     String content = campo.getText().toString();
                     fields_content[t]=content;
                 }
-                Parsearjson();
-                String proceso = "Crear Entrada";
-                new MyAsyncTask(CreateentradaActivity.this, httppost, proceso, urlv, nombre)
-                        .execute();
+                if (Parsearjson()){
+                    String proceso = "Crear Entrada";
+                    new MyAsyncTask(CreateentradaActivity.this, httppost, proceso, urlv, nombre)
+                            .execute();
+                }else{
+                    Toast.makeText(getApplicationContext(), "Ingrese un Usuario", Toast.LENGTH_SHORT).show();
+                }
+
 
             }
         });

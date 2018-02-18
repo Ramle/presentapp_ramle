@@ -18,6 +18,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -651,7 +652,20 @@ public class EntradasActivity extends AppCompatActivity {
 
         //logocol.setBackgroundDrawable(drawable);
 
-        tabLayout.addTab(tabLayout.newTab().setIcon(drawable));
+        TabLayout.Tab t = tabLayout.newTab();
+        t.setCustomView(R.layout.item_tabs);
+        ImageView image = (ImageView)t.getCustomView().findViewById(R.id.img_persona);
+        CardView card = (CardView)t.getCustomView().findViewById(R.id.card_notificacion);
+        Log.i("NOTIFICACIONES",""+notification_count);
+        if (notification_count >= 0)  {
+            card.setVisibility(View.VISIBLE);
+        }else{
+            card.setVisibility(View.GONE);
+        }
+        image.setImageDrawable(drawable);
+        tabLayout.addTab(t);
+
+        //tabLayout.addTab(tabLayout.newTab().setIcon(drawable));
     }
 
     public class DownloadImage extends AsyncTask<String, Integer, Drawable> {

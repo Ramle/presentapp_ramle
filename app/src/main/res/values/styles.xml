@@ -41,6 +41,10 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <style name="marcos_card">
+        <item name="android:background">@drawable/borde_cards</item>
+    </style>
+
     <style name="botones_ter">
         <item name="android:layout_width">@dimen/ancho_inputs2</item>
         <item name="android:layout_height">@dimen/alto_inputs2</item>

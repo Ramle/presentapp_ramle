@@ -128,11 +128,15 @@ public class CreareventoActivity extends AppCompatActivity implements View.OnCli
                 showDatePickerDialogTodoDia();
                 break;
             case R.id.enviodataevento:
-                Parsearjson();
-                String proceso = "Crear Evento";
-                String nombre = null;
-                new MyAsyncTask(CreareventoActivity.this, httppost, proceso, urlv, nombre)
-                        .execute();
+                if (Parsearjson()){
+                    String proceso = "Crear Evento";
+                    String nombre = null;
+                    new MyAsyncTask(CreareventoActivity.this, httppost, proceso, urlv, nombre)
+                            .execute();
+                }else{
+                    Toast.makeText(this, "Los Campos No Deben Estar Vacios", Toast.LENGTH_SHORT).show();
+                }
+                
                 break;
         }
 
@@ -216,7 +220,7 @@ public class CreareventoActivity extends AppCompatActivity implements View.OnCli
 
     }
 
-    public void Parsearjson() {
+    public Boolean Parsearjson() {
 
         post_url = "http://serverprueba.present.com.co/api/calendar/store";
         //   post_url += "?token=$2y$10$CUR8/fvGJKaIFUESg5its.snr0DdZkAl3YcPIpbGtgrNa94caWgta";
@@ -226,39 +230,46 @@ public class CreareventoActivity extends AppCompatActivity implements View.OnCli
         httppost.addHeader("Content-Type", "application/json");
         try {
             //forma el JSON y tipo de contenido
-
-            /*JSONObject title = new JSONObject(String.valueOf(nombreevento.getText()));
+            if (nombreevento.getText().toString().equals("") || fechacomienzo.getText().toString().equals("") || fechafin.getText().toString().equals("")) {
+                return false;
+            }else{
+                /*JSONObject title = new JSONObject(String.valueOf(nombreevento.getText()));
             JSONObject start = new JSONObject(String.valueOf(fechacomienzo.getText()));
             JSONObject end = new JSONObject(String.valueOf(fechafin.getText()));
             JSONObject ad = new JSONObject(String.valueOf(true));*/
-            JSONObject j = new JSONObject();
-            //j.put("key","users_ids");
-            j.put("title",String.valueOf(nombreevento.getText()));
+                JSONObject j = new JSONObject();
+                //j.put("key","users_ids");
+                j.put("title",String.valueOf(nombreevento.getText()));
 
-            j.put("start",String.valueOf(fechacomienzo.getText()));
-            j.put("end",String.valueOf(fechafin.getText()));
+                j.put("start",String.valueOf(fechacomienzo.getText()));
+                j.put("end",String.valueOf(fechafin.getText()));
 
 
-            j.put("ad",true);
-            j.put("token",token);
-            j.put("email",email);
-            Log.d("On real"+j.toString(), "NN");
+                j.put("ad",true);
+                j.put("token",token);
+                j.put("email",email);
+                Log.d("On real"+j.toString(), "NN");
 
-            StringEntity stringEntity = new StringEntity( j.toString());
-            //  Toast.makeText(CreareventoActivity.this, j.toString(), Toast.LENGTH_LONG).show();
+                StringEntity stringEntity = new StringEntity( j.toString());
+                //  Toast.makeText(CreareventoActivity.this, j.toString(), Toast.LENGTH_LONG).show();
 
-            stringEntity.setContentType( (Header) new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-            httppost.setEntity(stringEntity);
+                stringEntity.setContentType( (Header) new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                httppost.setEntity(stringEntity);
+                return true;
+            }
 
         } catch (JSONException e) {
             Toast.makeText(CreareventoActivity.this, "Error"+e, Toast.LENGTH_LONG).show();
             e.printStackTrace();
+            return false;
         } catch (UnsupportedEncodingException e) {
             Toast.makeText(CreareventoActivity.this, "Error"+e, Toast.LENGTH_LONG).show();
             e.printStackTrace();
+            return false;
         } catch (IOException e) {
             Toast.makeText(CreareventoActivity.this, "Error"+e, Toast.LENGTH_LONG).show();
             e.printStackTrace();
+            return false;
         }
 
     }
