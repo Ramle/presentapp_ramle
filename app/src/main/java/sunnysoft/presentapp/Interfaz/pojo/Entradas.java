@@ -16,6 +16,7 @@ public class Entradas {
     private String image_persona;
     private String [] tags;
     private String url_entrada_detail;
+    private String url_tabs_entradas;
 
     public Entradas(String nombre, String detalle, Integer indice, String image_persona, String [] nomtags) {
         this.nombre = nombre;
@@ -26,11 +27,20 @@ public class Entradas {
     }
 
 
-    public Entradas(String nombre, String fecha, String [] tags, String url_entrada_detail) {
+    public Entradas(String nombre, String fecha, String [] tags, String url_entrada_detail,String url_tabs_entradas) {
         this.nombre = nombre;
         this.fecha = fecha;
         this.tags = tags;
         this.url_entrada_detail = url_entrada_detail;
+        this.url_tabs_entradas = url_tabs_entradas;
+    }
+
+    public String getUrl_tabs_entradas() {
+        return url_tabs_entradas;
+    }
+
+    public void setUrl_tabs_entradas(String url_tabs_entradas) {
+        this.url_tabs_entradas = url_tabs_entradas;
     }
 
     public Entradas() {

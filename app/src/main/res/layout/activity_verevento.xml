@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="sunnysoft.presentapp.Interfaz.VereventoActivity"
-    android:background="@color/white">
+    android:background="@color/white"
+    tools:context="sunnysoft.presentapp.Interfaz.VereventoActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="#69B4E8"
         android:theme="@style/AppTheme.AppBarOverlay"
@@ -30,41 +30,29 @@
             layout="@layout/toolbarfecha"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             app:layout_constraintTop_toBottomOf="@+id/toolbar" />
     </android.support.design.widget.AppBarLayout>
 
     <include
         android:id="@+id/cabeceraevento"
         layout="@layout/content_cabeceraevento"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/appBarLayout"
-        android:layout_marginBottom="24dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/borde_inferior"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
-        android:background="@drawable/borde_inferior"/>
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
 
     <include
+        android:id="@+id/include2"
         layout="@layout/content_verevento"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/cabeceraevento"
-        android:layout_marginEnd="32dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="18dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -74,20 +62,13 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab3"
-        android:layout_width="54dp"
-        android:layout_height="54dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="40dp"
-        android:layout_marginStart="40dp"
-        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginStart="15dp"
         app:backgroundTint="#DC9233"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.421"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/appBarLayout"
-        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/icono_menu" />
 
-    </RelativeLayout>
+</android.support.constraint.ConstraintLayout>

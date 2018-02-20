@@ -20,6 +20,7 @@ import java.util.List;
 
 import me.gujun.android.taggroup.TagGroup;
 import sunnysoft.presentapp.Interfaz.CalendarioActivity;
+import sunnysoft.presentapp.Interfaz.DetalleentradaActivity;
 import sunnysoft.presentapp.Interfaz.VereventoActivity;
 import sunnysoft.presentapp.Interfaz.pojo.Entradas;
 import sunnysoft.presentapp.Interfaz.pojo.Murales;
@@ -69,6 +70,7 @@ public class EntradasAdapter extends RecyclerView.Adapter<EntradasAdapter.ViewHo
         TextView titulo;
         TextView detalle;
 
+
         public ViewHolder(View itemView) {
             super(itemView);
 
@@ -83,8 +85,9 @@ public class EntradasAdapter extends RecyclerView.Adapter<EntradasAdapter.ViewHo
 
             Log.e("Data clicked", "onClick " +  entradasList.get(getPosition()).getUrl_entrada_detail());
 
-            Intent i = new Intent(context, VereventoActivity.class);
+            Intent i = new Intent(context, DetalleentradaActivity.class);
             i.putExtra("DetailUrl",  entradasList.get(getPosition()).getUrl_entrada_detail());
+            i.putExtra("tURL",entradasList.get(getPosition()).getUrl_tabs_entradas());
             context.startActivity(i);
 
         }

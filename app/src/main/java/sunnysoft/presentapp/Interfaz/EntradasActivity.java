@@ -80,6 +80,7 @@ public class EntradasActivity extends AppCompatActivity {
     String email;
     String url;
     String token;
+    String URL_TABS;
 
     String image_user;
     String entradas_url;
@@ -143,6 +144,7 @@ public class EntradasActivity extends AppCompatActivity {
         urls = new ArrayList<>();
         //
         seteartabs(url);
+        URL_TABS = url;
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.ç
@@ -234,6 +236,12 @@ public class EntradasActivity extends AppCompatActivity {
 
                     mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
                     tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+                    Bundle b = getIntent().getExtras();
+
+                    if (b != null){
+                        tabLayout.setScrollPosition(b.getInt("posicion"),0f,true);
+                        mViewPager.setCurrentItem(b.getInt("posicion"));
+                    }
 
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
@@ -318,6 +326,7 @@ public class EntradasActivity extends AppCompatActivity {
         RecyclerView recyclerEntradas;
         EntradasAdapter adapter;
         public int contador;
+        String uTabs;
 
         List<Entradas> EntradasList;
 
@@ -325,7 +334,7 @@ public class EntradasActivity extends AppCompatActivity {
 
         }
 
-        public static PlaceholderFragment newInstance(int sectionNumber, List<String> urls_param, String email, String token) {
+        public static PlaceholderFragment newInstance(int sectionNumber, List<String> urls_param, String email, String token,String url_tabs) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
@@ -333,6 +342,7 @@ public class EntradasActivity extends AppCompatActivity {
             args.putStringArrayList("ARG_urls", (ArrayList<String>) urls_param);
             args.putString("email", email);
             args.putString("token", token);
+            args.putString("urlT",url_tabs);
             fragment.setArguments(args);
             return fragment;
         }
@@ -351,6 +361,7 @@ public class EntradasActivity extends AppCompatActivity {
             urls_fragment = extras.getStringArrayList("ARG_urls");
             final String email= extras.getString("email");
             final String token= extras.getString("token");
+            uTabs = extras.getString("urlT");
             //Log.i("On Errno 2000 "+urls_fragment, "NN");
             // Log.e("DataDescribe", "Data: "+ urls_fragment.size());
 
@@ -516,7 +527,7 @@ public class EntradasActivity extends AppCompatActivity {
 
                         // Log.i("Good", "onCreateView: "+ proceso_name);
 
-                        EntradasList_Contenido.add(new Entradas(proceso_name,dateref,tags,url_entrada_detail));
+                        EntradasList_Contenido.add(new Entradas(proceso_name,dateref,tags,url_entrada_detail,uTabs));
 
                         // Toast.makeText(VerEntradas.this, "Bien por "+entrada_1.getIndice(), Toast.LENGTH_LONG).show();
 
@@ -627,7 +638,7 @@ public class EntradasActivity extends AppCompatActivity {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
 
-            return PlaceholderFragment.newInstance(position + 1, urls, email, token);
+            return PlaceholderFragment.newInstance(position + 1, urls, email, token,URL_TABS);
 
 
         }
@@ -647,7 +658,7 @@ public class EntradasActivity extends AppCompatActivity {
         setBackgroundDrawable(drawable);
     }
 
-    @Deprecated
+
     public void setBackgroundDrawable(Drawable drawable) {
 
         //logocol.setBackgroundDrawable(drawable);
@@ -664,6 +675,7 @@ public class EntradasActivity extends AppCompatActivity {
         }
         image.setImageDrawable(drawable);
         tabLayout.addTab(t);
+
 
         //tabLayout.addTab(tabLayout.newTab().setIcon(drawable));
     }

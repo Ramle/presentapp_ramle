@@ -26,10 +26,74 @@
 >
 
                 <TextView
+                    android:id="@+id/dataresponsables"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:text="--"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/responsables" />
+
+                <TextView
+                    android:id="@+id/responsables"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:text="Responsable"
+                    android:textColor="@color/basico"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cont_adjuntos" />
+
+                <android.support.constraint.ConstraintLayout
+                    android:id="@+id/cont_adjuntos"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/fieldeventos_list">
+
+                    <me.gujun.android.taggroup.TagGroup
+                        android:id="@+id/tag_group"
+                        style="@style/TagGroup"
+                        app:atg_borderColor="@color/color_inputs_primarios"
+                        app:atg_checkedBackgroundColor="@color/color_inputs_primarios"
+                        app:atg_checkedBorderColor="@color/color_inputs_primarios"
+                        app:atg_textColor="@color/color_letra_btn_prim" />
+
+                </android.support.constraint.ConstraintLayout>
+
+                <ListView
+                    android:id="@+id/fieldeventos_list"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@+id/imagen"
+                    android:layout_below="@+id/imagen"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:divider="@null"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imagen" />
+
+                <TextView
                     android:id="@+id/txv_nombre"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
+                    android:layout_marginEnd="20dp"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="8dp"
                     android:text="--"
@@ -43,7 +107,7 @@
                     android:id="@+id/txv_fecha"
                     android:layout_width="0dp"
                     android:layout_height="25dp"
-                    android:layout_marginEnd="10dp"
+                    android:layout_marginEnd="20dp"
                     android:layout_marginStart="24dp"
                     android:text="--"
                     android:textColor="@color/colorAccent"
@@ -57,13 +121,11 @@
                     android:id="@+id/imagen"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="20dp"
                     app:cardCornerRadius="25dp"
-                    app:cardElevation="10dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:cardElevation="0dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0">
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <android.support.constraint.ConstraintLayout
                         android:layout_width="match_parent"
@@ -85,58 +147,6 @@
             </android.support.constraint.ConstraintLayout>
         </LinearLayout>
 
-        <ListView
-            android:id="@+id/fieldeventos_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/imagen"
-            android:layout_below="@+id/imagen"
-            android:layout_marginTop="15dp"
-            android:divider="@null"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imagen"/>
-
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/cont_adjuntos"
-            android:layout_width="343dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="15dp"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.581"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fieldeventos_list">
-
-            <me.gujun.android.taggroup.TagGroup
-                android:id="@+id/tag_group"
-                style="@style/TagGroup"
-                app:atg_borderColor="@color/color_inputs_primarios"
-                app:atg_checkedBackgroundColor="@color/color_inputs_primarios"
-                app:atg_checkedBorderColor="@color/color_inputs_primarios"
-                app:atg_textColor="@color/color_letra_btn_prim" />
-
-        </android.support.constraint.ConstraintLayout>
-
-        <TextView
-            android:id="@+id/responsables"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:text="responsables"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.066"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/dataresponsables"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:text="--"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/responsables" />
     </LinearLayout>
 
 </ScrollView>
