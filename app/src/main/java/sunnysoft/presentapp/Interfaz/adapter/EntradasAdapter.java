@@ -12,6 +12,7 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -55,6 +56,8 @@ public class EntradasAdapter extends RecyclerView.Adapter<EntradasAdapter.ViewHo
         holder.detalle.setText(entradasList.get(position).getFecha());
         holder.mTagGroup.setTags(entradasList.get(position).getTags());
         Log.e("", "onBindViewHolder: "+ entradasList.get(position).getNombre());
+        Toast.makeText(context, "dato "+entradasList.get(position).getImage_persona(), Toast.LENGTH_LONG).show();
+
 
     }
 

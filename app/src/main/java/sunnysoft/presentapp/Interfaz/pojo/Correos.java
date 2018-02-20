@@ -15,16 +15,25 @@ public class Correos {
     private String asunto;
     private String imagen_persona;
     private String url_detalle;
+    private String isread;
 
-    public Correos(String nombre, String fecha, String hora, String imagen_persona, String asunto, String url_detalle) {
+    public Correos(String nombre, String fecha, String hora, String imagen_persona, String asunto, String url_detalle, String isread) {
         this.nombre = nombre;
         this.fecha = fecha;
         this.Hora = hora;
         this.asunto = asunto;
         this.imagen_persona = imagen_persona;
         this.url_detalle = url_detalle;
+        this.isread = isread;
     }
 
+    public String getIsread() {
+        return isread;
+    }
+
+    public void setIsread(String isread) {
+        this.isread = isread;
+    }
 
     public String getUrl_detalle() {
         return url_detalle;

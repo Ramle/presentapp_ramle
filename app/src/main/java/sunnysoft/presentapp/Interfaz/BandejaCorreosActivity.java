@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -33,13 +35,23 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.HttpEntity;
+import cz.msebera.android.httpclient.HttpResponse;
+import cz.msebera.android.httpclient.ParseException;
+import cz.msebera.android.httpclient.client.HttpClient;
+import cz.msebera.android.httpclient.client.methods.HttpGet;
 import cz.msebera.android.httpclient.entity.StringEntity;
+import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 import sunnysoft.presentapp.Datos.DatabaseHelper;
 import sunnysoft.presentapp.Interfaz.adapter.CorreosAdapter;
 import sunnysoft.presentapp.Interfaz.pojo.Correos;
@@ -356,36 +368,92 @@ public class BandejaCorreosActivity extends AppCompatActivity {
             final String email= extras.getString("email");
             final String token= extras.getString("token");
 
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-            recyclerCorreos.setLayoutManager(linearLayoutManager);
-
             String url = urls.get(contador-1);
             url += "?token="+token;
             url += "&email="+ email;
             Log.e("Data: ", "Data contador " + urls.size());
 
-            Contenido(contador,url, email, token);
+
+
+            try{
+
+                // GetEntradasData getEntradasData = new GetEntradasData(url);
+                ExecuteTask executeTask = new ExecuteTask();
+                executeTask.execute(url);
+
+                JSONObject JsonDataEntrada = new JSONObject(executeTask.get());
+                //Log.i("Goood", "onCreateView : "+JsonDataEntrada);
+                // JSONObject dataEntradas = getEntradasData.getResponse();
+
+                muralesList = Contenido(contador,JsonDataEntrada);
+
+                //Log.i("", "onCreateView: "+EntradasList);
+                // Inicializar el adaptador con la fuente de datos.
+                adapter = new CorreosAdapter(getContext(), muralesList);
+                recyclerCorreos.setAdapter(adapter);
+
+            }catch (Exception e){
+
+                Log.e("Exception", "onCreateView: "+ e);
+
+            }
+            Log.i("URL", "onCreateView: "+url);
+
+            final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
+            recyclerCorreos.setLayoutManager(linearLayoutManager);
+
 
             EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+
                 @Override
                 public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-
-                    final int curSize = adapter.getItemCount();
 
                     String url = urls.get(contador-1);
                     url += "&token="+token;
                     url += "&email="+ email;
-                    //   Log.e("Data: ", "Data contador " + urls.size());
+                    // Log.e("Data: ", "Data contador " + urls.size());
 
-                    Contenido(contador,url, email, token);
 
-                    view.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            adapter.notifyItemRangeInserted(curSize, muralesList.size() - 1);
+                    if (!url.equals("null"+"&token="+token+"&email="+ email)){
+
+                        ExecuteTask executeTask = new ExecuteTask();
+                        executeTask.execute(url);
+
+                        JSONObject JsonDataEntrada = null;
+                        try {
+                            JsonDataEntrada = new JSONObject(executeTask.get());
+                            //Log.i("", "onLoadMore Data good: "+JsonDataEntrada );
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.e("", "onLoadMore JSONException: "+e );
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                            Log.e("", "onLoadMore InterruptedException: "+e );
+                        } catch (ExecutionException e) {
+                            Log.e("", "onLoadMore ExecutionException: "+e );
+                            e.printStackTrace();
                         }
-                    });
+                        //Log.i("Goood", "onCreateView : "+JsonDataEntrada);
+                        // JSONObject dataEntradas = getEntradasData.getResponse();
+
+                        final int curSize = adapter.getItemCount();
+                        List<Correos> muralesMoreList = Contenido(contador,JsonDataEntrada);
+                        // adapter.notifyItemInserted(EntradasList.size() - 1);
+                        muralesList.addAll(muralesMoreList);
+                        Handler handler = new Handler();
+
+                        final Runnable r = new Runnable() {
+                            public void run() {
+                                adapter.notifyItemRangeInserted(curSize,muralesList.size() -1);
+                            }
+                        };
+
+                        handler.post(r);
+
+                    }
+
                 }
             };
 
@@ -394,145 +462,131 @@ public class BandejaCorreosActivity extends AppCompatActivity {
             return rootView;
         }
 
-        public void Contenido(final int contador, String urls_param, String email, String token){
 
-            AsyncHttpClient client = new AsyncHttpClient();
-            // llamado del servicio
+        public List<Correos> Contenido(final int contador, JSONObject responseCorreos){
 
-            RequestHandle post  = client.get(urls_param, new AsyncHttpResponseHandler() {
+            List<Correos> CorreoList_Contenido = new ArrayList<>();
 
-                final ProgressDialog[] progressDialog = new ProgressDialog[1];
+            String id = null;
+            String user_name = null;
+            String curso_grupo = null;
+            String created_at = null;
+            String proceso_name = null;
+            String detalles = null;
+            String img_persona = null;
+            String name = null;
+            String url_entrada_detail = null;
 
-                @Override
-                public void onStart(){
-
-                    super.onStart();
-
-                }
-
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-
-                    // Declaracion de variables
-                    String responseStr = null;
-                    Boolean isfiles = false;
-                    Boolean isphotos = false;
-
-                    try {
-
-                        //respuesta del servicio
-                        responseStr = new String(responseBody, "UTF-8");
-                        // manejo del primer nivel de objetos
-                        JSONObject comunicados = new JSONObject(responseStr);
-                        // Se obtiene valores del objeto
-                        String valorLlave = comunicados.getString("emails");
-
-                        JSONObject segundoobj = new JSONObject(valorLlave);
-
-                        String urlnextpage = segundoobj.getString("next_page_url");
-
-                        String valordata = segundoobj.getString("data");
-
-                        JSONArray items = new JSONArray(valordata);
+            try {
 
 
-                        for (int i = 0; i < items.length(); i++) {
+                String valorLlave = responseCorreos.getString("emails");
 
-                            String item = items.getString(i);
+                JSONObject segundoobj = new JSONObject(valorLlave);
 
-                            JSONObject valores = new JSONObject(item);
+                String urlnextpage = segundoobj.getString("next_page_url");
 
-                            String date = valores.getString("date");
-                            String time = valores.getString("time");
-                            String subject = valores.getString("subject");
-                            String url_detail = valores.getString("url_email_detail");
-                            String participants = valores.getString("participants");
-                            String user_image = valores.getString("user_image");
-                            String isread = valores.getString("is_read");
+                String valordata = segundoobj.getString("data");
+
+                JSONArray items = new JSONArray(valordata);
 
 
+                for (int i = 0; i < items.length(); i++) {
 
-                            muralesList.add(new Correos(participants, date, time, user_image, subject,url_detail));
+                    String item = items.getString(i);
 
+                    JSONObject valores = new JSONObject(item);
 
+                    String date = valores.getString("date");
+                    String time = valores.getString("time");
+                    String subject = valores.getString("subject");
+                    String url_detail = valores.getString("url_email_detail");
+                    String participants = valores.getString("participants");
+                    String user_image = valores.getString("user_image");
+                    String isread = valores.getString("is_read");
 
-                            //muralesList.add(new Correos(user_namedata, created_atdata, hora, asunto,user_photo, url_detalle));
-                            adapter = new CorreosAdapter(getContext(), muralesList);
-                            recyclerCorreos.setAdapter(adapter);
-
-                        }
-
-                        urls.set(contador-1, urlnextpage);
-
-                        // Log.e("Data: ", "Data Url " + urls.get(contador - 1));
-
-                    }  catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    adapter = new CorreosAdapter(getContext(),muralesList);
-                    recyclerCorreos.setAdapter(adapter);
-
+                    CorreoList_Contenido.add(new Correos(participants, date, time, user_image, subject,url_detail, isread));
 
                 }
 
+                urls.set(contador-1, urlnextpage);
 
-                @Override
-                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                // Log.e("Data: ", "Data Url " + urls.get(contador - 1));
 
-                    if (statusCode == 421) {
-                        //declaracion de variables
-                        String responseStr = null;
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), "Fallo por "+e, Toast.LENGTH_LONG).show();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
-                        try {
-                            // respuesta del servicio
-                            responseStr = new String(responseBody, "UTF-8");
-                            // manejo de primer nivel de objetos del json
-                            JSONObject errorx = new JSONObject(responseStr);
-                            // se obtiene los valores del json
-                            String valorLlave = errorx.getString("errors");
-                            // manejo del segundo nivel de valores de json
-                            JSONObject errorxa = new JSONObject(valorLlave);
-                            // se obtiene los valores que contiene el objeto
-                            String msgerror = errorxa.getString("login");
-                            // se maneja el array json
-                            JSONArray jsonarray = new JSONArray(msgerror);
 
-                            //se obtiene cada uno de los mensajes que se encuentran dentro del json
-                            for(int i=0; i < jsonarray.length(); i++) {
-                                String mensaje = jsonarray.getString(i);
-                                Toast.makeText(getContext(), mensaje, Toast.LENGTH_LONG).show();
-                            }
+            //Log.e("Data: ", "Data Url " + urls.get(contador - 1));
+
+            return CorreoList_Contenido;
+        }
 
 
 
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    // When Http response code is '500'
-                    else if (statusCode == 500) {
+        class ExecuteTask extends AsyncTask<String, Integer, String>
+        {
 
-                        Toast.makeText(getContext(), "Erros Statuscode = 500", Toast.LENGTH_LONG).show();
-                    }
-                    // When Http response code other than 404, 500
-                    else {
-                        Log.i("On Failure", "NN");
-                        Toast.makeText(getContext(), "On Failure ", Toast.LENGTH_LONG).show();
+            @Override
+            protected String doInBackground(String... params) {
 
-                        //Institución no valida.
-                    }
+                String res=PostData(params);
+                //  Log.i("", "doInBackground: "+res);
 
+                return res;
+            }
 
-                }
-
-            });
+            @Override
+            protected void onPostExecute(String result) {
+                super.onPostExecute(result);
+            }
 
         }
+
+        public String PostData(String[] valuse) {
+            String s="";
+            try
+            {
+                HttpClient httpClient=new DefaultHttpClient();
+                HttpGet httpGet=new HttpGet(valuse[0]);
+
+                HttpResponse httpResponse=  httpClient.execute(httpGet);
+
+                HttpEntity httpEntity=httpResponse.getEntity();
+
+                s= readResponse(httpResponse);
+
+            }
+            catch(Exception exception)  {}
+            return s;
+
+        }
+
+        public String readResponse(HttpResponse res) {
+            InputStream is=null;
+            String return_text="";
+            try {
+                is=res.getEntity().getContent();
+                BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(is));
+                String line="";
+                StringBuffer sb=new StringBuffer();
+                while ((line=bufferedReader.readLine())!=null)
+                {
+                    sb.append(line);
+                }
+                return_text=sb.toString();
+            } catch (Exception e)
+            {
+
+            }
+            return return_text;
+
+        }
+
     }
 
 
