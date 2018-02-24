@@ -56,7 +56,7 @@ public class EntradasAdapter extends RecyclerView.Adapter<EntradasAdapter.ViewHo
         holder.detalle.setText(entradasList.get(position).getFecha());
         holder.mTagGroup.setTags(entradasList.get(position).getTags());
         Log.e("", "onBindViewHolder: "+ entradasList.get(position).getNombre());
-        Toast.makeText(context, "dato "+entradasList.get(position).getImage_persona(), Toast.LENGTH_LONG).show();
+        //Toast.makeText(context, "dato "+entradasList.get(position).getImage_persona(), Toast.LENGTH_LONG).show();
 
 
     }

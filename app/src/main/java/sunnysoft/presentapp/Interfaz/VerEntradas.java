@@ -300,6 +300,7 @@ public class VerEntradas extends AppCompatActivity {
                 }catch (Exception e){
                     Toast.makeText(VerEntradas.this, "Fallo por "+e, Toast.LENGTH_LONG).show();
                     Log.i("WSUsuarios","Fallo por "+e);
+
                 }
             }
 

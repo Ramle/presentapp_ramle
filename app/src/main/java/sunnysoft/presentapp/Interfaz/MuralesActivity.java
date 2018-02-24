@@ -289,6 +289,7 @@ public class MuralesActivity extends AppCompatActivity {
 
                         midb.logouth();
                         midb.oncreateusers();
+                        progressDialog[0].dismiss();
                         Intent i = new Intent(MuralesActivity.this, InicioActivity.class);
                         startActivity(i);
 

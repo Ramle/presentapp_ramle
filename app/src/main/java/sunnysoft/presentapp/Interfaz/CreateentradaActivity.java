@@ -413,6 +413,7 @@ public class CreateentradaActivity extends AppCompatActivity implements MultiSel
                         }
                         midb.logouth();
                         midb.oncreateusers();
+                        progressDialog[0].dismiss();
                         Intent i = new Intent(CreateentradaActivity.this, InicioActivity.class);
                         startActivity(i);
 

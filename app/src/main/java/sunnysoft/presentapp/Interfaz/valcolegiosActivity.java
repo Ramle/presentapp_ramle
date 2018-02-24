@@ -189,6 +189,8 @@ public class valcolegiosActivity extends AppCompatActivity {
                                     Toast.makeText(valcolegiosActivity.this, "El código de la institución es requerido", Toast.LENGTH_LONG).show();
                                 }
 
+                                progressDialog[0].dismiss();
+
                                 Intent i = new Intent(valcolegiosActivity.this, valcolegiosActivity.class);
                                  startActivity(i);
 

@@ -144,8 +144,6 @@ public class DetalleentradaActivity extends AppCompatActivity {
 
         });
 
-        // Toast.makeText(DetalleentradaActivity.this, "Fallo por "+url, Toast.LENGTH_LONG).show();
-
         // Invoke RESTful Web Service with Http parameters
         RequestHandle post = client.get(DetalleentradaActivity.this, url, entity, "application/json", new AsyncHttpResponseHandler() {
 
