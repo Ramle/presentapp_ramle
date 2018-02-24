@@ -186,7 +186,7 @@ public class valcolegiosActivity extends AppCompatActivity {
                                 for(int i=0; i < jsonarray.length(); i++) {
                                     String mensaje = jsonarray.getString(i);
 
-                                    Toast.makeText(valcolegiosActivity.this, mensaje, Toast.LENGTH_LONG).show();
+                                    Toast.makeText(valcolegiosActivity.this, "El código de la institución es requerido", Toast.LENGTH_LONG).show();
                                 }
 
                                 Intent i = new Intent(valcolegiosActivity.this, valcolegiosActivity.class);

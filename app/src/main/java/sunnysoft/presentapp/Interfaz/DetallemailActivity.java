@@ -141,14 +141,14 @@ public class DetallemailActivity extends AppCompatActivity {
                         List<String> url_files = new ArrayList<>();
                         List<String> urls_images = new ArrayList<>();
 
-                        for (int i=0;i<items.length();i++){
-                            String item = items.getString(i);
+                        for (int i=0;i<items2.length();i++){
+                            String item = items2.getString(i);
                             JSONObject valoresFiles = new JSONObject(item);
                             name_files.add(valoresFiles.getString("original_name"));
                             url_files.add(valoresFiles.getString("url"));
                         }
 
-                        for (int j=0;j<items2.length();j++){
+                        for (int j=0;j<items.length();j++){
                             String item = items.getString(j);
                             JSONObject valoresImages = new JSONObject(item);
                             urls_images.add(valoresImages.getString("url"));

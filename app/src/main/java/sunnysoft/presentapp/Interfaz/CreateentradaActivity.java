@@ -511,10 +511,14 @@ public class CreateentradaActivity extends AppCompatActivity implements MultiSel
                         String content = campo.getText().toString();
                         fields_content[t]=content;
                     }
-                    Parsearjson();
-                    String proceso = "Crear Entrada";
-                    new MyAsyncTask(CreateentradaActivity.this, httppost, proceso, urlv , nombre)
-                            .execute();
+                    if (Parsearjson()){
+                        String proceso = "Crear Entrada";
+                        new MyAsyncTask(CreateentradaActivity.this, httppost, proceso, urlv , nombre)
+                                .execute();
+                    }else{
+                        Toast.makeText(getApplicationContext(), "Los campos no deben estar vacios", Toast.LENGTH_SHORT).show();
+                    }
+
 
                 }
             });
@@ -605,14 +609,13 @@ public class CreateentradaActivity extends AppCompatActivity implements MultiSel
                         String content = campo.getText().toString();
                         fields_content[t]=content;
                     }
-                    Parsearjson();
-                    String proceso = "Crear Entrada";
-                    new MyAsyncTask(CreateentradaActivity.this, httppost, proceso, urlv, nombre)
-                            .execute();
-
-
-
-
+                    if (Parsearjson()){
+                        String proceso = "Crear Entrada";
+                        new MyAsyncTask(CreateentradaActivity.this, httppost, proceso, urlv, nombre)
+                                .execute();
+                    }else{
+                        Toast.makeText(getApplicationContext(), "Los campos no deben estar vacios", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 
@@ -683,29 +686,39 @@ public class CreateentradaActivity extends AppCompatActivity implements MultiSel
 
         httppost = new HttpPost(post_url);
         httppost.addHeader("Content-Type", "application/json");
-
+        Log.i("DATOS",""+multiSelectionSpinnercampos.getSelectedIndices().size());
+        Log.i("DATOS",""+multiSelectionSpinnertags.getSelectedIndices().size());
+        Log.i("DATOS",""+multiSelectionSpinnerusers.getSelectedIndices().size());
         try {
-            //forma el JSON y tipo de contenido
-            if (users_ids == null){
+            if (multiSelectionSpinnercampos.getSelectedIndices().size() == 0) {
+                Log.i("VALIDACION P1","FALSE");
                 return false;
-            }else{
-                JSONArray mJSONArrayusersid = new JSONArray(Arrays.asList(users_ids));
-                JSONArray mJSONArraytagsid = new JSONArray(Arrays.asList(tags_ids));
-                JSONArray mJSONArraysfieldsid = new JSONArray(Arrays.asList(fields_ids));
-                JSONArray mJSONArraysfieldscontent = new JSONArray(Arrays.asList(fields_content));
+            }else {
+                if (users_ids == null) {
+                    Log.i("VALIDACION P2","FALSE");
+                    return false;
+                } else {
+                    JSONArray mJSONArrayusersid = new JSONArray(Arrays.asList(users_ids));
+                    JSONArray mJSONArraytagsid = new JSONArray(Arrays.asList(tags_ids));
+                    JSONArray mJSONArraysfieldsid = new JSONArray(Arrays.asList(fields_ids));
+                    JSONArray mJSONArraysfieldscontent = new JSONArray(Arrays.asList(fields_content));
 
-                JSONObject j = new JSONObject();
-                //j.put("key","users_ids");
-                j.put("users_ids", mJSONArrayusersid);
-                j.put("tags_ids", mJSONArraytagsid);
-                j.put("fields_ids", mJSONArraysfieldsid);
-                j.put("fields_content", mJSONArraysfieldscontent);
+                    JSONObject j = new JSONObject();
+                    //j.put("key","users_ids");
+                    j.put("users_ids", mJSONArrayusersid);
+                    j.put("tags_ids", mJSONArraytagsid);
+                    j.put("fields_ids", mJSONArraysfieldsid);
+                    j.put("fields_content", mJSONArraysfieldscontent);
 
-                StringEntity stringEntity = new StringEntity(j.toString());
-                stringEntity.setContentType((Header) new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-                httppost.setEntity(stringEntity);
-                return true;
+                    StringEntity stringEntity = new StringEntity(j.toString());
+                    stringEntity.setContentType((Header) new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                    httppost.setEntity(stringEntity);
+                    Log.i("VALIDACION P3","TRUE");
+                    return true;
+                }
             }
+
+            //forma el JSON y tipo de contenido
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -726,24 +739,24 @@ public class CreateentradaActivity extends AppCompatActivity implements MultiSel
             @Override
             public void onClick(View view) {
 
-                fields_ids = new Integer[camppin.size()];
-                fields_content = new String[camppin.size()];
-                fields_ids = camppin.toArray(fields_ids);
-
-                for (int t = 0; t<fields_ids.length; t++){
-                    EditText campo = (EditText)findViewById(fields_ids[t]);
-                    String content = campo.getText().toString();
-                    fields_content[t]=content;
-                }
                 if (Parsearjson()){
+                    Log.i("VALIDACION p4","TRUE");
+                    fields_ids = new Integer[camppin.size()];
+                    fields_content = new String[camppin.size()];
+                    fields_ids = camppin.toArray(fields_ids);
+
+                    for (int t = 0; t<fields_ids.length; t++){
+                        EditText campo = (EditText)findViewById(fields_ids[t]);
+                        String content = campo.getText().toString();
+                        fields_content[t]=content;
+                    }
                     String proceso = "Crear Entrada";
                     new MyAsyncTask(CreateentradaActivity.this, httppost, proceso, urlv, nombre)
                             .execute();
                 }else{
-                    Toast.makeText(getApplicationContext(), "Ingrese un Usuario", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Los campos no deben estar vacios", Toast.LENGTH_SHORT).show();
+                    Log.i("VALIDACION p4","FALSE");
                 }
-
-
             }
         });
 

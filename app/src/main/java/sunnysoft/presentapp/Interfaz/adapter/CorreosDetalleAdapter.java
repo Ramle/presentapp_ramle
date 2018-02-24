@@ -2,6 +2,7 @@ package sunnysoft.presentapp.Interfaz.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -60,24 +61,28 @@ public class CorreosDetalleAdapter extends RecyclerView.Adapter<CorreosDetalleAd
         name_files = correoDetalles.get(position).getName_files();
         url_files = correoDetalles.get(position).getUrl_files();
         urls_images = correoDetalles.get(position).getUrls_images();
-        if (!name_files.isEmpty() && !url_files.isEmpty()){
+        LayoutInflater inflater = LayoutInflater.from(context);
+        //if (!name_files.isEmpty() && !url_files.isEmpty()){
             for (int i=0;i<name_files.size();i++){
-                LayoutInflater inflater = LayoutInflater.from(context);
-                View v = inflater.inflate(R.layout.boton_adjuntos,holder.contenedor_adjuntos,false);
+                View v = inflater.inflate(R.layout.boton_adjuntos,holder.contenedor_adjuntos,true);
                 Button b = (Button)v.findViewById(R.id.boton_adjunto);
+                b.setId(i);
                 b.setText(name_files.get(i));
                 b.setOnClickListener(new IntemClickListener(url_files.get(i)));
             }
-        }
+        //}
 
-        if (!urls_images.isEmpty()){
+        //if (!urls_images.isEmpty()){
             for (int i=0;i<urls_images.size();i++){
-                LayoutInflater inflater = LayoutInflater.from(context);
-                View v = inflater.inflate(R.layout.imagen_correos,holder.contenedor_imagenes,false);
+                Log.i("ADJUNTOS","CRea"+urls_images.size());
+                //LayoutInflater inflater = LayoutInflater.from(context);
+                View v = inflater.inflate(R.layout.imagen_correos,holder.contenedor_imagenes,true);
                 ImageView img = (ImageView)v.findViewById(R.id.imagen_correos);
+                img.setId(i);
                 Picasso.with(context).load(urls_images.get(i)).error(R.drawable.logo).into(img);
+                img.setOnClickListener(new IntemClickListener(urls_images.get(i)));
             }
-        }
+        //}
 
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,8 +116,7 @@ public class CorreosDetalleAdapter extends RecyclerView.Adapter<CorreosDetalleAd
 
         @Override
         public void onClick(View view) {
-            Intent i = new Intent(context, DetalleMuralesActivity.class);
-            i.putExtra("servicio",url);
+            Intent i = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
             context.startActivity(i);
         }
     }
