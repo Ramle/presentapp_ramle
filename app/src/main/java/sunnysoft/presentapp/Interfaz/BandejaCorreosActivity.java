@@ -71,6 +71,7 @@ public class BandejaCorreosActivity extends AppCompatActivity {
     String nombreMenuCorreo;
     int notification_count;
     String mural_url;
+    String URL_TABS;
 
 
     public static List<String> urls;
@@ -140,6 +141,7 @@ public class BandejaCorreosActivity extends AppCompatActivity {
         // funcion que crea los tabs
         //
         seteartabs(url);
+        URL_TABS = url;
         Log.i("URL",url);
 
         //Tooblar
@@ -331,6 +333,7 @@ public class BandejaCorreosActivity extends AppCompatActivity {
         CorreosAdapter adapter;
         RecyclerView recyclerCorreos;
         public int contador;
+        String uTabs;
 
 
         public PlaceholderFragment() {
@@ -342,7 +345,7 @@ public class BandejaCorreosActivity extends AppCompatActivity {
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        public static BandejaCorreosActivity.PlaceholderFragment newInstance(int sectionNumber, List<String> urls, String email, String token) {
+        public static BandejaCorreosActivity.PlaceholderFragment newInstance(int sectionNumber, List<String> urls, String email, String token, String url_tabs) {
             BandejaCorreosActivity.PlaceholderFragment fragment = new BandejaCorreosActivity.PlaceholderFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
@@ -350,6 +353,7 @@ public class BandejaCorreosActivity extends AppCompatActivity {
             args.putStringArrayList("ARG_urls", (ArrayList<String>) urls);
             args.putString("email", email);
             args.putString("token", token);
+            args.putString("urlT",url_tabs);
             fragment.setArguments(args);
             return fragment;
         }
@@ -367,6 +371,7 @@ public class BandejaCorreosActivity extends AppCompatActivity {
             urls = extras.getStringArrayList("ARG_urls");
             final String email= extras.getString("email");
             final String token= extras.getString("token");
+            uTabs = extras.getString("urlT");
 
             String url = urls.get(contador-1);
             url += "?token="+token;
@@ -505,7 +510,8 @@ public class BandejaCorreosActivity extends AppCompatActivity {
                     String user_image = valores.getString("user_image");
                     String isread = valores.getString("is_read");
 
-                    CorreoList_Contenido.add(new Correos(participants, date, time, user_image, subject,url_detail, isread));
+                    //CorreoList_Contenido.add(new Correos(participants, date, time, user_image, subject,url_detail, isread, uTabs));
+                    CorreoList_Contenido.add(new Correos(participants,date,time,subject,user_image,url_detail,isread,uTabs));
 
                 }
 
@@ -603,7 +609,7 @@ public class BandejaCorreosActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return BandejaCorreosActivity.PlaceholderFragment.newInstance(position + 1, urls , email, token);
+            return BandejaCorreosActivity.PlaceholderFragment.newInstance(position + 1, urls , email, token, URL_TABS);
         }
 
         @Override
