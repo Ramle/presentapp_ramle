@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,9 +55,16 @@ public class CorreosAdapter  extends RecyclerView.Adapter<sunnysoft.presentapp.I
     @Override
     public void onBindViewHolder(sunnysoft.presentapp.Interfaz.adapter.CorreosAdapter.ViewHolder holder, int position) {
         holder.txvNombre.setText(correosList.get(position).getNombre());
+
         holder.txvFecha.setText(correosList.get(position).getFecha());
         holder.txvasunto.setText(correosList.get(position).getAsunto());
         holder.txvhora.setText(correosList.get(position).getHora());
+
+        Log.i("data",correosList.get(position).getNombre());
+        Log.i("data",correosList.get(position).getAsunto());
+        Log.i("data",correosList.get(position).getHora());
+        Log.i("data",correosList.get(position).getImagen_persona());
+
 
 
         Picasso.with(context)
@@ -70,7 +78,7 @@ public class CorreosAdapter  extends RecyclerView.Adapter<sunnysoft.presentapp.I
 
         }
 
-        holder.cardCorreo.setOnClickListener(new CorreosAdapter.IntemClickListener(correosList.get(position).getUrl_detalle()));
+        holder.cardCorreo.setOnClickListener(new CorreosAdapter.IntemClickListener(correosList.get(position).getUrl_detalle(),correosList.get(position).getUrl_tabs_correos()));
 
     }
 
@@ -85,15 +93,18 @@ public class CorreosAdapter  extends RecyclerView.Adapter<sunnysoft.presentapp.I
 
     class IntemClickListener implements View.OnClickListener{
         String url;
+        String url_tabs;
 
-        public IntemClickListener(String url) {
+        public IntemClickListener(String url,String url_tabs) {
             this.url = url;
+            this.url_tabs = url_tabs;
         }
 
         @Override
         public void onClick(View view) {
             Intent i = new Intent(context, DetallemailActivity.class);
             i.putExtra("servicio",url);
+            i.putExtra("url_tabs",url_tabs);
             context.startActivity(i);
         }
     }
