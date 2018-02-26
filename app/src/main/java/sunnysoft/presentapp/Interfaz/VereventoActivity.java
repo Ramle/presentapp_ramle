@@ -1,5 +1,6 @@
 package sunnysoft.presentapp.Interfaz;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -69,6 +71,7 @@ public class VereventoActivity extends AppCompatActivity {
 
     String token;
     String subdomain;
+    private Toolbar secundaria;
     private HashMap<String, FieldsEvento> fieldsEventos = new HashMap<>();
 
     @Override
@@ -254,14 +257,19 @@ public class VereventoActivity extends AppCompatActivity {
 
         });
 
-
         //Tooblar
-        Toolbar toolbarfecha = (Toolbar) findViewById(R.id.toolbarfecha);
-        TextView toolbar_titlefecha = (TextView)toolbarfecha.findViewById(R.id.toolbar_titlefecha);
-        setSupportActionBar(toolbarfecha);
-        toolbar_titlefecha.setText("Ver evento");
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        secundaria = (Toolbar) findViewById(R.id.toolbar_secundaria);
+        secundaria.setNavigationIcon(R.drawable.arrow_back);
+        TextView titulo_secundaria = (TextView) secundaria.findViewById(R.id.toolbar_secundaria_title);
+        titulo_secundaria.setText("Ver evento");
+        secundaria.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(VereventoActivity.this, CalendarioActivity.class);
+                startActivity(i);
+            }
+        });
 
     }
 

@@ -26,10 +26,12 @@
             android:layout_height="wrap_content" />
 
         <include
-            android:id="@+id/toolbarfecha"
-            layout="@layout/toolbarfecha"
+            android:id="@+id/toolbar_secundaria"
+            layout="@layout/toolbar_secundaria"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar" />
     </android.support.design.widget.AppBarLayout>
 

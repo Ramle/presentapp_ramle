@@ -236,6 +236,7 @@ public class VerEntradas extends AppCompatActivity {
         String detalles = null;
         String img_persona = null;
         String name = null;
+        String urldetalle = null;
 
         try {
 
@@ -274,6 +275,7 @@ public class VerEntradas extends AppCompatActivity {
                 img_persona  = jsonobject_data.getString("user_image");
                 detalles = curso_grupo + " " + created_at;
                 jsonarray_tags = new JSONArray(jsonobject_data.getString("tags"));
+                urldetalle  = jsonobject_data.getString("url_entrada_detail");
 
                 String [] tags = new String [jsonarray_tags.length()];
                 for(int j=0; j < jsonarray_tags.length(); j++) {
@@ -291,7 +293,7 @@ public class VerEntradas extends AppCompatActivity {
                     //entrada_1 = new Entradas(user_name, detalles, i + 1);
 
                   //  Log.e("Data: ", "Data Url " + detalles);
-                    ProcesoEntradasList_Contenido.add(new Entradas(user_name, detalles, i + 1,img_persona,tags));
+                    ProcesoEntradasList_Contenido.add(new Entradas(user_name, detalles, i + 1,img_persona,tags, urldetalle));
                     //saveEntrada(new Entradas(user_name, detalles, i + 1,img_persona,tags));
 
                     // Toast.makeText(VerEntradas.this, "Bien por "+entrada_1.getIndice(), Toast.LENGTH_LONG).show();
