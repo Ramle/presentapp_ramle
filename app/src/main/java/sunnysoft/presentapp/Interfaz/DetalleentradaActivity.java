@@ -91,18 +91,11 @@ public class DetalleentradaActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         Bundle datos = getIntent().getExtras();
-<<<<<<< HEAD
-        url = datos.getString("DetailUrl");
-=======
         if (datos != null){
             url = datos.getString("DetailUrl");
             urlT = datos.getString("tURL");
         }
-
->>>>>>> b70a0d7eb75ec94230fd3e6d7a982d07a4c5b4d5
         midb = new DatabaseHelper(this);
-
-
 
         Cursor Resultados = midb.Session();
 
