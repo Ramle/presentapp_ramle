@@ -238,6 +238,8 @@ public class VereventoActivity extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] responseBody, Throwable error) {
 
+
+
                 if (statusCode == 404) {
                     Log.i("On Failure", "404");
                     Toast.makeText(VereventoActivity.this, "Fallo por 404 ", Toast.LENGTH_LONG).show();

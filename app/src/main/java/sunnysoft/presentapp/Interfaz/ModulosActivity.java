@@ -202,6 +202,7 @@ public class ModulosActivity extends AppCompatActivity {
                         }
                         midb.logouth();
                         midb.oncreateusers();
+
                         Intent i = new Intent(ModulosActivity.this, InicioActivity.class);
                         startActivity(i);
 

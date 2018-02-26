@@ -296,6 +296,8 @@ public class MenuActivity extends AppCompatActivity {
 
                         midb.logouth();
                         midb.oncreateusers();
+
+                        progressDialog[0].dismiss();
                         Intent i = new Intent(MenuActivity.this, InicioActivity.class);
                         startActivity(i);
 

@@ -14,7 +14,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
         app:cardCornerRadius="5dp"
-        app:cardElevation="5dp"
+        app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,7 +22,9 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@drawable/borde_cards"
+            android:paddingBottom="5dp">
 
             <TextView
                 android:id="@+id/txv_nombre"
@@ -98,7 +100,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/imagen"
-                    tools:ignore="NotSibling" />
+                    tools:ignore="NotSibling,WebViewLayout" />
 
                 <Button
                     android:id="@+id/btn_responder"

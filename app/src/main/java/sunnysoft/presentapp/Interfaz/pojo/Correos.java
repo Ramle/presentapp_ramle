@@ -16,8 +16,9 @@ public class Correos {
     private String imagen_persona;
     private String url_detalle;
     private String isread;
+    private String url_tabs_correos;
 
-    public Correos(String nombre, String fecha, String hora, String imagen_persona, String asunto, String url_detalle, String isread) {
+    public Correos(String nombre, String fecha, String hora, String asunto, String imagen_persona, String url_detalle, String isread, String url_tabs_correos) {
         this.nombre = nombre;
         this.fecha = fecha;
         this.Hora = hora;
@@ -25,6 +26,15 @@ public class Correos {
         this.imagen_persona = imagen_persona;
         this.url_detalle = url_detalle;
         this.isread = isread;
+        this.url_tabs_correos = url_tabs_correos;
+    }
+
+    public String getUrl_tabs_correos() {
+        return url_tabs_correos;
+    }
+
+    public void setUrl_tabs_correos(String url_tabs_correos) {
+        this.url_tabs_correos = url_tabs_correos;
     }
 
     public String getIsread() {

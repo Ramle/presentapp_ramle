@@ -1,11 +1,14 @@
 package sunnysoft.presentapp.Interfaz;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -41,6 +44,7 @@ public class DetallemailActivity extends AppCompatActivity {
 
     private Toolbar secundaria;
     private String URL;
+    private String URL_TABS;
     private String urlservice;
 
     private String subdomain;
@@ -53,26 +57,34 @@ public class DetallemailActivity extends AppCompatActivity {
     private CorreosDetalleAdapter adapter;
     private List<CorreoDetalle> correoDetalles = new ArrayList<>();
 
+    private TabLayout tabLayout;
+    String nombreMenuCorreo;
+    List<String> nomes;
+
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(DetallemailActivity.this, "El botón retroceder se ha deshabilitado", Toast.LENGTH_LONG).show();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detallemail);
 
-        secundaria = (Toolbar) findViewById(R.id.toolbar);
-        secundaria.setNavigationIcon(R.drawable.arrow_back);
-        TextView titulo_secundaria = (TextView) secundaria.findViewById(R.id.toolbar_secundaria_title);
-        titulo_secundaria.setText("Detalle Correo");
-        secundaria.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
+        //Tooblar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        TextView toolbar_title = (TextView)toolbar.findViewById(R.id.toolbar_title);
+        setSupportActionBar(toolbar);
+        toolbar_title.setText(getResources().getText(R.string.txt_detalle_correo));
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null){
             URL = extras.getString("servicio");
+            URL_TABS = extras.getString("url_tabs");
         }
+
+        nomes = new ArrayList<>();
 
         midb = new DatabaseHelper(this);
         context = this;
@@ -95,8 +107,8 @@ public class DetallemailActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent i = new Intent(DetallemailActivity.this, BandejaCorreosActivity.class);
+                startActivity(i);
             }
         });
 
@@ -221,6 +233,144 @@ public class DetallemailActivity extends AppCompatActivity {
                 }
 
             }
+        });
+
+        seteartabs(URL_TABS);
+    }
+
+    public void seteartabs(final String url){
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        JSONObject jsonParams = new JSONObject();
+        StringEntity entity = null;
+
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+
+        // llamado del servicio
+        RequestHandle post  = client.get(url, new AsyncHttpResponseHandler() {
+
+
+
+            @Override
+            public void onStart(){
+
+                super.onStart();
+
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+                // Declaracion de variables
+                String responseStr = null;
+
+                try {
+
+                    //respuesta del servicio
+                    responseStr = new String(responseBody, "UTF-8");
+                    // manejo del primer nivel de objetos
+                    JSONObject user = new JSONObject(responseStr);
+                    // Se obtiene valores del objeto
+                    String valorLlave = user.getString("menu");
+
+                    JSONArray items = new JSONArray(valorLlave);
+
+                    for(int i=0; i < items.length(); i++) {
+                        String item = items.getString(i);
+
+                        JSONObject valores = new JSONObject(item);
+
+                        nombreMenuCorreo = valores.getString("name");
+                        nomes.add(nombreMenuCorreo);
+                    }
+
+                    for (int a = 0; a< nomes.size(); a++){
+                        /////////////////////creacion de tabs dinamicamente//////////////////////
+                        tabLayout.addTab(tabLayout.newTab().setText(nomes.get(a)));
+                    }
+
+                    tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                        @Override
+                        public void onTabSelected(TabLayout.Tab tab) {
+
+                        }
+
+                        @Override
+                        public void onTabUnselected(TabLayout.Tab tab) {
+                            Intent i = new Intent(getApplicationContext(),BandejaCorreosActivity.class);
+                            i.putExtra("posicion",tab.getPosition());
+                            startActivity(i);
+                        }
+
+                        @Override
+                        public void onTabReselected(TabLayout.Tab tab) {
+
+                        }
+                    });
+
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+                if (statusCode == 421) {
+                    //declaracion de variables
+                    String responseStr = null;
+
+                    try {
+                        // respuesta del servicio
+                        responseStr = new String(responseBody, "UTF-8");
+                        // manejo de primer nivel de objetos del json
+                        JSONObject errorx = new JSONObject(responseStr);
+                        // se obtiene los valores del json
+                        String valorLlave = errorx.getString("errors");
+                        // manejo del segundo nivel de valores de json
+                        JSONObject errorxa = new JSONObject(valorLlave);
+                        // se obtiene los valores que contiene el objeto
+                        String msgerror = errorxa.getString("login");
+                        // se maneja el array json
+                        JSONArray jsonarray = new JSONArray(msgerror);
+
+                        //se obtiene cada uno de los mensajes que se encuentran dentro del json
+                        for(int i=0; i < jsonarray.length(); i++) {
+                            String mensaje = jsonarray.getString(i);
+                            Toast.makeText(DetallemailActivity.this, mensaje, Toast.LENGTH_LONG).show();
+                        }
+
+                        midb.logouth();
+                        midb.oncreateusers();
+                        Intent i = new Intent(DetallemailActivity.this, InicioActivity.class);
+                        startActivity(i);
+
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                // When Http response code is '500'
+                else if (statusCode == 500) {
+
+                    Toast.makeText(DetallemailActivity.this, "Erros Statuscode = 500", Toast.LENGTH_LONG).show();
+                }
+                // When Http response code other than 404, 500
+                else {
+                    Log.i("On Failure", "NN");
+                    Toast.makeText(DetallemailActivity.this, "On Failure ", Toast.LENGTH_LONG).show();
+
+                    //Institución no valida.
+                }
+
+
+            }
+
         });
     }
 

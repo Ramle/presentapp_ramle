@@ -271,6 +271,7 @@ public class EntradasActivity extends AppCompatActivity {
                         String msgerror = errorxa.getString("login");
                         // se maneja el array json
                         JSONArray jsonarray = new JSONArray(msgerror);
+                        progressDialog[0].dismiss();
 
                         //se obtiene cada uno de los mensajes que se encuentran dentro del json
                         for(int i=0; i < jsonarray.length(); i++) {
@@ -280,6 +281,7 @@ public class EntradasActivity extends AppCompatActivity {
 
                         midb.logouth();
                         midb.oncreateusers();
+
                         Intent i = new Intent(EntradasActivity.this, InicioActivity.class);
                         startActivity(i);
 

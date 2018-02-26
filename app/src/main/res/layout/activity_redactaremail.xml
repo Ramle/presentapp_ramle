@@ -6,21 +6,161 @@
         android:layout_height="match_parent"
         tools:context="sunnysoft.presentapp.Interfaz.RedactaremailActivity">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#69B4E8"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <include
-            android:id="@+id/toolbar_secundaria"
-            layout="@layout/toolbar_secundaria"
-            android:layout_width="0dp"
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabsent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+            android:background="@color/color_botones_primarios"
+            app:tabGravity="center"
+            app:tabIndicatorColor="@color/color_input"
+            app:tabSelectedTextColor="@color/color_input"/>
+    </android.support.design.widget.AppBarLayout>
+
+
+    <TextView
+        android:id="@+id/txvpara"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="136dp"
+        android:text="Para"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="23dp" />
+
+    <TextView
+        android:id="@+id/txvacudiente"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Acudientes"
+        app:layout_constraintTop_toBottomOf="@+id/txvpara"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="16dp" />
+
+    <com.guna.libmultispinner.MultiSelectionSpinner
+        android:id="@+id/mySpinnerusers"
+        android:layout_width="230dp"
+        android:layout_height="27dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/inputs_secundarios"
+
+        android:text="Selección múltiple"
+        app:layout_constraintTop_toBottomOf="@+id/mySpinnerusers2"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="123dp" />
+
+    <TextView
+        android:id="@+id/txvdocente"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Docentes"
+        app:layout_constraintTop_toBottomOf="@+id/txvacudiente"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="16dp" />
+
+    <com.guna.libmultispinner.MultiSelectionSpinner
+        android:id="@+id/mySpinnerusers2"
+        android:layout_width="233dp"
+        android:layout_height="25dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+
+        android:layout_marginTop="8dp"
+        android:background="@drawable/inputs_secundarios"
+        android:text="Selección múltiple"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.829"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mySpinnerusers3"
+        tools:ignore="MissingConstraints" />
+
+
+    <TextView
+        android:id="@+id/txvestudiante"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Estudiantes"
+        app:layout_constraintTop_toBottomOf="@+id/txvdocente"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="16dp" />
+
+    <com.guna.libmultispinner.MultiSelectionSpinner
+        android:id="@+id/mySpinnerusers3"
+        android:layout_width="229dp"
+        android:layout_height="28dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+
+        android:layout_marginTop="24dp"
+        android:background="@drawable/inputs_secundarios"
+        android:text="Selección múltiple"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.834"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txvpara"
+        tools:ignore="MissingConstraints" />
+
+
+    <EditText
+        android:id="@+id/editText3"
+        android:layout_width="339dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="56dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Asunto"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.517"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mySpinnerusers"
+        tools:ignore="MissingConstraints" />
+
+    <EditText
+        android:id="@+id/editText4"
+        android:layout_width="340dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="28dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Redacta tu email"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText3"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="Enviar"
+        app:layout_constraintTop_toBottomOf="@+id/editText4"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="265dp" />
 
 
      <android.support.design.widget.FloatingActionButton
