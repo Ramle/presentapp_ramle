@@ -19,6 +19,8 @@ import org.json.JSONObject;
 import java.util.List;
 
 import me.gujun.android.taggroup.TagGroup;
+import sunnysoft.presentapp.Interfaz.DetalleentradaActivity;
+import sunnysoft.presentapp.Interfaz.DetalleentradagralActivity;
 import sunnysoft.presentapp.Interfaz.pojo.Entradas;
 import sunnysoft.presentapp.R;
 
@@ -58,6 +60,7 @@ public class ProcesoEntradasAdapter extends RecyclerView.Adapter<ProcesoEntradas
                 .error(R.drawable.logo)
                 .into(holder.imgPersona);
 
+        holder.url = entradasList.get(position).getUrl_entrada_detail();
         holder.mTagGroup.setTags(entradasList.get(position).getNomtags());
 
     }
@@ -74,6 +77,7 @@ public class ProcesoEntradasAdapter extends RecyclerView.Adapter<ProcesoEntradas
         TextView titulo;
         TextView detalle;
         ImageView imgPersona;
+        String url;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -85,13 +89,16 @@ public class ProcesoEntradasAdapter extends RecyclerView.Adapter<ProcesoEntradas
             imgPersona = (ImageView)itemView.findViewById(R.id.img_persona);
             mTagGroup = (TagGroup)itemView.findViewById(R.id.tag_group_entradas);
 
-
         }
+
         @Override
         public void onClick(View view) {
 
-        }
+            Intent i = new Intent(context, DetalleentradaActivity.class);
+            i.putExtra("DetailUrl", url);
+            context.startActivity(i);
 
+        }
 
         public Entradas getItem(int position) {
             return entradasList.get(position);

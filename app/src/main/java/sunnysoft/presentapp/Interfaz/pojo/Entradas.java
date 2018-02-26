@@ -18,12 +18,13 @@ public class Entradas {
     private String url_entrada_detail;
     private String url_tabs_entradas;
 
-    public Entradas(String nombre, String detalle, Integer indice, String image_persona, String [] nomtags) {
+    public Entradas(String nombre, String detalle, Integer indice, String image_persona, String [] nomtags, String url_detalle) {
         this.nombre = nombre;
         this.detalle = detalle;
         this.nomtags = nomtags;
         this.indice = indice;
         this.image_persona = image_persona;
+        this.url_entrada_detail = url_detalle;
     }
 
 
