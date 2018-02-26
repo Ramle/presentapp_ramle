@@ -92,6 +92,8 @@ public class RedactaremailActivity extends AppCompatActivity {
         url += "?token=" + token;
         url += "&email=" + email;
 
+        Log.e("url", url);
+
         Desplegarcampos(url);
 
         try {
@@ -136,41 +138,49 @@ public class RedactaremailActivity extends AppCompatActivity {
                     JSONObject user = new JSONObject(responseStr);
                     String usuarios = user.getString("usuarios");
                     JSONArray items = new JSONArray(usuarios);
-
-
-                    for (int i = 0; i < items.length(); i++) {
+                   for (int i = 0; i < items.length(); i++) {
 
                         String item = items.getString(i);
 
                         JSONObject valores = new JSONObject(item);
-                        String iduser = user.getString("id");
-                        String nombreuser = user.getString("nombre");
+                        String iduser = valores.getString("id");
+                        String nombreuser = valores.getString("nombre");
 
                     }
 
                     String acgs = user.getString("acgs");
 
+                    JSONObject acgs2 = new JSONObject(acgs);
+                    String Estudiantes = acgs2.getString("Estudiantes");
+                    //String Docentes = acgs2.getString("Docentes");
+                    String Acudientes = acgs2.getString("Acudientes");
 
 
-                  /*  JSONArray itemsacgs = new JSONArray(acgs);
 
-                    for (int i = 0; i < itemsacgs.length(); i++) {
+                   JSONArray Estudiantes2 = new JSONArray(Estudiantes);
 
-                        String item2 = itemsacgs.getString(i);
+                    for (int i = 0; i < Estudiantes2.length(); i++) {
 
-                        JSONArray itemsacgs2 = new JSONArray(item2);
+                        String item2 = Estudiantes2.getString(i);
+                        JSONObject valores22 = new JSONObject(item2);
+                        String iduser22 = valores22.getString("id");
+                        String nombreuser22 = valores22.getString("name");
 
-                            for (int a = 0; a < itemsacgs2.length(); a++) {
-
-                                String item22 = itemsacgs2.getString(a);
-
-                                JSONObject valores22 = new JSONObject(item22);
-                                String iduser22 = user.getString("id");
-                                String nombreuser22 = user.getString("nombre");
-                            }
+                    }
 
 
-                    }*/
+                    JSONArray Acudientes2 = new JSONArray(Acudientes);
+
+                    for (int i = 0; i < Acudientes2.length(); i++) {
+
+                        String item22 = Acudientes2.getString(i);
+                        JSONObject valores2 = new JSONObject(item22);
+                        String iduser22 = valores2.getString("id");
+                        String nombreuser22 = valores2.getString("name");
+
+                    }
+
+                    String url_create = user.getString("url_create");
 
                     progressDialog[0].dismiss();
 
