@@ -142,7 +142,6 @@ public class BandejaCorreosActivity extends AppCompatActivity {
         //
         seteartabs(url);
         URL_TABS = url;
-        Log.i("URL",url);
 
         //Tooblar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -159,6 +158,7 @@ public class BandejaCorreosActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 Intent i = new Intent(BandejaCorreosActivity.this, MenuActivity.class);
+                i.putExtra("url_tabs",URL_TABS);
                 startActivity(i);
             }
         });
@@ -223,7 +223,7 @@ public class BandejaCorreosActivity extends AppCompatActivity {
                         notification_count = valores.getInt("notificaciones_count");
                         mural_url = valores.getString("mural_url");
 
-                        Log.e("correo menu", mural_url);
+                        //Log.e("correo menu", mural_url);
 
                         urls.add(mural_url);
                         nomes.add(nombreMenuCorreo);

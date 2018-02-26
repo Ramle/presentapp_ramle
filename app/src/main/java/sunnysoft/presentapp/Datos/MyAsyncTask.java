@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import cz.msebera.android.httpclient.client.methods.HttpPost;
+import sunnysoft.presentapp.Interfaz.BandejaCorreosActivity;
 import sunnysoft.presentapp.Interfaz.CreareventoActivity;
 import sunnysoft.presentapp.Interfaz.CreateentradaActivity;
 
@@ -54,6 +55,13 @@ public class MyAsyncTask extends AsyncTask<String,Void,String> {
 
                     resultado = myRestFulGP.enviardatos(httppost);
                     break;
+
+                case "Enviar Email":
+
+                    resultado = myRestFulGP.enviardatos(httppost);
+                    break;
+
+
                 default:
                      resultado = null;
                     break;
@@ -100,6 +108,16 @@ public class MyAsyncTask extends AsyncTask<String,Void,String> {
 
                 context.startActivity(i);
                 break;
+
+            case "Enviar Email":
+
+                Toast.makeText(context, "El email ha sido enviado", Toast.LENGTH_LONG).show();
+                i = new Intent(context, BandejaCorreosActivity.class);
+
+                context.startActivity(i);
+                break;
+
+
 
         }
 
