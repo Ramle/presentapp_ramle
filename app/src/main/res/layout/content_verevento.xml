@@ -7,10 +7,10 @@
     android:fillViewport="true">
 
     <LinearLayout
+        android:id="@+id/eventogeneral"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:id="@+id/eventogeneral"
         tools:ignore="fieldeventos_list">
 
         <LinearLayout
@@ -22,8 +22,7 @@
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:context="sunnysoft.presentapp.Interfaz.VereventoActivity"
->
+                tools:context="sunnysoft.presentapp.Interfaz.VereventoActivity">
 
                 <TextView
                     android:id="@+id/dataresponsables"
@@ -51,29 +50,24 @@
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cont_adjuntos" />
+                    app:layout_constraintTop_toBottomOf="@+id/tag_group" />
 
-                <android.support.constraint.ConstraintLayout
-                    android:id="@+id/cont_adjuntos"
+
+                <me.gujun.android.taggroup.TagGroup
+                    android:id="@+id/tag_group"
+                    style="@style/TagGroup"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
                     android:layout_marginStart="20dp"
-                    android:layout_marginTop="10dp"
-                    android:visibility="visible"
+                    android:layout_marginTop="20dp"
+                    app:atg_borderColor="@color/color_inputs_primarios"
+                    app:atg_checkedBackgroundColor="@color/color_inputs_primarios"
+                    app:atg_checkedBorderColor="@color/color_inputs_primarios"
+                    app:atg_textColor="@color/color_letra_btn_prim"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/fieldeventos_list">
+                    app:layout_constraintTop_toBottomOf="@+id/fieldeventos_list" />
 
-                    <me.gujun.android.taggroup.TagGroup
-                        android:id="@+id/tag_group"
-                        style="@style/TagGroup"
-                        app:atg_borderColor="@color/color_inputs_primarios"
-                        app:atg_checkedBackgroundColor="@color/color_inputs_primarios"
-                        app:atg_checkedBorderColor="@color/color_inputs_primarios"
-                        app:atg_textColor="@color/color_letra_btn_prim" />
-
-                </android.support.constraint.ConstraintLayout>
 
                 <ListView
                     android:id="@+id/fieldeventos_list"

@@ -136,7 +136,7 @@ public class DetalleentradaActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent i = new Intent(DetalleentradaActivity.this, EntradasActivity.class);
+                Intent i = new Intent(DetalleentradaActivity.this, MenuActivity.class);
 
                 startActivity(i);
 
