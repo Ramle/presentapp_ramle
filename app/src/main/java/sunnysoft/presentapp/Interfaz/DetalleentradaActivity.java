@@ -130,7 +130,7 @@ public class DetalleentradaActivity extends AppCompatActivity {
 
         img_persona = (ImageView) findViewById(R.id.img_persona);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab3);
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab3);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,7 +142,7 @@ public class DetalleentradaActivity extends AppCompatActivity {
 
             }
 
-        });
+        });*/
 
         // Invoke RESTful Web Service with Http parameters
         RequestHandle post = client.get(DetalleentradaActivity.this, url, entity, "application/json", new AsyncHttpResponseHandler() {

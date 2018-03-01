@@ -23,14 +23,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tabsent"
+        <include
+            android:id="@+id/toolbar_secundaria"
+            layout="@layout/toolbar_secundaria"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/color_botones_primarios"
-            app:tabGravity="center"
-            app:tabIndicatorColor="@color/color_input"
-            app:tabSelectedTextColor="@color/color_input"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
     </android.support.design.widget.AppBarLayout>
 
     <ScrollView
@@ -54,12 +53,11 @@
                 <include
                     layout="@layout/content_detalleentradagral"
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
+                    android:layout_height="500dp"
                     android:layout_alignParentEnd="true"
                     android:layout_below="@+id/toolbarfecha"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="10dp"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -70,21 +68,5 @@
             </android.support.constraint.ConstraintLayout>
         </LinearLayout>
     </ScrollView>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab3"
-        android:layout_width="54dp"
-        android:layout_height="54dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_weight="1"
-        app:backgroundTint="#DC9233"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/icono_menu" />
 
 </android.support.constraint.ConstraintLayout>

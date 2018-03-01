@@ -44,7 +44,7 @@ public class DetallemailActivity extends AppCompatActivity {
 
     private Toolbar secundaria;
     private String URL;
-    private String URL_TABS;
+    //private String URL_TABS;
     private String urlservice;
 
     private String subdomain;
@@ -78,10 +78,22 @@ public class DetallemailActivity extends AppCompatActivity {
         toolbar_title.setText(getResources().getText(R.string.txt_detalle_correo));
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        secundaria = (Toolbar) findViewById(R.id.toolbar_secundaria);
+        secundaria.setNavigationIcon(R.drawable.arrow_back);
+        TextView titulo_secundaria = (TextView) secundaria.findViewById(R.id.toolbar_secundaria_title);
+        titulo_secundaria.setText("Correos");
+        secundaria.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(DetallemailActivity.this, BandejaCorreosActivity.class);
+                startActivity(i);
+            }
+        });
+
         Bundle extras = getIntent().getExtras();
         if (extras != null){
             URL = extras.getString("servicio");
-            URL_TABS = extras.getString("url_tabs");
+            //URL_TABS = extras.getString("url_tabs");
         }
 
         nomes = new ArrayList<>();
@@ -103,14 +115,14 @@ public class DetallemailActivity extends AppCompatActivity {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recycler_detalle_correo.setLayoutManager(linearLayoutManager);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(DetallemailActivity.this, BandejaCorreosActivity.class);
                 startActivity(i);
             }
-        });
+        });*/
 
         AsyncHttpClient client = new AsyncHttpClient();
         JSONObject jsonParams = new JSONObject();
@@ -235,10 +247,10 @@ public class DetallemailActivity extends AppCompatActivity {
             }
         });
 
-        seteartabs(URL_TABS);
+        //seteartabs(URL_TABS);
     }
 
-    public void seteartabs(final String url){
+    /*public void seteartabs(final String url){
 
         AsyncHttpClient client = new AsyncHttpClient();
         JSONObject jsonParams = new JSONObject();
@@ -372,6 +384,6 @@ public class DetallemailActivity extends AppCompatActivity {
             }
 
         });
-    }
+    }*/
 
 }

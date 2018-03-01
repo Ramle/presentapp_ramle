@@ -58,7 +58,7 @@ public class DetalleentradagralActivity extends AppCompatActivity {
 
     private DatabaseHelper midb;
     String url;
-    String urlT;
+    //String urlT;
     TextView nombreentrada;
     TextView cursogrupo;
     TextView txv_nombre;
@@ -68,15 +68,21 @@ public class DetalleentradagralActivity extends AppCompatActivity {
     TextView dataresponsables;
     ImageView img_persona;
     String email;
-    private TabLayout tabLayout;
+    private Toolbar secundaria;
+    //private TabLayout tabLayout;
     final ProgressDialog[] progressDialog = new ProgressDialog[1];
-    List<String>nomesImage = new ArrayList<>();
-    int notification_count;
+    //List<String>nomesImage = new ArrayList<>();
+    //int notification_count;
 
     String token;
     String subdomain;
     private HashMap<String, FieldsEntradas> fieldsEntradas = new HashMap<>();
 
+
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(DetalleentradagralActivity.this, "El botón retroceder se ha deshabilitado", Toast.LENGTH_LONG).show();
+    }
 
 
     @Override
@@ -88,7 +94,7 @@ public class DetalleentradagralActivity extends AppCompatActivity {
 
         if (datos != null){
          url = datos.getString("url");
-         urlT = datos.getString("tURL");
+         //urlT = datos.getString("tURL");
         }
         
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -98,11 +104,23 @@ public class DetalleentradagralActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
+        secundaria = (Toolbar) findViewById(R.id.toolbar_secundaria);
+        secundaria.setNavigationIcon(R.drawable.arrow_back);
+        TextView titulo_secundaria = (TextView) secundaria.findViewById(R.id.toolbar_secundaria_title);
+        titulo_secundaria.setText("Entradas");
+        secundaria.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(DetalleentradagralActivity.this, EntradasActivity.class);
+                startActivity(i);
+            }
+        });
+
         midb = new DatabaseHelper(this);
 
         Cursor Resultados = midb.Session();
 
-        try {
+        /*try {
 
             seteartabs(urlT);
 
@@ -110,7 +128,7 @@ public class DetalleentradagralActivity extends AppCompatActivity {
 
             Toast.makeText(DetalleentradagralActivity.this, "Fallo por NN ", Toast.LENGTH_LONG).show();
 
-        }
+        }*/
 
         token =Resultados.getString(Resultados.getColumnIndex("token"));
         email =Resultados.getString(Resultados.getColumnIndex("user"));
@@ -127,7 +145,7 @@ public class DetalleentradagralActivity extends AppCompatActivity {
         //final DateFormat originalFormatHour = new SimpleDateFormat("HH:mm:ss");
 
         final TagGroup mTagGroup = (TagGroup) findViewById(R.id.tag_group);
-        mfieldsEntradasList = (ListView) findViewById(R.id.fieldentradas_list);
+        mfieldsEntradasList = (ListView) findViewById(R.id.fieldeventos_list);
 
         //traer datos de ws
         final AsyncHttpClient client = new AsyncHttpClient();
@@ -289,7 +307,7 @@ public class DetalleentradagralActivity extends AppCompatActivity {
 
 
     /////////////////////llenar tabs ///////////////////////////////////////////
-    public void seteartabs(String url){
+    /*Public void seteartabs(String url){
 
         AsyncHttpClient client = new AsyncHttpClient();
         JSONObject jsonParams = new JSONObject();
@@ -307,8 +325,8 @@ public class DetalleentradagralActivity extends AppCompatActivity {
             public void onStart(){
 
                 super.onStart();
-                /*progressDialog[1] = ProgressDialog.show(
-                        getApplicationContext(), "Por favor espere", "Procesando...");*/
+                progressDialog[1] = ProgressDialog.show(
+                        getApplicationContext(), "Por favor espere", "Procesando...");
 
             }
 
@@ -428,7 +446,7 @@ public class DetalleentradagralActivity extends AppCompatActivity {
 
         });
 
-    }
+    }*/
 
     public class DownloadImage extends AsyncTask<String, Integer, Drawable> {
         @Override
@@ -478,7 +496,7 @@ public class DetalleentradagralActivity extends AppCompatActivity {
     }
 
 
-    public class DownloadImageTab extends AsyncTask<String, Integer, Drawable> {
+    /*public class DownloadImageTab extends AsyncTask<String, Integer, Drawable> {
         @Override
         protected Drawable doInBackground(String... arg0) {
             // This is done in a background thread
@@ -527,14 +545,14 @@ public class DetalleentradagralActivity extends AppCompatActivity {
 
             return null;
         }
-    }
+    }*/
 
-    private void setImageTab(Drawable drawable) {
+    /*private void setImageTab(Drawable drawable) {
 
         setBackgroundDrawableTab(drawable);
-    }
+    }*/
 
-    public void setBackgroundDrawableTab(Drawable drawable) {
+    /*public void setBackgroundDrawableTab(Drawable drawable) {
 
         //logocol.setBackgroundDrawable(drawable);
 
@@ -552,7 +570,7 @@ public class DetalleentradagralActivity extends AppCompatActivity {
         tabLayout.addTab(t);
 
         //tabLayout.addTab(tabLayout.newTab().setIcon(drawable));
-    }
+    }*/
 
 
 

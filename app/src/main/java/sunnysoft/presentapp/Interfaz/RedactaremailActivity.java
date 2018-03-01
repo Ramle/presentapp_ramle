@@ -94,6 +94,7 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
     private TabLayout tabLayout;
     String nombreMenuCorreo;
     List<String> nomes;
+    private Toolbar secundaria;
 
 
     private DatabaseHelper midb;
@@ -118,7 +119,19 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
         toolbar_title.setText(getResources().getText(R.string.txt_menu_Temail));
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        secundaria = (Toolbar) findViewById(R.id.toolbar_secundaria);
+        secundaria.setNavigationIcon(R.drawable.arrow_back);
+        TextView titulo_secundaria = (TextView) secundaria.findViewById(R.id.toolbar_secundaria_title);
+        titulo_secundaria.setText("Correos");
+        secundaria.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(RedactaremailActivity.this, BandejaCorreosActivity.class);
+                startActivity(i);
+            }
+        });
+
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,7 +140,7 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
                 Intent i = new Intent(RedactaremailActivity.this, MenuActivity.class);
                 startActivity(i);
             }
-        });
+        });*/
 
         midb = new DatabaseHelper(this);
         context = this;
@@ -167,7 +180,7 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
 
         Log.e("urlv", seturl);
 
-        seteartabs(seturl);
+        //seteartabs(seturl);
 
         Desplegarcampos(url);
 
@@ -541,7 +554,7 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
 
     }
 
-    public void seteartabs(final String url){
+    /*public void seteartabs(final String url){
 
         AsyncHttpClient client = new AsyncHttpClient();
         JSONObject jsonParams = new JSONObject();
@@ -675,7 +688,7 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
             }
 
         });
-    }
+    }*/
 
     // fin clase
 
