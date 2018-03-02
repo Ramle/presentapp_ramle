@@ -497,7 +497,8 @@ public class CreateentradaActivity extends AppCompatActivity implements MultiSel
             btncrear.setTextColor(getResources().getColor(R.color.color_letra_btn_prim));
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
             //params.setLayoutDirection(Gravity.RIGHT|Gravity.CENTER_VERTICAL);
-            params.setMargins(800,50,0,20);
+            params.setMargins(0,50,0,20);
+            params.gravity = Gravity.END;
             btncrear.setLayoutParams(params);
             btncrear.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -593,7 +594,9 @@ public class CreateentradaActivity extends AppCompatActivity implements MultiSel
             btncrear.setTextColor(getResources().getColor(R.color.color_letra_btn_prim));
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
             //params.setLayoutDirection(Gravity.RIGHT|Gravity.CENTER_VERTICAL);
-            params.setMargins(800,50,0,20);
+            params.setMargins(0,50,0,20);
+            params.gravity = Gravity.END;
+
             btncrear.setText("Crear");
             btncrear.setLayoutParams(params);
 
@@ -627,8 +630,6 @@ public class CreateentradaActivity extends AppCompatActivity implements MultiSel
     }
 
     public void pintartagsuser(List<Integer> indtag) {
-
-
         ArrayList<Integer> Indices = new ArrayList<>();
         ArrayList<String> tags = new ArrayList<>();
         ArrayList<Integer>  idusers = new ArrayList<>();
@@ -687,14 +688,11 @@ public class CreateentradaActivity extends AppCompatActivity implements MultiSel
 
         httppost = new HttpPost(post_url);
         httppost.addHeader("Content-Type", "application/json");
-        Log.i("DATOS",""+multiSelectionSpinnercampos.getSelectedIndices().size());
-        Log.i("DATOS",""+multiSelectionSpinnertags.getSelectedIndices().size());
-        Log.i("DATOS",""+multiSelectionSpinnerusers.getSelectedIndices().size());
         try {
-            if (multiSelectionSpinnercampos.getSelectedIndices().size() == 0) {
-                Log.i("VALIDACION P1","FALSE");
-                return false;
-            }else {
+           // if (multiSelectionSpinnercampos.getSelectedIndices().size() == 0) {
+             //   Log.i("VALIDACION P1","FALSE");
+               // return false;
+            //}else {
                 if (users_ids == null) {
                     Log.i("VALIDACION P2","FALSE");
                     return false;
@@ -717,20 +715,23 @@ public class CreateentradaActivity extends AppCompatActivity implements MultiSel
                     Log.i("VALIDACION P3","TRUE");
                     return true;
                 }
-            }
+           // }
 
             //forma el JSON y tipo de contenido
 
         } catch (JSONException e) {
             e.printStackTrace();
-            return false;
+            //return false;
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            return false;
-        } catch (IOException e) {
+            //return false;
+        } catch (NullPointerException e) {
             e.printStackTrace();
-            return false;
+            return true;
+            //return false;
         }
+
+        return false;
 
     }
 
