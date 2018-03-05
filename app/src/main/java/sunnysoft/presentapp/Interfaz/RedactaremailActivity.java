@@ -202,8 +202,16 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
                     }
                     users = new String[listusu.size()];
                     users = listusu.toArray(users);
-                    multiSelectionSpinnerdestinatarios.setItems(users);
-                    String acgs = user.getString("acgs");
+                    if(users.length != 0){
+                        multiSelectionSpinnerdestinatarios.setItems(users);
+                    }else{
+
+
+                    }
+
+                    String acgs = null;
+
+                    acgs = user.getString("acgs");
                     //    contenidoJson es tu string conteniendo el json.
                     JSONObject mainObject = new JSONObject(acgs);
                     //Obtenemos los objetos dentro del objeto principal.
@@ -255,8 +263,10 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
                     }
                     progressDialog[0].dismiss();
                 } catch (UnsupportedEncodingException e) {
+                    progressDialog[0].dismiss();
                     e.printStackTrace();
                 } catch (JSONException e) {
+                    progressDialog[0].dismiss();
                     e.printStackTrace();
                 }
             }
