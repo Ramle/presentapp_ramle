@@ -138,9 +138,9 @@ public class CorreosDetalleAdapter extends RecyclerView.Adapter<CorreosDetalleAd
             fecha = (TextView)itemView.findViewById(R.id.txv_fecha);
             hora = (TextView)itemView.findViewById(R.id.txv_hora);
             img_usuario = (ImageView)itemView.findViewById(R.id.img_persona);
-            btn_reenviar = (Button)itemView.findViewById(R.id.btn_reenviar);
+            //btn_reenviar = (Button)itemView.findViewById(R.id.btn_reenviar);
             btn_responder = (Button)itemView.findViewById(R.id.btn_responder);
-            btn_responder_todos = (Button)itemView.findViewById(R.id.btn_responder_todos);
+            //btn_responder_todos = (Button)itemView.findViewById(R.id.btn_responder_todos);
             web_contenido = (WebView)itemView.findViewById(R.id.webview_contenido);
             contenedor_adjuntos = (LinearLayout)itemView.findViewById(R.id.contenedor_adjuntos);
             contenedor_imagenes = (LinearLayout)itemView.findViewById(R.id.contenedor_imagenes);

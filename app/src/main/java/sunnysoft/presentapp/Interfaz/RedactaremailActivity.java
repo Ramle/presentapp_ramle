@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,9 +13,14 @@ import android.support.v4.content.res.TypedArrayUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +38,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -45,62 +52,44 @@ import sunnysoft.presentapp.R;
 
 public class RedactaremailActivity extends AppCompatActivity implements MultiSelectionSpinner.OnMultipleItemsSelectedListener {
 
-
     String url;
     String token;
     String email;
     String subdomain;
-
     HttpPost httppost;
     String urlv;
     String post_url;
+    MultiSelectionSpinner multiSelectionSpinnerdestinatarios;
+    MultiSelectionSpinner multiSelectionSpinner;
 
-    // manejar los multispinner
-
-    MultiSelectionSpinner multiSelectionSpinneracudientes;
-    MultiSelectionSpinner multiSelectionSpinnerdocentes;
-    MultiSelectionSpinner multiSelectionSpinnerestudiantes;
-
-    TextView txvacudiente;
-    TextView txvdocente;
-    TextView txvestudiante;
-
+    LinearLayout layout;
+    EditText et;
+    TextView txtcamp;
     EditText editText3;
     EditText editText4;
-
     Button enviarmail;
-
-    String[] Acud;
-    String[] Doce;
-    String[] Estu;
-
-
+    String[] users;
+    List<String> listusu = new ArrayList<>();
     List<String> listacu = new ArrayList<>();
-    List<String> listdoc = new ArrayList<>();
     List<String> listest = new ArrayList<>();
-
-    List<Integer> listidacu = new ArrayList<>();
+    List<Integer> listidusu = new ArrayList<>();
     List<Integer> listiddoc = new ArrayList<>();
-    List<Integer> listidest = new ArrayList<>();
-
+    List<Integer[]> indi = new ArrayList<>();
+    List<Integer> usuariosid = new ArrayList<>();
+    List<List<String>> destinatarios = new ArrayList<>();
+    List<List<Integer>> iddestinatarios = new ArrayList<>();
     // envio formulario
-
     Integer acu_ids[] ;
     Integer doc_ids[];
     Integer est_ids[];
     Integer usuarios[];
-
-
+    Integer destinatariosids[];
     private TabLayout tabLayout;
     String nombreMenuCorreo;
     List<String> nomes;
     private Toolbar secundaria;
-
-
     private DatabaseHelper midb;
-
     Context context;
-
     @Override
     public void onBackPressed() {
         Toast.makeText(RedactaremailActivity.this, "El botón retroceder se ha deshabilitado", Toast.LENGTH_LONG).show();
@@ -111,18 +100,17 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_redactaremail);
-
         //Tooblar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         TextView toolbar_title = (TextView)toolbar.findViewById(R.id.toolbar_title);
         setSupportActionBar(toolbar);
         toolbar_title.setText(getResources().getText(R.string.txt_menu_Temail));
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
         secundaria = (Toolbar) findViewById(R.id.toolbar_secundaria);
         secundaria.setNavigationIcon(R.drawable.arrow_back);
         TextView titulo_secundaria = (TextView) secundaria.findViewById(R.id.toolbar_secundaria_title);
         titulo_secundaria.setText("Correos");
+        indi.clear();
         secundaria.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -144,57 +132,32 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
 
         midb = new DatabaseHelper(this);
         context = this;
-
         Cursor Resultados = midb.Session();
-
         subdomain = Resultados.getString(Resultados.getColumnIndex("subdomain"));
         token = Resultados.getString(Resultados.getColumnIndex("token"));
         email = Resultados.getString(Resultados.getColumnIndex("user"));
-
-        multiSelectionSpinneracudientes = (MultiSelectionSpinner) findViewById(R.id.mySpinnerusers3);
-        multiSelectionSpinnerdocentes = (MultiSelectionSpinner) findViewById(R.id.mySpinnerusers2);
-        multiSelectionSpinnerestudiantes = (MultiSelectionSpinner) findViewById(R.id.mySpinnerusers);
-
-        txvacudiente = (TextView) findViewById(R.id.txvacudiente);
-        txvdocente = (TextView) findViewById(R.id.txvdocente);
-        txvestudiante = (TextView) findViewById(R.id.txvestudiante);
-
+        multiSelectionSpinnerdestinatarios = (MultiSelectionSpinner) findViewById(R.id.mySpinnerusers3);
         editText3 = (EditText) findViewById((R.id.editText3));
         editText4 = (EditText) findViewById((R.id.editText4));
-
         enviarmail= (Button) findViewById(R.id.enviarmail);
-
-        multiSelectionSpinneracudientes.setListener(this, 1);
-        multiSelectionSpinnerdocentes.setListener(this, 1);
-        multiSelectionSpinnerestudiantes.setListener(this, 1);
-
+        multiSelectionSpinnerdestinatarios.setListener(this, 1);
         url = "http://serverprueba.present.com.co/api/email/new";
         url += "?token=" + token;
         url += "&email=" + email;
-
         String seturl;
-
         seturl = "http://serverprueba.present.com.co/api/email/menu";
         seturl += "?token=" + token;
         seturl += "&email=" + email;
-
-        Log.e("urlv", seturl);
-
         //seteartabs(seturl);
-
         Desplegarcampos(url);
-
         try {
             Thread.sleep(2000);
 
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
         enviar();
-
     }
-
     public void Desplegarcampos(String url) {
 
         AsyncHttpClient client = new AsyncHttpClient();
@@ -229,63 +192,41 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
                     String usuarios = user.getString("usuarios");
                     JSONArray items = new JSONArray(usuarios);
                    for (int i = 0; i < items.length(); i++) {
-
                         String item = items.getString(i);
-
                         JSONObject valores = new JSONObject(item);
-                        String iduser = valores.getString("id");
+                        int iduser = valores.getInt("id");
                         String nombreuser = valores.getString("nombre");
+                       listusu.add(nombreuser);
+                       listidusu.add(iduser);
 
                     }
-
+                    users = new String[listusu.size()];
+                    users = listusu.toArray(users);
+                    multiSelectionSpinnerdestinatarios.setItems(users);
                     String acgs = user.getString("acgs");
-
-                    JSONObject acgs2 = new JSONObject(acgs);
-                    String Estudiantes = acgs2.getString("Estudiantes");
-                   // String Docentes = acgs2.getString("Docentes");
-                    String Acudientes = acgs2.getString("Acudientes");
-
-                    JSONArray Acudientes2 = new JSONArray(Acudientes);
-
-                    for (int i = 0; i < Acudientes2.length(); i++) {
-
-                        String item22 = Acudientes2.getString(i);
-                        JSONObject valores2 = new JSONObject(item22);
-                        int iduser22 = valores2.getInt("id");
-                        String nombreuser22 = valores2.getString("name");
-
-                        listacu.add(nombreuser22);
-                        listidacu.add(iduser22);
-                    }
-
-
-                  /*  JSONArray Docentes2 = new JSONArray(Docentes);
-
-                    for (int i = 0; i < Docentes2.length(); i++) {
-
-                        String item22 = Docentes2.getString(i);
-                        JSONObject valores2 = new JSONObject(item22);
-                        int iduser22 = valores2.getInt("id");
-                        String nombreuser22 = valores2.getString("name");
-
-                        listdoc.add(nombreuser22);
-                        listiddoc.add(iduser22);
-
-                    }*/
-
-
-
-                   JSONArray Estudiantes2 = new JSONArray(Estudiantes);
-
-                    for (int i = 0; i < Estudiantes2.length(); i++) {
-
-                        String item2 = Estudiantes2.getString(i);
-                        JSONObject valores22 = new JSONObject(item2);
-                        int iduser22 = valores22.getInt("id");
-                        String nombreuser22 = valores22.getString("name");
-                        listest.add(nombreuser22);
-                        listidest.add(iduser22);
-
+                    //    contenidoJson es tu string conteniendo el json.
+                    JSONObject mainObject = new JSONObject(acgs);
+                    //Obtenemos los objetos dentro del objeto principal.
+                    Iterator<String> keys = mainObject.keys();
+                    while (keys.hasNext())
+                    {
+                        // obtiene el nombre del objeto.
+                        String key = keys.next();
+                        String it = mainObject.getString(key);
+                        listest.add(key);
+                        listacu.clear();
+                        listiddoc.clear();
+                        JSONArray users = new JSONArray(it);
+                        for (int i = 0; i < users.length(); i++) {
+                            String itemr = users.getString(i);
+                            JSONObject valoresr = new JSONObject(itemr);
+                            int iduser = valoresr.getInt("id");
+                            String nombreuser = valoresr.getString("name");
+                            listacu.add(nombreuser);
+                            listiddoc.add(iduser);
+                        }
+                        destinatarios.add(listacu);
+                        iddestinatarios.add(listiddoc);
                     }
 
                     String url_create = user.getString("url_create");
@@ -294,56 +235,30 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
                     post_url += "?token=" + token;
                     post_url += "&email=" + email;
 
-                    if(listacu.size() > 0 ){
+                    layout = (LinearLayout) findViewById(R.id.linearLayout3);
+                    int y = 1;
+                    for(int x=0;x<destinatarios.size();x++) {
+                        y = y+1;
+                        String[] Array1;
+                        Array1 = new String[destinatarios.get(x).size()];
+                            Array1 = destinatarios.get(x).toArray(Array1);
+                        LayoutInflater inflater = LayoutInflater.from(context);
+                        int id = R.layout.layout_left;
+                        RelativeLayout relativeLayout = (RelativeLayout) inflater.inflate(id, null, false);
+                        TextView txtcamp = (TextView) relativeLayout.findViewById(R.id.txvredac);
+                        txtcamp.setText(listest.get(x));
+                        multiSelectionSpinner = (MultiSelectionSpinner) relativeLayout.findViewById(R.id.mySpinneredac); ;
+                        multiSelectionSpinner.setItems(Array1);
+                        layout.addView(relativeLayout);
 
-                        multiSelectionSpinneracudientes.setVisibility(View.VISIBLE);
-                        txvacudiente.setVisibility(View.VISIBLE);
-                        Acud = new String[listacu.size()];
-                        Acud = listacu.toArray(Acud);
-                        multiSelectionSpinneracudientes.setItems(Acud);
-
-                    }else{
-                        multiSelectionSpinneracudientes.setVisibility(View.INVISIBLE);
-                        txvacudiente.setVisibility(View.INVISIBLE);
+                        multiSelectionSpinner.setListener(RedactaremailActivity.this, y);
                     }
-
-
-                    if(listdoc.size() > 0 ){
-
-                        multiSelectionSpinnerdocentes.setVisibility(View.VISIBLE);
-                        txvdocente.setVisibility(View.VISIBLE);
-                        Doce = new String[listdoc.size()];
-                        Doce = listacu.toArray(Doce);
-                        multiSelectionSpinnerdocentes.setItems(Doce);
-
-                    }else{
-                        multiSelectionSpinnerdocentes.setVisibility(View.INVISIBLE);
-                        txvdocente.setVisibility(View.INVISIBLE);
-                    }
-
-                    if(listest.size() > 0 ) {
-                        multiSelectionSpinnerestudiantes.setVisibility(View.VISIBLE);
-                        txvestudiante.setVisibility(View.VISIBLE);
-                        Estu = new String[listest.size()];
-                        Estu = listest.toArray(Estu);
-                        multiSelectionSpinnerestudiantes.setItems(Estu);
-                    }else{
-
-                        multiSelectionSpinnerdocentes.setVisibility(View.INVISIBLE);
-                        txvestudiante.setVisibility(View.INVISIBLE);
-
-                    }
-
                     progressDialog[0].dismiss();
-
-
-
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -394,12 +309,12 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
                 else {
                     Log.i("On Failure", "NN");
                     Toast.makeText(RedactaremailActivity.this, "On Failure ", Toast.LENGTH_LONG).show();
-
                 }
             }
         });
 
     }
+
 
     public void  enviar(){
 
@@ -416,8 +331,7 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
                          .execute();
                 }else{
                     Toast.makeText(getApplicationContext(), "Los campos no deben estar vacios", Toast.LENGTH_SHORT).show();
-                    //Log.i("VALIDACION p4","FALSE");
-                }
+                    }
 
             }
         });
@@ -429,58 +343,38 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
         httppost = new HttpPost(post_url);
         httppost.addHeader("Content-Type", "application/json");
         // validar que los arraylist del servicio >0
-        if(listacu.size() > 0 ){
-            acu_ids = new Integer[multiSelectionSpinneracudientes.getSelectedIndices().size()];
 
-            for (int a = 0; a <  multiSelectionSpinneracudientes.getSelectedIndices().size(); a++ ){
+        Log.e("Idsusuarios", String.valueOf(indi.size()));
 
-                acu_ids[a]= listidacu.get(multiSelectionSpinneracudientes.getSelectedIndices().get(a));
+        for (int r = 0; r< indi.size(); r++){
 
-            }
+            int ind = indi.get(r)[1] - 2;
 
-        }else{
-
-            acu_ids = new Integer[0];
+            Log.e("indic", String.valueOf(iddestinatarios.get(ind).get(indi.get(r)[0])));
+            //usuariosid.add(iddestinatarios.get(ind).get(indi.get(r)[0]));
 
         }
 
-        if(listdoc.size() > 0 ){
+        Integer[] stockArr = new Integer[usuariosid.size()];
+        stockArr = usuariosid.toArray(stockArr);
 
-            doc_ids = new Integer[multiSelectionSpinnerdocentes.getSelectedIndices().size()];
 
-            for (int a = 0; a < multiSelectionSpinnerdocentes.getSelectedIndices().size(); a++ ){
 
-                doc_ids[a]= listiddoc.get(multiSelectionSpinnerdocentes.getSelectedIndices().get(a));
+                destinatariosids = new Integer[multiSelectionSpinnerdestinatarios.getSelectedIndices().size()];
 
-            }
-       }else{
+        for (int a = 0; a <  multiSelectionSpinnerdestinatarios.getSelectedIndices().size(); a++ ){
 
-            doc_ids = new Integer[0];
+            destinatariosids[a]= listidusu.get(multiSelectionSpinnerdestinatarios.getSelectedIndices().get(a));
 
         }
 
-        if(listest.size() > 0 ) {
 
-            est_ids = new Integer[multiSelectionSpinnerestudiantes.getSelectedIndices().size()];
 
-            for (int a = 0; a < multiSelectionSpinnerestudiantes.getSelectedIndices().size(); a++ ){
-
-                est_ids[a]= listidest.get(multiSelectionSpinnerestudiantes.getSelectedIndices().get(a));
-
-            }
-
-        }else{
-            est_ids = new Integer[0];
-        }
-
-        int cantidad = acu_ids.length + doc_ids.length + est_ids.length;
+        int cantidad = stockArr.length + destinatariosids.length;
 
         usuarios = new Integer[cantidad];
 
-        usuarios = concatenateTwoArrays(acu_ids,doc_ids,est_ids);
-
-
-
+        usuarios = concatenateTwoArrays(stockArr,destinatariosids);
 
 
         // parsear json
@@ -517,7 +411,7 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
     }
 
 
-    protected Integer[] concatenateTwoArrays(Integer[] arrayFirst,Integer[] arraySecond, Integer[] arraytercer){
+    protected Integer[] concatenateTwoArrays(Integer[] arrayFirst,Integer[] arraySecond){
         // Initialize an empty list
         List<Integer> both = new ArrayList<>();
 
@@ -529,7 +423,6 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
 
         // add 3er array
 
-        Collections.addAll(both,arraytercer);
 
         // Convert list to array
         Integer[] result = both.toArray(new Integer[both.size()]);
@@ -538,12 +431,64 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
         return result;
     }
 
+    public  void cargarindices(List<Integer> indices, int indicador){
+
+        // elimina si en la nueva lista ya no viene algunos elementos y los elimina
+
+
+        //int validacion = 0;
+
+
+        /*for (int z = 0 ; z < indi.size(); z++) {
+            validacion = 0;
+            for (int w = 0 ; w < indices.size(); w++) {
+
+                if(indices.get(w) == indi.get(z)[0] &&  indicador == indi.get(z)[1] ){
+                    validacion = 1;
+                    w = indices.size();
+                }
+            }
+            if (validacion == 0){
+                indi.remove(z);
+            }
+        }*/
+
+        Integer aux[];
+
+        // valida para ingresar un nuevo indice
+
+        for (int i = 0 ; i < indices.size(); i++){
+            aux = new Integer[2];
+            aux[0] =  indices.get(i);
+            aux[1] =  indicador;
+
+            if(indi.size() != 0){
+            for (int a = 0 ; a < indi.size(); a++) {
+
+
+                if(indi.get(a)[0] != aux[0] || indi.get(a)[1] != aux[1] ){
+                    indi.add(aux);
+                }
+            }
+            }else{
+                indi.add(aux);
+            }
+        }
+        //Log.e("revision", String.valueOf(indi.size()));
+    }
+
 
 
     @Override
     public void selectedIndices(List<Integer> indices, int multiplespinner) {
 
-        //Toast.makeText(this, indices.toString(), Toast.LENGTH_LONG).show();
+        if(multiplespinner != 1){
+            cargarindices(indices, multiplespinner);
+        }
+
+
+
+       //Toast.makeText(this, indices.toString(), Toast.LENGTH_LONG).show();
 
     }
 
