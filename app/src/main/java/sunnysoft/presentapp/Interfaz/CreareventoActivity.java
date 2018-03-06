@@ -51,7 +51,10 @@ public class CreareventoActivity extends AppCompatActivity implements View.OnCli
     private DatabaseHelper midb;
     String email;
     String token;
+<<<<<<< HEAD
     private Toolbar secundaria;
+=======
+>>>>>>> eaec3f814cff70d0fabd52307a142221b5e7b69f
     @Override
     public void onBackPressed() {
         Toast.makeText(CreareventoActivity.this, "El botón retroceder se ha deshabilitado", Toast.LENGTH_LONG).show();
@@ -104,6 +107,7 @@ public class CreareventoActivity extends AppCompatActivity implements View.OnCli
 
 
         //Tooblar
+<<<<<<< HEAD
 
         secundaria = (Toolbar) findViewById(R.id.toolbar_secundaria);
         secundaria.setNavigationIcon(R.drawable.arrow_back);
@@ -116,6 +120,13 @@ public class CreareventoActivity extends AppCompatActivity implements View.OnCli
                 startActivity(i);
             }
         });
+=======
+        Toolbar toolbarfecha = (Toolbar) findViewById(R.id.toolbarfecha);
+        TextView toolbar_titlefecha = (TextView)toolbarfecha.findViewById(R.id.toolbar_titlefecha);
+        setSupportActionBar(toolbarfecha);
+        toolbar_titlefecha.setText("Crear evento");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+>>>>>>> eaec3f814cff70d0fabd52307a142221b5e7b69f
 
     }
 

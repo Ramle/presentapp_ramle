@@ -206,9 +206,12 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
                         multiSelectionSpinnerdestinatarios.setItems(users);
                     }else{
 
+<<<<<<< HEAD
                         Toast.makeText(RedactaremailActivity.this, "No hay usuarios destinatarios para el envio", Toast.LENGTH_LONG).show();
                         multiSelectionSpinnerdestinatarios.setFocusable(false);
                         multiSelectionSpinnerdestinatarios.setEnabled(false);
+=======
+>>>>>>> eaec3f814cff70d0fabd52307a142221b5e7b69f
 
                     }
 
@@ -328,6 +331,10 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
 
     }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> eaec3f814cff70d0fabd52307a142221b5e7b69f
     public void  enviar(){
 
         enviarmail.setOnClickListener(new View.OnClickListener() {
@@ -335,7 +342,11 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
             public void onClick(View view) {
 
                 String nombre = null;
+<<<<<<< HEAD
                 if (users.length != 0){
+=======
+
+>>>>>>> eaec3f814cff70d0fabd52307a142221b5e7b69f
                 if (Parsearjson()){
 
                     String proceso = "Enviar Email";
@@ -345,9 +356,12 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
                     Toast.makeText(getApplicationContext(), "Los campos no deben estar vacios", Toast.LENGTH_SHORT).show();
                     }
 
+<<<<<<< HEAD
                 }else{
                     Toast.makeText(getApplicationContext(), "No hay usuarios para el envio", Toast.LENGTH_SHORT).show();
                 }
+=======
+>>>>>>> eaec3f814cff70d0fabd52307a142221b5e7b69f
             }
         });
 
@@ -373,9 +387,16 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
         Integer[] stockArr = new Integer[usuariosid.size()];
         stockArr = usuariosid.toArray(stockArr);
 
+<<<<<<< HEAD
         destinatariosids = new Integer[multiSelectionSpinnerdestinatarios.getSelectedIndices().size()];
 
 
+=======
+
+
+                destinatariosids = new Integer[multiSelectionSpinnerdestinatarios.getSelectedIndices().size()];
+
+>>>>>>> eaec3f814cff70d0fabd52307a142221b5e7b69f
         for (int a = 0; a <  multiSelectionSpinnerdestinatarios.getSelectedIndices().size(); a++ ){
 
             destinatariosids[a]= listidusu.get(multiSelectionSpinnerdestinatarios.getSelectedIndices().get(a));
@@ -383,6 +404,10 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
         }
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> eaec3f814cff70d0fabd52307a142221b5e7b69f
         int cantidad = stockArr.length + destinatariosids.length;
 
         usuarios = new Integer[cantidad];

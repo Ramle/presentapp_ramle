@@ -75,11 +75,14 @@ public class VereventoActivity extends AppCompatActivity {
     private HashMap<String, FieldsEvento> fieldsEventos = new HashMap<>();
 
     @Override
+<<<<<<< HEAD
     public void onBackPressed() {
         Toast.makeText(VereventoActivity.this, "El botón retroceder se ha deshabilitado", Toast.LENGTH_LONG).show();
     }
 
     @Override
+=======
+>>>>>>> eaec3f814cff70d0fabd52307a142221b5e7b69f
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verevento);

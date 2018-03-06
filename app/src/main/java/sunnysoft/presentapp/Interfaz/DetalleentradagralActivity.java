@@ -231,8 +231,11 @@ public class DetalleentradagralActivity extends AppCompatActivity {
                     }
 
                     mTagGroup.setTags(tags);
+<<<<<<< HEAD
                     int k = 1;
                     int cantidad = 0;
+=======
+>>>>>>> eaec3f814cff70d0fabd52307a142221b5e7b69f
 
                     for(int j=0; j < jsonarray_field.length(); j++) {
 
@@ -250,11 +253,15 @@ public class DetalleentradagralActivity extends AppCompatActivity {
 
                         //Relacionando la lista con el adaptador
                         mfieldsEntradasList.setAdapter(mfieldsEntradaAdapter);
+<<<<<<< HEAD
                         k += j;
+=======
+>>>>>>> eaec3f814cff70d0fabd52307a142221b5e7b69f
 
                     }
 
 
+<<<<<<< HEAD
                     if(cantidad > 500){
 
                         mfieldsEntradasList.getLayoutParams().height= 500;
@@ -269,6 +276,8 @@ public class DetalleentradagralActivity extends AppCompatActivity {
                     }
 
 
+=======
+>>>>>>> eaec3f814cff70d0fabd52307a142221b5e7b69f
 
                 } catch (UnsupportedEncodingException e1) {
                     e1.printStackTrace();

@@ -35,6 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+<<<<<<< HEAD
         <include
             android:id="@+id/toolbar_secundaria"
             layout="@layout/toolbar_secundaria"
@@ -42,6 +43,15 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+=======
+
+        <include
+            android:id="@+id/toolbarfecha"
+            layout="@layout/toolbarfecha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+>>>>>>> eaec3f814cff70d0fabd52307a142221b5e7b69f
             app:layout_constraintTop_toBottomOf="@+id/toolbar" />
     </android.support.design.widget.AppBarLayout>
 
