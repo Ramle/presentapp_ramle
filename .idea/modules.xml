@@ -4,11 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/libmultispinner/libmultispinner.iml" filepath="$PROJECT_DIR$/libmultispinner/libmultispinner.iml" />
-<<<<<<< HEAD
       <module fileurl="file://$PROJECT_DIR$/presentapp_ramle-master.iml" filepath="$PROJECT_DIR$/presentapp_ramle-master.iml" />
-=======
-      <module fileurl="file://$PROJECT_DIR$/presentapp_ramle.iml" filepath="$PROJECT_DIR$/presentapp_ramle.iml" />
->>>>>>> eaec3f814cff70d0fabd52307a142221b5e7b69f
     </modules>
   </component>
 </project>
