@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="sunnysoft.presentapp.Interfaz.CreateentradaActivity">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <include
+        android:id="@+id/toolbar_secundaria"
+        layout="@layout/toolbar_secundaria"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_secundaria"
+        tools:ignore="MissingConstraints,UnknownId">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/btncrea"
+                    android:layout_width="100dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/botones_secundarios"
+                    android:text="Crear"
+                    android:textColor="@color/color_input"
+                    android:textColorLink="@color/color_letra_btn_prim"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <LinearLayout
+                    android:id="@+id/layout_edittext"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:orientation="vertical"
+                    android:paddingBottom="10dp"
+                    app:layout_constraintBottom_toTopOf="@+id/btncrea"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/textView6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="5dp"
+                        android:text="Usuarios"
+                        android:textStyle="bold"
+                        tools:ignore="MissingConstraints"
+                        tools:layout_editor_absoluteY="232dp" />
+
+                    <com.guna.libmultispinner.MultiSelectionSpinner
+                        android:id="@+id/mySpinnerusers"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/inputs_secundarios"
+                        android:text="Selección múltiple"
+
+                        tools:ignore="MissingConstraints" />
+
+                    <me.gujun.android.taggroup.TagGroup
+                        android:id="@+id/tag_group"
+                        style="@style/TagGroup"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="10dp"
+                        app:atg_borderColor="@color/color_inputs_primarios"
+                        app:atg_checkedBackgroundColor="@color/color_inputs_primarios"
+                        app:atg_checkedBorderColor="@color/color_inputs_primarios"
+                        app:atg_textColor="@color/color_letra_btn_prim" />
+
+                    <TextView
+                        android:id="@+id/textView7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Tags"
+                        android:textStyle="bold" />
+
+                    <com.guna.libmultispinner.MultiSelectionSpinner
+                        android:id="@+id/mySpinnertags"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/inputs_secundarios"
+                        tools:ignore="MissingConstraints" />
+
+                    <me.gujun.android.taggroup.TagGroup
+                        android:id="@+id/tag_group2"
+                        style="@style/TagGroup"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="10dp"
+                        app:atg_borderColor="@color/color_inputs_primarios"
+                        app:atg_checkedBackgroundColor="@color/color_inputs_primarios"
+                        app:atg_checkedBorderColor="@color/color_inputs_primarios"
+                        app:atg_textColor="@color/color_letra_btn_prim" />
+
+                    <TextView
+                        android:id="@+id/textView8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Campos"
+                        android:textStyle="bold" />
+
+                    <com.guna.libmultispinner.MultiSelectionSpinner
+                        android:id="@+id/mySpinnercampos"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/inputs_secundarios"
+                        tools:ignore="MissingConstraints" />
+
+                </LinearLayout>
+            </android.support.constraint.ConstraintLayout>
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="60dp"
+        android:layout_height="71dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:clickable="true"
+        app:backgroundTint="#DC9233"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/icono_menu" />
+
+
+</android.support.constraint.ConstraintLayout>

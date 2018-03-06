@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <corners android:radius="@dimen/borde_botones"/>
+            <gradient
+                android:startColor="@color/color_inputs_primarios"
+                android:centerColor="@color/color_inputs_primarios"
+                android:endColor="@color/color_inputs_primarios"></gradient>
+            <stroke android:width="@dimen/borde_botones"
+                android:color="@color/color_inputs_primarios"/>
+
+        </shape>
+    </item>
+
+
+</selector>
