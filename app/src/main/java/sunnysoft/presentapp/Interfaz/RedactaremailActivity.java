@@ -1,11 +1,16 @@
 package sunnysoft.presentapp.Interfaz;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Typeface;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -49,6 +54,7 @@ import cz.msebera.android.httpclient.protocol.HTTP;
 import sunnysoft.presentapp.Datos.DatabaseHelper;
 import sunnysoft.presentapp.Datos.MyAsyncTask;
 import sunnysoft.presentapp.R;
+import sunnysoft.presentapp.utils.RealPath;
 
 public class RedactaremailActivity extends AppCompatActivity implements MultiSelectionSpinner.OnMultipleItemsSelectedListener {
 
@@ -90,6 +96,12 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
     private Toolbar secundaria;
     private DatabaseHelper midb;
     Context context;
+    private Uri mPhotoUri;
+    private int request;
+    private ArrayList<String> nombres = new ArrayList<>();
+    private ArrayList<String> archivo = new ArrayList<>();
+    private TextView txv_adj;
+
     @Override
     public void onBackPressed() {
         Toast.makeText(RedactaremailActivity.this, "El botón retroceder se ha deshabilitado", Toast.LENGTH_LONG).show();
@@ -140,6 +152,7 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
         editText3 = (EditText) findViewById((R.id.editText3));
         editText4 = (EditText) findViewById((R.id.editText4));
         enviarmail= (Button) findViewById(R.id.enviarmail);
+        txv_adj = (TextView)findViewById(R.id.txv_adj);
         multiSelectionSpinnerdestinatarios.setListener(this, 1);
         url = "http://serverprueba.present.com.co/api/email/new";
         url += "?token=" + token;
@@ -646,5 +659,78 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
     }*/
 
     // fin clase
+
+    public void seleccionArchivo(View v){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
+            adjuntarArchivo();
+        }else{
+            int hasWriteContactsPermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            if (hasWriteContactsPermission != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},0);
+            }else if (hasWriteContactsPermission == PackageManager.PERMISSION_GRANTED){
+                adjuntarArchivo();
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if(0 == requestCode) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                adjuntarArchivo();
+            }
+        }else{
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    private void adjuntarArchivo() {
+        Intent archivo = new Intent(Intent.ACTION_GET_CONTENT);
+        archivo.setType("image/*");
+        startActivityForResult(archivo,request=0);
+    }
+
+    public String devolverNombre(Uri uri){
+        String nombre = "";
+        Cursor cursor = null;
+        try {
+            cursor = getContentResolver().query(uri, new String[]{
+                    MediaStore.Images.ImageColumns.DISPLAY_NAME
+            }, null, null, null);
+
+            if (cursor != null && cursor.moveToFirst()) {
+                nombre = cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DISPLAY_NAME));
+                //Log.i("EL NOMBRE", nombre);
+                //return nombre;
+            }
+        } finally {
+
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return nombre;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK ) {
+            if (requestCode == 0){
+                mPhotoUri = data.getData();
+                nombres.add(devolverNombre(mPhotoUri));
+                archivo.add(RealPath.getRealPathFromUri(mPhotoUri,this));
+                llenarTex();
+            }
+        }
+    }
+
+
+    public void llenarTex(){
+        String adj = "";
+        for (String item:nombres) {
+            adj = adj+item+"\n";
+        }
+        txv_adj.setText(adj);
+    }
 
     }
