@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import sunnysoft.presentapp.Interfaz.responder_emailActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +24,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import sunnysoft.presentapp.Interfaz.DetalleMuralesActivity;
+import sunnysoft.presentapp.Interfaz.VerEntradas;
 import sunnysoft.presentapp.Interfaz.pojo.CorreoDetalle;
+import sunnysoft.presentapp.Interfaz.responder_emailActivity;
 import sunnysoft.presentapp.R;
 
 /**
@@ -33,10 +36,12 @@ import sunnysoft.presentapp.R;
 public class CorreosDetalleAdapter extends RecyclerView.Adapter<CorreosDetalleAdapter.ViewHolder> {
 
     Context context;
+
     List<CorreoDetalle> correoDetalles;
     private List<String> name_files = new ArrayList<>();
     private List<String> url_files = new ArrayList<>();
     private List<String> urls_images = new ArrayList<>();
+    String View_all_url;
 
     public CorreosDetalleAdapter(Context context, List<CorreoDetalle> correoDetalles) {
         this.context = context;
@@ -62,6 +67,7 @@ public class CorreosDetalleAdapter extends RecyclerView.Adapter<CorreosDetalleAd
         url_files = correoDetalles.get(position).getUrl_files();
         urls_images = correoDetalles.get(position).getUrls_images();
         LayoutInflater inflater = LayoutInflater.from(context);
+        View_all_url = correoDetalles.get(position).getReply();
         //if (!name_files.isEmpty() && !url_files.isEmpty()){
             for (int i=0;i<name_files.size();i++){
                 View v = inflater.inflate(R.layout.boton_adjuntos,holder.contenedor_adjuntos,true);
@@ -131,21 +137,40 @@ public class CorreosDetalleAdapter extends RecyclerView.Adapter<CorreosDetalleAd
         private ConstraintLayout desplegable;
         private CardView card;
 
-        public ViewHolder(View itemView) {
+           public ViewHolder(View itemView) {
             super(itemView);
 
             nombre = (TextView)itemView.findViewById(R.id.txv_nombre);
             fecha = (TextView)itemView.findViewById(R.id.txv_fecha);
             hora = (TextView)itemView.findViewById(R.id.txv_hora);
             img_usuario = (ImageView)itemView.findViewById(R.id.img_persona);
-            //btn_reenviar = (Button)itemView.findViewById(R.id.btn_reenviar);
             btn_responder = (Button)itemView.findViewById(R.id.btn_responder);
-            //btn_responder_todos = (Button)itemView.findViewById(R.id.btn_responder_todos);
             web_contenido = (WebView)itemView.findViewById(R.id.webview_contenido);
             contenedor_adjuntos = (LinearLayout)itemView.findViewById(R.id.contenedor_adjuntos);
             contenedor_imagenes = (LinearLayout)itemView.findViewById(R.id.contenedor_imagenes);
             desplegable = (ConstraintLayout)itemView.findViewById(R.id.desplegable);
             card = (CardView)itemView.findViewById(R.id.card_correos);
+            Correosdetalle();
+           }
+
+        private void Correosdetalle(){
+               btn_responder.setOnClickListener(new View.OnClickListener() {
+                   @Override
+                   public void onClick(View view) {
+
+                       Intent i = new Intent(context, responder_emailActivity.class);
+                       i.putExtra("View_all_url", View_all_url);
+                       context.startActivity(i);
+                   }
+               });
+
+
+
         }
+
+
+
     }
+
+
 }

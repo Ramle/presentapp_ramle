@@ -61,6 +61,11 @@ public class MyAsyncTask extends AsyncTask<String,Void,String> {
                     resultado = myRestFulGP.enviardatos(httppost);
                     break;
 
+                case "responder Email":
+
+                    resultado = myRestFulGP.enviardatos(httppost);
+                    break;
+
 
                 default:
                      resultado = null;
@@ -112,6 +117,14 @@ public class MyAsyncTask extends AsyncTask<String,Void,String> {
             case "Enviar Email":
 
                 Toast.makeText(context, "El email ha sido enviado", Toast.LENGTH_LONG).show();
+                i = new Intent(context, BandejaCorreosActivity.class);
+
+                context.startActivity(i);
+                break;
+
+            case "responder Email":
+
+                //Toast.makeText(context, "El email ha sido enviado", Toast.LENGTH_LONG).show();
                 i = new Intent(context, BandejaCorreosActivity.class);
 
                 context.startActivity(i);

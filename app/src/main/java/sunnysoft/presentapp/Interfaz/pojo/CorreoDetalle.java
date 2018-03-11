@@ -14,12 +14,13 @@ public class CorreoDetalle {
     private String contenido;
     private String fecha;
     private String hora;
+    private String reply;
     private List<String> name_files;
     private List<String> url_files;
     private List<String> urls_images;
 
 
-    public CorreoDetalle(String nombre, String imagen_usuario, String contenido, String fecha, String hora, List<String> name_files, List<String> url_files, List<String> urls_images) {
+    public CorreoDetalle(String nombre, String imagen_usuario, String contenido, String fecha, String hora, List<String> name_files, List<String> url_files, List<String> urls_images, String reply) {
         this.nombre = nombre;
         this.imagen_usuario = imagen_usuario;
         this.contenido = contenido;
@@ -28,6 +29,7 @@ public class CorreoDetalle {
         this.name_files = name_files;
         this.url_files = url_files;
         this.urls_images = urls_images;
+        this.reply = reply;
     }
 
     public List<String> getName_files() {
@@ -92,6 +94,14 @@ public class CorreoDetalle {
 
     public void setHora(String hora) {
         this.hora = hora;
+    }
+
+    public String getReply() {
+        return reply;
+    }
+
+    public void setReply(String reply) {
+        this.reply = reply;
     }
 
 

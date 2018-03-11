@@ -36,6 +36,8 @@ import sunnysoft.presentapp.Datos.DatabaseHelper;
 import sunnysoft.presentapp.Interfaz.adapter.CorreosAdapter;
 import sunnysoft.presentapp.Interfaz.adapter.CorreosDetalleAdapter;
 import sunnysoft.presentapp.Interfaz.pojo.CorreoDetalle;
+
+
 import sunnysoft.presentapp.R;
 
 public class DetallemailActivity extends AppCompatActivity {
@@ -108,6 +110,7 @@ public class DetallemailActivity extends AppCompatActivity {
         urlservice = URL;
         urlservice += "?token="+token;
         urlservice += "&email="+ email;
+        Log.e("servicio", urlservice);
 
         recycler_detalle_correo = (RecyclerView)findViewById(R.id.recycler_correo_detalles);
 
@@ -139,6 +142,7 @@ public class DetallemailActivity extends AppCompatActivity {
                     JSONObject principal = new JSONObject(responseStr);
 
                     String valorLlave = principal.getString("email");
+                    String reply = principal.getString("reply_url");
 
                     JSONObject detalle_correo = new JSONObject(valorLlave);
 
@@ -157,6 +161,7 @@ public class DetallemailActivity extends AppCompatActivity {
                         String name = valores.getString("name");
                         String images = valores.getString("images");
                         String files = valores.getString("files");
+
 
                         JSONArray items = new JSONArray(images);
                         JSONArray items2 = new JSONArray(files);
@@ -178,7 +183,7 @@ public class DetallemailActivity extends AppCompatActivity {
                             urls_images.add(valoresImages.getString("url"));
                         }
 
-                        correoDetalles.add(new CorreoDetalle(name,user_image,body,date,time,name_files,url_files,urls_images));
+                        correoDetalles.add(new CorreoDetalle(name,user_image,body,date,time,name_files,url_files,urls_images, reply));
                     }
 
                     adapter = new CorreosDetalleAdapter(getApplicationContext(), correoDetalles);

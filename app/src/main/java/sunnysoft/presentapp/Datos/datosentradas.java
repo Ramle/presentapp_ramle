@@ -21,11 +21,13 @@ public class datosentradas {
 
         try {
             HttpResponse response = httpclient.execute(httppost);
+            return "se ha enviado";
         } catch (IOException e) {
             e.printStackTrace();
+            return "No se ha enviado" + e;
         }
 
-        return "se ha enviado";
+
 
     }
 }

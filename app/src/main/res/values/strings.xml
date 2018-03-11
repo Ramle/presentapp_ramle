@@ -23,6 +23,7 @@
     <string name="txt_menu_vemail">VER E-MAIL</string>
     <string name="txt_menu_Temail">REDACTAR E-MAIL</string>
     <string name="txt_detalle_correo">VER E-MAIL</string>
+    <string name="txt_responder_email">RESPONDER E-MAIL</string>
 
 
     <string name="title_activity_login">loginActivity</string>
