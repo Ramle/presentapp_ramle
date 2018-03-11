@@ -31,6 +31,7 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:hint="Redacta tu email"
+        android:background="@drawable/inputs_terciario"
         android:inputType="text|textMultiLine"
         app:layout_constraintBottom_toTopOf="@+id/btn_responderemail"
         app:layout_constraintEnd_toEndOf="parent"

@@ -37,6 +37,9 @@
             android:name=".Interfaz.CreateentradaActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".Interfaz.responder_emailActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".Interfaz.MenuActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".Interfaz.LoginActivity" />

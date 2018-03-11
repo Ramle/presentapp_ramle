@@ -78,9 +78,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:ems="10"
-
+                    android:background="@drawable/inputs_terciario"
                     android:hint="Asunto"
                     android:inputType="text|textMultiLine"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -88,33 +88,6 @@
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
                     tools:ignore="MissingConstraints" />
 
-                <TextView
-                    android:id="@+id/txvpara"
-                    android:layout_width="wrap_content"
-                    android:layout_height="16dp"
-                    android:layout_marginTop="36dp"
-                    android:text="Para"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.046"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.guna.libmultispinner.MultiSelectionSpinner
-                    android:id="@+id/mySpinnerusers3"
-                    android:layout_width="222dp"
-                    android:layout_height="32dp"
-                    android:layout_alignBottom="@+id/txvpara"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="36dp"
-                    android:layout_toEndOf="@+id/txvpara"
-                    android:text="Selección múltiple"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.91"
-                    app:layout_constraintStart_toEndOf="@+id/txvpara"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="MissingConstraints,UnknownId" />
 
                 <LinearLayout
                     android:id="@+id/linearLayout3"
@@ -122,11 +95,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="0dp"
                     android:orientation="vertical"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/mySpinnerusers3"
+                    app:layout_constraintTop_toBottomOf="@+id/relativeLayout6"
                     tools:ignore="MissingConstraints"></LinearLayout>
 
                 <Button
@@ -162,6 +135,7 @@
                     android:layout_marginTop="24dp"
                     android:ems="10"
                     android:hint="Redacta tu email"
+                    android:background="@drawable/inputs_terciario"
                     android:inputType="text|textMultiLine"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -181,6 +155,44 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/btn_adj" />
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayout6"
+                    android:layout_width="343dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.555"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:background="@drawable/inputs_terciario"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/txvpara"
+                        android:layout_width="wrap_content"
+                        android:layout_height="16dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:paddingLeft="10dp"
+                        android:text="Para"
+                        android:textStyle="bold"
+                        tools:layout_editor_absoluteX="28dp"
+                        tools:layout_editor_absoluteY="8dp" />
+
+                    <com.guna.libmultispinner.MultiSelectionSpinner
+                        android:id="@+id/mySpinnerusers3"
+                        android:layout_width="222dp"
+                        android:layout_height="32dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="15dp"
+                        android:text="Selección múltiple"
+                        tools:ignore="MissingConstraints,UnknownId"
+                        tools:layout_editor_absoluteX="146dp"
+                        tools:layout_editor_absoluteY="8dp" />
+                </RelativeLayout>
             </android.support.constraint.ConstraintLayout>
         </LinearLayout>
 

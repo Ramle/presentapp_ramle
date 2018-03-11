@@ -266,11 +266,32 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
                         LayoutInflater inflater = LayoutInflater.from(context);
                         int id = R.layout.layout_left;
                         RelativeLayout relativeLayout = (RelativeLayout) inflater.inflate(id, null, false);
+                        relativeLayout.setBackgroundResource(R.drawable.inputs_terciario);
+
+                        /*RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayout.getLayoutParams();
+                        params.height = 70;
+                        relativeLayout.setLayoutParams(params);*/
+
+
+
+                        /*LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)relativeLayout.getLayoutParams();
+                        params.setMargins(0, 0, 0, 0);
+                        relativeLayout.setLayoutParams(params);*/
+
+
                         TextView txtcamp = (TextView) relativeLayout.findViewById(R.id.txvredac);
                         txtcamp.setText(listest.get(x));
+                        txtcamp.setPadding(0,0,0,10);
+
+
+
                         multiSelectionSpinner = (MultiSelectionSpinner) relativeLayout.findViewById(R.id.mySpinneredac); ;
                         multiSelectionSpinner.setItems(Array1);
+                        txtcamp.setPadding(10,0,0,10);
+
                         layout.addView(relativeLayout);
+                        layout.setBackgroundResource(R.drawable.inputs_terciario);
+
 
                         multiSelectionSpinner.setListener(RedactaremailActivity.this, y);
                     }
