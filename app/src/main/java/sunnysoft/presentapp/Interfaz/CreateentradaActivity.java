@@ -697,23 +697,32 @@ public class CreateentradaActivity extends AppCompatActivity implements MultiSel
                     Log.i("VALIDACION P2","FALSE");
                     return false;
                 } else {
-                    JSONArray mJSONArrayusersid = new JSONArray(Arrays.asList(users_ids));
-                    JSONArray mJSONArraytagsid = new JSONArray(Arrays.asList(tags_ids));
-                    JSONArray mJSONArraysfieldsid = new JSONArray(Arrays.asList(fields_ids));
-                    JSONArray mJSONArraysfieldscontent = new JSONArray(Arrays.asList(fields_content));
+                    if(tags_ids != null || fields_ids != null){
 
-                    JSONObject j = new JSONObject();
-                    //j.put("key","users_ids");
-                    j.put("users_ids", mJSONArrayusersid);
-                    j.put("tags_ids", mJSONArraytagsid);
-                    j.put("fields_ids", mJSONArraysfieldsid);
-                    j.put("fields_content", mJSONArraysfieldscontent);
+                        JSONArray mJSONArrayusersid = new JSONArray(Arrays.asList(users_ids));
+                        JSONArray mJSONArraytagsid = new JSONArray(Arrays.asList(tags_ids));
+                        JSONArray mJSONArraysfieldsid = new JSONArray(Arrays.asList(fields_ids));
+                        JSONArray mJSONArraysfieldscontent = new JSONArray(Arrays.asList(fields_content));
 
-                    StringEntity stringEntity = new StringEntity(j.toString());
-                    stringEntity.setContentType((Header) new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-                    httppost.setEntity(stringEntity);
-                    Log.i("VALIDACION P3","TRUE");
-                    return true;
+                        JSONObject j = new JSONObject();
+                        //j.put("key","users_ids");
+                        j.put("users_ids", mJSONArrayusersid);
+                        j.put("tags_ids", mJSONArraytagsid);
+                        j.put("fields_ids", mJSONArraysfieldsid);
+                        j.put("fields_content", mJSONArraysfieldscontent);
+
+                        StringEntity stringEntity = new StringEntity(j.toString());
+                        stringEntity.setContentType((Header) new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                        httppost.setEntity(stringEntity);
+                        Log.i("VALIDACION P3","TRUE");
+                        return true;
+
+
+                    }else {
+
+                        Log.i("VALIDACION P3","FALSE");
+                        return false;
+                }
                 }
            // }
 
