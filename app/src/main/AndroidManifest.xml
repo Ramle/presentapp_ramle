@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="sunnysoft.presentapp">
+
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />
+
+    <application
+        android:allowBackup="true"
+        android:hardwareAccelerated="true"
+        android:largeHeap="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:background="@color/white">
+
+        <activity
+            android:name=".Interfaz.InicioActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Interfaz.valcolegiosActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Interfaz.CreateentradaActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Interfaz.responder_emailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Interfaz.MenuActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Interfaz.LoginActivity" />
+        <activity
+            android:name=".Interfaz.MuralesActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Interfaz.forgotActivity" />
+        <activity android:name=".Interfaz.ModulosActivity" />
+        <activity android:name=".Interfaz.entagendadiariaActivity" />
+        <activity android:name=".Interfaz.DetalleentradaActivity" />
+        <activity android:name=".Interfaz.EntradasActivity" />
+        <activity android:name=".Interfaz.DetalleentradagralActivity" />
+        <activity
+            android:name=".Interfaz.bandejasemailActivity"
+            android:label="@string/title_activity_bandejasemail"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".Interfaz.DetallemailActivity"
+            android:label="@string/title_activity_detallemail"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".Interfaz.RedactaremailActivity"
+            android:label="@string/title_activity_redactaremail"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".Interfaz.CalendarioActivity"
+            android:label="@string/title_activity_calendario"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".Interfaz.VereventoActivity" />
+        <activity android:name=".Interfaz.CreareventoActivity" />
+        <activity
+            android:name=".Interfaz.BandejaCorreosActivity"
+            android:label="@string/title_activity_bandeja_correos"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".Interfaz.DetalleMuralesActivity" />
+        <activity android:name=".Interfaz.GaleriaDetalleActivity"></activity>
+
+        <activity
+            android:name=".Interfaz.VerEntradas"
+            android:label="@string/title_activity_ver_entradas"
+            android:theme="@style/AppTheme"></activity>
+
+        <!-- SERVICIO DE NOTIFICACIONES -->
+
+        <service
+            android:name=".firebase.MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+
+
+        <service
+            android:name=".firebase.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+    </application>
+
+</manifest>

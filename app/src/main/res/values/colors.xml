@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#69b4e8</color>
+
+    <color name="color_letra_in_prim">#ffffff</color>
+    <color name="color_letra_btn_prim">#69b4e8</color>
+
+    <color name="color_input">#69b4e8</color>
+    <color name="color_inputs_primarios">#69b4e8</color>
+    <color name="color_botones_primarios">#1e2139</color>
+    <color name="basico">#000000</color>
+
+    <color name="color_btn_ent">#ffffff</color>
+    <color name="color_marcos">#e5e6e8</color>
+
+
+
+    <color name="color_notificacion">#dc9233</color>
+    <color name="negro_opaco">#5d000000</color>
+</resources>
