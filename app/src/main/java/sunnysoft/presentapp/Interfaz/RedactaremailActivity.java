@@ -17,6 +17,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.content.res.TypedArrayUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +39,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -429,11 +433,20 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
         JSONObject j = new JSONObject();
         //j.put("key","users_ids");
         try {
-            j.put("email", email);
-            j.put("token", token);
-            j.put("usuarios", mJSONArrayusuarios);
-            j.put("title", editText3.getText());
-            j.put("contents", editText4.getText());
+            if (archivo.size() > 0){
+                j.put("email", email);
+                j.put("token", token);
+                j.put("usuarios", mJSONArrayusuarios);
+                j.put("title", editText3.getText());
+                j.put("contents", editText4.getText());
+                j.put("file", convertirArchivo(archivo.get(0)));
+            }else{
+                j.put("email", email);
+                j.put("token", token);
+                j.put("usuarios", mJSONArrayusuarios);
+                j.put("title", editText3.getText());
+                j.put("contents", editText4.getText());
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -752,6 +765,23 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
             adj = adj+item+"\n";
         }
         txv_adj.setText(adj);
+    }
+
+    public String convertirArchivo(String ruta){
+        //String path = getRealPathFromURI(ruta);
+        String archivoConvertido = "";
+        File file = new File(ruta);
+        try (FileInputStream archivoruta = new FileInputStream(file)){
+            byte dataarchivo[] = new byte[(int) file.length()];
+            archivoruta.read(dataarchivo);
+            archivoConvertido = Base64.encodeToString(dataarchivo,Base64.DEFAULT);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Log.i("CONVERTIDPO",archivoConvertido);
+        return archivoConvertido;
     }
 
     }
