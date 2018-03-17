@@ -152,15 +152,17 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
         subdomain = Resultados.getString(Resultados.getColumnIndex("subdomain"));
         token = Resultados.getString(Resultados.getColumnIndex("token"));
         email = Resultados.getString(Resultados.getColumnIndex("user"));
-        multiSelectionSpinnerdestinatarios = (MultiSelectionSpinner) findViewById(R.id.mySpinnerusers3);
+
         editText3 = (EditText) findViewById((R.id.editText3));
         editText4 = (EditText) findViewById((R.id.editText4));
         enviarmail= (Button) findViewById(R.id.enviarmail);
         txv_adj = (TextView)findViewById(R.id.txv_adj);
+        multiSelectionSpinnerdestinatarios = (MultiSelectionSpinner) findViewById(R.id.mySpinnerusers3);
         multiSelectionSpinnerdestinatarios.setListener(this, 1);
         url = "http://serverprueba.present.com.co/api/email/new";
         url += "?token=" + token;
         url += "&email=" + email;
+        Log.e("servicio", url);
         String seturl;
         seturl = "http://serverprueba.present.com.co/api/email/menu";
         seturl += "?token=" + token;
@@ -207,6 +209,7 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
                     responseStr = new String(responseBody, "UTF-8");
                     JSONObject user = new JSONObject(responseStr);
                     String usuarios = user.getString("usuarios");
+
                     JSONArray items = new JSONArray(usuarios);
                    for (int i = 0; i < items.length(); i++) {
                         String item = items.getString(i);
@@ -219,12 +222,18 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
                     }
                     users = new String[listusu.size()];
                     users = listusu.toArray(users);
-                    if(users.length != 0){
+                    try {
                         multiSelectionSpinnerdestinatarios.setItems(users);
-                    }else{
 
+                    }catch (Exception e){
+                        Toast.makeText(RedactaremailActivity.this, "El usuario no tiene destinatarios asignados, por favor comuniquese con el administrador del app", Toast.LENGTH_LONG).show();
+                        Intent i = new Intent(RedactaremailActivity.this, BandejaCorreosActivity.class);
+                        startActivity(i);
 
                     }
+
+
+
 
                     String acgs = null;
 
@@ -290,14 +299,16 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
 
 
                         multiSelectionSpinner = (MultiSelectionSpinner) relativeLayout.findViewById(R.id.mySpinneredac); ;
+
                         multiSelectionSpinner.setItems(Array1);
-                        txtcamp.setPadding(10,0,0,10);
+                            txtcamp.setPadding(10,0,0,10);
 
-                        layout.addView(relativeLayout);
-                        layout.setBackgroundResource(R.drawable.inputs_terciario);
+                            layout.addView(relativeLayout);
+                            layout.setBackgroundResource(R.drawable.inputs_terciario);
 
 
-                        multiSelectionSpinner.setListener(RedactaremailActivity.this, y);
+                            multiSelectionSpinner.setListener(RedactaremailActivity.this, y);
+
                     }
                     progressDialog[0].dismiss();
                 } catch (UnsupportedEncodingException e) {
@@ -439,7 +450,7 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
                 j.put("usuarios", mJSONArrayusuarios);
                 j.put("title", editText3.getText());
                 j.put("contents", editText4.getText());
-                j.put("file", convertirArchivo(archivo.get(0)));
+                j.put("files", convertirArchivo(archivo.get(0)));
             }else{
                 j.put("email", email);
                 j.put("token", token);
