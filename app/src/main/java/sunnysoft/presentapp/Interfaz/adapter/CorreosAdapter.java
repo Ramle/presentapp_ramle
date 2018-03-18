@@ -60,17 +60,18 @@ public class CorreosAdapter  extends RecyclerView.Adapter<sunnysoft.presentapp.I
         holder.txvasunto.setText(correosList.get(position).getAsunto());
         holder.txvhora.setText(correosList.get(position).getHora());
 
-        Log.i("data",correosList.get(position).getNombre());
-        Log.i("data",correosList.get(position).getAsunto());
-        Log.i("data",correosList.get(position).getHora());
-        Log.i("data",correosList.get(position).getImagen_persona());
+
+        try{
+
+            Picasso.with(context)
+                    .load(correosList.get(position).getImagen_persona())
+                    .error(R.drawable.logo)
+                    .into(holder.imgPersona);
+
+        }catch (Exception e){
 
 
-
-        Picasso.with(context)
-                .load(correosList.get(position).getImagen_persona())
-                .error(R.drawable.logo)
-                .into(holder.imgPersona);
+        }
 
         if (!correosList.get(position).getIsread().equals("true")){
 

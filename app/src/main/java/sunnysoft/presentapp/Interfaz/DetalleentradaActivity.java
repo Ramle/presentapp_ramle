@@ -223,6 +223,8 @@ public class DetalleentradaActivity extends AppCompatActivity {
                     }
 
                     mTagGroup.setTags(tags);
+                    int k = 1;
+                    int cantidad = 0;
 
 
                     for(int j=0; j < jsonarray_field.length(); j++) {
@@ -243,7 +245,22 @@ public class DetalleentradaActivity extends AppCompatActivity {
 
                         //Relacionando la lista con el adaptador
                         mfieldsEventosList.setAdapter(mfieldsEventoAdapter);
+                        k += j;
 
+                    }
+
+
+                    if(cantidad > 500){
+
+                        mfieldsEventosList.getLayoutParams().height= 500;
+
+                    }else{
+
+                        if(cantidad > 250 || k > 1){
+
+                            mfieldsEventosList.getLayoutParams().height= 350;
+
+                        }
                     }
 
                 } catch (UnsupportedEncodingException e1) {
@@ -288,8 +305,9 @@ public class DetalleentradaActivity extends AppCompatActivity {
         secundaria.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(DetalleentradaActivity.this, ModulosActivity.class);
-                startActivity(i);
+                // Intent i = new Intent(DetalleentradaActivity.this, VerEntradas.class);
+                onBackPressed();
+                //startActivity(i);
             }
         });
 

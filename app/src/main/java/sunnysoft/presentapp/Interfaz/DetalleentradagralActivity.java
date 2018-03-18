@@ -93,10 +93,10 @@ public class DetalleentradagralActivity extends AppCompatActivity {
         Bundle datos = getIntent().getExtras();
 
         if (datos != null){
-         url = datos.getString("url");
-         //urlT = datos.getString("tURL");
+            url = datos.getString("url");
+            //urlT = datos.getString("tURL");
         }
-        
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         TextView toolbar_title = (TextView)toolbar.findViewById(R.id.toolbar_title);
         setSupportActionBar(toolbar);
@@ -232,6 +232,13 @@ public class DetalleentradagralActivity extends AppCompatActivity {
 
                     mTagGroup.setTags(tags);
 
+                    int k = 1;
+                    int cantidad = 0;
+
+                    JSONObject jsonobject_fields_first = jsonarray_field.getJSONObject(0);
+                    String contentField_first       = jsonobject_fields_first.getString("content");
+                    cantidad = contentField_first.length();
+
                     for(int j=0; j < jsonarray_field.length(); j++) {
 
                         final FieldsEntradasAdapter mfieldsEntradaAdapter;
@@ -249,6 +256,21 @@ public class DetalleentradagralActivity extends AppCompatActivity {
                         //Relacionando la lista con el adaptador
                         mfieldsEntradasList.setAdapter(mfieldsEntradaAdapter);
 
+                        k += j;
+
+                    }
+
+                    if(cantidad > 500){
+
+                        mfieldsEntradasList.getLayoutParams().height= 500;
+
+                    }else{
+
+                        if(cantidad > 250 || k > 1){
+
+                            mfieldsEntradasList.getLayoutParams().height= 350;
+
+                        }
                     }
 
 

@@ -133,7 +133,7 @@ public class BandejaCorreosActivity extends AppCompatActivity {
         url += ".present.com.co//api/email/menu";
         url += "?token=" + token;
         url += "&email=" + email;
-
+        Log.e("urlserv", url);
         urls = new ArrayList<>();
         nomes = new ArrayList<>();
 

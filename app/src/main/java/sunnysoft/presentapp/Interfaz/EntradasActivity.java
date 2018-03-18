@@ -459,7 +459,7 @@ public class EntradasActivity extends AppCompatActivity {
                 }
             };
 
-           recyclerEntradas.addOnScrollListener(scrollListener);
+            recyclerEntradas.addOnScrollListener(scrollListener);
             // mocking network delay for API call
             /*new Handler().postDelayed(new Runnable() {
                 @Override

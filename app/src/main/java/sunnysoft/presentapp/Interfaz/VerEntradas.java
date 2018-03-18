@@ -87,11 +87,11 @@ public class VerEntradas extends AppCompatActivity {
         setContentView(R.layout.activity_ver_entradas);
 
 
-      //  final ListView mProcesoEntradasList;
+        //  final ListView mProcesoEntradasList;
         final String View_all_url = getIntent().getStringExtra("View_all_url");
 
         recyclerEntradas = (RecyclerView) findViewById(R.id.entradas_list);
-      //  mProcesoEntradasList = (ListView) findViewById(R.id.entradas_list);
+        //  mProcesoEntradasList = (ListView) findViewById(R.id.entradas_list);
 
         midb = new DatabaseHelper(this);
 
@@ -138,7 +138,7 @@ public class VerEntradas extends AppCompatActivity {
             // JSONObject dataEntradas = getEntradasData.getResponse();
 
             EntradasList = Contenido(JsonDataEntrada);
-           // Log.i("Goood", "onCreateView : "+EntradasList);
+            // Log.i("Goood", "onCreateView : "+EntradasList);
 
             //Log.i("", "onCreateView: "+EntradasList);
             // Inicializar el adaptador con la fuente de datos.
@@ -219,7 +219,7 @@ public class VerEntradas extends AppCompatActivity {
             }
         };
 
-       recyclerEntradas.addOnScrollListener(scrollListener);
+        recyclerEntradas.addOnScrollListener(scrollListener);
 
     }
 
@@ -292,12 +292,12 @@ public class VerEntradas extends AppCompatActivity {
 
                     //entrada_1 = new Entradas(user_name, detalles, i + 1);
 
-                  //  Log.e("Data: ", "Data Url " + detalles);
+                    //  Log.e("Data: ", "Data Url " + detalles);
                     ProcesoEntradasList_Contenido.add(new Entradas(user_name, detalles, i + 1,img_persona,tags, urldetalle));
                     //saveEntrada(new Entradas(user_name, detalles, i + 1,img_persona,tags));
 
                     // Toast.makeText(VerEntradas.this, "Bien por "+entrada_1.getIndice(), Toast.LENGTH_LONG).show();
-;
+                    ;
 
                 }catch (Exception e){
                     Toast.makeText(VerEntradas.this, "Fallo por "+e, Toast.LENGTH_LONG).show();

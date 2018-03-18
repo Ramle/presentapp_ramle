@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.widget.GridView;
@@ -68,11 +70,12 @@ public class MenuActivity extends AppCompatActivity {
 
     ImageView menlogocol;
     ImageView menimageuser;
+    CardView cardviewuser;
 
     Context context;
 
 
-     TextView lbl_nombre;
+    TextView lbl_nombre;
     TextView lbl_profecion;
 
 
@@ -94,7 +97,9 @@ public class MenuActivity extends AppCompatActivity {
 
         // recibe datos de otra activity
 
-       Bundle datos = getIntent().getExtras();
+
+
+        Bundle datos = getIntent().getExtras();
 
 
         // Inicia base de datos
@@ -111,10 +116,30 @@ public class MenuActivity extends AppCompatActivity {
         logo =Resultados.getString(Resultados.getColumnIndex("logo"));
         user_image =Resultados.getString(Resultados.getColumnIndex("user_image"));
 
+        //Toast.makeText(MenuActivity.this, " "+ getResources().getDisplayMetrics().densityDpi, Toast.LENGTH_LONG).show();
+
         //Iniciar de componentes
 
         menlogocol = (ImageView) findViewById(R.id.menlogocol);
         menimageuser = (ImageView) findViewById(R.id.menimageuser);
+        cardviewuser = (CardView) findViewById(R.id.cardView);
+
+        if(getResources().getDisplayMetrics().densityDpi <= DisplayMetrics.DENSITY_HIGH){
+
+            menlogocol.getLayoutParams().width = 190;
+            menlogocol.getLayoutParams().height = 95;
+            menlogocol.setAdjustViewBounds(true);
+
+            menlogocol.setTop(150);
+
+            menimageuser.getLayoutParams().width = 140;
+            menimageuser.getLayoutParams().height = 140;
+            cardviewuser.getLayoutParams().width = 140;
+            cardviewuser.getLayoutParams().height = 140;
+            cardviewuser.setRadius(70);
+            menimageuser.setAdjustViewBounds(true);
+
+        }
 
         lbl_nombre = (TextView) findViewById(R.id.lbl_nombre);
         lbl_profecion = (TextView) findViewById(R.id.lbl_profecion);
@@ -130,7 +155,7 @@ public class MenuActivity extends AppCompatActivity {
         Log.e("url", url);
         // setear imagenes
         new MenuActivity.DownloadImage().execute(logo);
-        new MenuActivity.DownloadImage2().execute(user_image);
+        // new MenuActivity.DownloadImage2().execute(user_object.getString("user_image"));
 
         // setear textos principales
 
@@ -161,10 +186,12 @@ public class MenuActivity extends AppCompatActivity {
         JSONObject jsonParams = new JSONObject();
         StringEntity entity = null;
 
+
+
         // llamado del servicio
         RequestHandle post  = client.get(url, new AsyncHttpResponseHandler() {
 
-         final ProgressDialog[] progressDialog = new ProgressDialog[1];
+            final ProgressDialog[] progressDialog = new ProgressDialog[1];
 
 
             @Override
@@ -202,7 +229,9 @@ public class MenuActivity extends AppCompatActivity {
 
                     String valorLlave = user.getString("menu");
                     lbl_nombre.setText(user_object.getString("user_name"));
-                    lbl_profecion.setText(user_object.getString("user_type"));
+                    lbl_profecion.setText(user_object.getString("user_type") );
+
+                    new MenuActivity.DownloadImage2().execute(user_object.getString("user_image"));
 
                     JSONArray items = new JSONArray(valorLlave);
 

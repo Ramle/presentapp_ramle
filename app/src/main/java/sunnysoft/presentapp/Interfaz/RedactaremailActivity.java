@@ -386,8 +386,18 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
                 if (Parsearjson()){
 
                     String proceso = "Enviar Email";
-                    new MyAsyncTask(RedactaremailActivity.this, httppost, proceso, urlv, nombre)
-                         .execute();
+                    try{
+
+                        new MyAsyncTask(RedactaremailActivity.this, httppost, proceso, urlv, nombre)
+                                .execute();
+
+                    }catch (Exception e){
+
+                        Log.e("error file", String.valueOf(e));
+
+                    }
+
+
                 }else{
                     Toast.makeText(getApplicationContext(), "Los campos no deben estar vacios", Toast.LENGTH_SHORT).show();
                     }
@@ -403,7 +413,7 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
         httppost.addHeader("Content-Type", "application/json");
         // validar que los arraylist del servicio >0
 
-        Log.e("Idsusuarios", String.valueOf(indi.size()));
+        //Log.e("Idsusuarios", String.valueOf(indi.size()));
 
         for (int r = 0; r< indi.size(); r++){
 
@@ -443,6 +453,8 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
 
         JSONObject j = new JSONObject();
         //j.put("key","users_ids");
+
+        Log.e("files", convertirArchivo(archivo.get(0)));
         try {
             if (archivo.size() > 0){
                 j.put("email", email);
@@ -451,6 +463,7 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
                 j.put("title", editText3.getText());
                 j.put("contents", editText4.getText());
                 j.put("files", convertirArchivo(archivo.get(0)));
+                j.put("image_name", nombres.get(0));
             }else{
                 j.put("email", email);
                 j.put("token", token);
@@ -464,6 +477,7 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
         }
 
         StringEntity stringEntity = null;
+        Log.e("jsonenvio", j.toString());
         try {
             stringEntity = new StringEntity(j.toString());
         } catch (UnsupportedEncodingException e) {

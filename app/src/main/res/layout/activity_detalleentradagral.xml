@@ -53,7 +53,7 @@
                 <include
                     layout="@layout/content_detalleentradagral"
                     android:layout_width="0dp"
-                    android:layout_height="500dp"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_below="@+id/toolbarfecha"
                     android:layout_marginEnd="10dp"
