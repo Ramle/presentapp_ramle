@@ -44,6 +44,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -105,6 +106,7 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
     private ArrayList<String> nombres = new ArrayList<>();
     private ArrayList<String> archivo = new ArrayList<>();
     private TextView txv_adj;
+    private float tamaño;
 
     @Override
     public void onBackPressed() {
@@ -136,11 +138,9 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
         });
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Intent i = new Intent(RedactaremailActivity.this, MenuActivity.class);
                 startActivity(i);
             }
@@ -211,13 +211,13 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
                     String usuarios = user.getString("usuarios");
 
                     JSONArray items = new JSONArray(usuarios);
-                   for (int i = 0; i < items.length(); i++) {
+                    for (int i = 0; i < items.length(); i++) {
                         String item = items.getString(i);
                         JSONObject valores = new JSONObject(item);
                         int iduser = valores.getInt("id");
                         String nombreuser = valores.getString("nombre");
-                       listusu.add(nombreuser);
-                       listidusu.add(iduser);
+                        listusu.add(nombreuser);
+                        listidusu.add(iduser);
 
                     }
                     users = new String[listusu.size()];
@@ -275,7 +275,7 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
                         y = y+1;
                         String[] Array1;
                         Array1 = new String[destinatarios.get(x).size()];
-                            Array1 = destinatarios.get(x).toArray(Array1);
+                        Array1 = destinatarios.get(x).toArray(Array1);
                         LayoutInflater inflater = LayoutInflater.from(context);
                         int id = R.layout.layout_left;
                         RelativeLayout relativeLayout = (RelativeLayout) inflater.inflate(id, null, false);
@@ -301,13 +301,13 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
                         multiSelectionSpinner = (MultiSelectionSpinner) relativeLayout.findViewById(R.id.mySpinneredac); ;
 
                         multiSelectionSpinner.setItems(Array1);
-                            txtcamp.setPadding(10,0,0,10);
+                        txtcamp.setPadding(10,0,0,10);
 
-                            layout.addView(relativeLayout);
-                            layout.setBackgroundResource(R.drawable.inputs_terciario);
+                        layout.addView(relativeLayout);
+                        layout.setBackgroundResource(R.drawable.inputs_terciario);
 
 
-                            multiSelectionSpinner.setListener(RedactaremailActivity.this, y);
+                        multiSelectionSpinner.setListener(RedactaremailActivity.this, y);
 
                     }
                     progressDialog[0].dismiss();
@@ -386,21 +386,11 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
                 if (Parsearjson()){
 
                     String proceso = "Enviar Email";
-                    try{
-
-                        new MyAsyncTask(RedactaremailActivity.this, httppost, proceso, urlv, nombre)
-                                .execute();
-
-                    }catch (Exception e){
-
-                        Log.e("error file", String.valueOf(e));
-
-                    }
-
-
+                    new MyAsyncTask(RedactaremailActivity.this, httppost, proceso, urlv, nombre)
+                            .execute();
                 }else{
                     Toast.makeText(getApplicationContext(), "Los campos no deben estar vacios", Toast.LENGTH_SHORT).show();
-                    }
+                }
 
             }
         });
@@ -413,7 +403,7 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
         httppost.addHeader("Content-Type", "application/json");
         // validar que los arraylist del servicio >0
 
-        //Log.e("Idsusuarios", String.valueOf(indi.size()));
+        Log.e("Idsusuarios", String.valueOf(indi.size()));
 
         for (int r = 0; r< indi.size(); r++){
 
@@ -429,7 +419,7 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
 
 
 
-                destinatariosids = new Integer[multiSelectionSpinnerdestinatarios.getSelectedIndices().size()];
+        destinatariosids = new Integer[multiSelectionSpinnerdestinatarios.getSelectedIndices().size()];
 
         for (int a = 0; a <  multiSelectionSpinnerdestinatarios.getSelectedIndices().size(); a++ ){
 
@@ -453,8 +443,6 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
 
         JSONObject j = new JSONObject();
         //j.put("key","users_ids");
-
-        Log.e("files", convertirArchivo(archivo.get(0)));
         try {
             if (archivo.size() > 0){
                 j.put("email", email);
@@ -462,8 +450,22 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
                 j.put("usuarios", mJSONArrayusuarios);
                 j.put("title", editText3.getText());
                 j.put("contents", editText4.getText());
-                j.put("files", convertirArchivo(archivo.get(0)));
-                j.put("image_name", nombres.get(0));
+                ArrayList<String> listarchivos = new ArrayList<>();
+                for (String item: archivo){
+                    listarchivos.add(convertirArchivo(item));
+                }
+                String[] file = listarchivos.toArray(new String[listarchivos.size()]);
+                JSONArray mJSONArrayfile = new JSONArray(Arrays.asList(file));
+                j.put("files", mJSONArrayfile);
+                ArrayList<String> listanombres = new ArrayList<>();
+
+
+                for (String item:nombres) {
+                    listanombres.add(item);
+                }
+                String[] names = listanombres.toArray(new String[listanombres.size()]);
+                JSONArray mJSONArraynames = new JSONArray(Arrays.asList(names));
+                j.put("image_name", mJSONArraynames);
             }else{
                 j.put("email", email);
                 j.put("token", token);
@@ -477,7 +479,6 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
         }
 
         StringEntity stringEntity = null;
-        Log.e("jsonenvio", j.toString());
         try {
             stringEntity = new StringEntity(j.toString());
         } catch (UnsupportedEncodingException e) {
@@ -524,7 +525,6 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
         /*for (int z = 0 ; z < indi.size(); z++) {
             validacion = 0;
             for (int w = 0 ; w < indices.size(); w++) {
-
                 if(indices.get(w) == indi.get(z)[0] &&  indicador == indi.get(z)[1] ){
                     validacion = 1;
                     w = indices.size();
@@ -545,13 +545,13 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
             aux[1] =  indicador;
 
             if(indi.size() != 0){
-            for (int a = 0 ; a < indi.size(); a++) {
+                for (int a = 0 ; a < indi.size(); a++) {
 
 
-                if(indi.get(a)[0] != aux[0] || indi.get(a)[1] != aux[1] ){
-                    indi.add(aux);
+                    if(indi.get(a)[0] != aux[0] || indi.get(a)[1] != aux[1] ){
+                        indi.add(aux);
+                    }
                 }
-            }
             }else{
                 indi.add(aux);
             }
@@ -570,7 +570,7 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
 
 
 
-       //Toast.makeText(this, indices.toString(), Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, indices.toString(), Toast.LENGTH_LONG).show();
 
     }
 
@@ -582,91 +582,65 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
     }
 
     /*public void seteartabs(final String url){
-
         AsyncHttpClient client = new AsyncHttpClient();
         JSONObject jsonParams = new JSONObject();
         StringEntity entity = null;
-
         tabLayout = (TabLayout) findViewById(R.id.tabsent);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         nomes = new ArrayList<>();
-
         // llamado del servicio
         RequestHandle post  = client.get(url, new AsyncHttpResponseHandler() {
-
-
             @Override
             public void onStart(){
-
                 super.onStart();
-
             }
-
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-
                 // Declaracion de variables
                 String responseStr = null;
-
                 try {
-
                     //respuesta del servicio
                     responseStr = new String(responseBody, "UTF-8");
                     // manejo del primer nivel de objetos
                     JSONObject user = new JSONObject(responseStr);
                     // Se obtiene valores del objeto
                     String valorLlave = user.getString("menu");
-
                     JSONArray items = new JSONArray(valorLlave);
-
                     for(int i=0; i < items.length(); i++) {
                         String item = items.getString(i);
-
                         JSONObject valores = new JSONObject(item);
-
                         nombreMenuCorreo = valores.getString("name");
                         nomes.add(nombreMenuCorreo);
                     }
-
                     for (int a = 0; a< nomes.size(); a++){
                         /////////////////////creacion de tabs dinamicamente//////////////////////
                         tabLayout.addTab(tabLayout.newTab().setText(nomes.get(a)));
                     }
-
                     tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                         @Override
                         public void onTabSelected(TabLayout.Tab tab) {
-
                         }
-
                         @Override
                         public void onTabUnselected(TabLayout.Tab tab) {
                             Intent i = new Intent(getApplicationContext(),BandejaCorreosActivity.class);
                             i.putExtra("posicion",tab.getPosition());
                             startActivity(i);
                         }
-
                         @Override
                         public void onTabReselected(TabLayout.Tab tab) {
-
                         }
                     });
-
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
-
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
                 if (statusCode == 421) {
                     //declaracion de variables
                     String responseStr = null;
-
                     try {
                         // respuesta del servicio
                         responseStr = new String(responseBody, "UTF-8");
@@ -680,18 +654,15 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
                         String msgerror = errorxa.getString("login");
                         // se maneja el array json
                         JSONArray jsonarray = new JSONArray(msgerror);
-
                         //se obtiene cada uno de los mensajes que se encuentran dentro del json
                         for(int i=0; i < jsonarray.length(); i++) {
                             String mensaje = jsonarray.getString(i);
                             Toast.makeText(RedactaremailActivity.this, mensaje, Toast.LENGTH_LONG).show();
                         }
-
                         midb.logouth();
                         midb.oncreateusers();
                         Intent i = new Intent(RedactaremailActivity.this, InicioActivity.class);
                         startActivity(i);
-
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     } catch (JSONException e) {
@@ -700,20 +671,15 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
                 }
                 // When Http response code is '500'
                 else if (statusCode == 500) {
-
                     Toast.makeText(RedactaremailActivity.this, "Erros Statuscode = 500", Toast.LENGTH_LONG).show();
                 }
                 // When Http response code other than 404, 500
                 else {
                     Log.i("On Failure", "NN");
                     Toast.makeText(RedactaremailActivity.this, "On Failure ", Toast.LENGTH_LONG).show();
-
                     //Institución no valida.
                 }
-
-
             }
-
         });
     }*/
 
@@ -745,7 +711,7 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
 
     private void adjuntarArchivo() {
         Intent archivo = new Intent(Intent.ACTION_GET_CONTENT);
-        archivo.setType("image/*");
+        archivo.setType("*/*");
         startActivityForResult(archivo,request=0);
     }
 
@@ -779,6 +745,19 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
                 nombres.add(devolverNombre(mPhotoUri));
                 archivo.add(RealPath.getRealPathFromUri(mPhotoUri,this));
                 llenarTex();
+                for (String item:archivo){
+                    File t = new File(item);
+                    tamaño += t.length();
+                    Log.i("TAMAÑO",""+tamaño/1024000);
+                    if (tamaño/1024000 >= 5.0) {
+                        Toast.makeText(context, "Los Archivos no deben Pesar mas de 5MB", Toast.LENGTH_SHORT).show();
+                        tamaño = 0.0f;
+                        txv_adj.setText("");
+                        archivo.clear();
+                        nombres.clear();
+                        break;
+                    }
+                }
             }
         }
     }
@@ -809,4 +788,4 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
         return archivoConvertido;
     }
 
-    }
+}
