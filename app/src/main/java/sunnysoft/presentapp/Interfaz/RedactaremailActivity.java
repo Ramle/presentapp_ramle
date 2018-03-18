@@ -44,6 +44,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -105,6 +106,7 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
     private ArrayList<String> nombres = new ArrayList<>();
     private ArrayList<String> archivo = new ArrayList<>();
     private TextView txv_adj;
+    private float tamaño;
 
     @Override
     public void onBackPressed() {
@@ -450,7 +452,22 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
                 j.put("usuarios", mJSONArrayusuarios);
                 j.put("title", editText3.getText());
                 j.put("contents", editText4.getText());
-                j.put("files", convertirArchivo(archivo.get(0)));
+                ArrayList<String> listarchivos = new ArrayList<>();
+                for (String item: archivo){
+                    listarchivos.add(convertirArchivo(item));
+                }
+                String[] file = listarchivos.toArray(new String[listarchivos.size()]);
+                JSONArray mJSONArrayfile = new JSONArray(Arrays.asList(file));
+                j.put("files", mJSONArrayfile);
+                ArrayList<String> listanombres = new ArrayList<>();
+
+
+                for (String item:nombres) {
+                    listanombres.add(item);
+                }
+                String[] names = listanombres.toArray(new String[listanombres.size()]);
+                JSONArray mJSONArraynames = new JSONArray(Arrays.asList(names));
+                j.put("image_name", mJSONArraynames);
             }else{
                 j.put("email", email);
                 j.put("token", token);
@@ -731,7 +748,7 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
 
     private void adjuntarArchivo() {
         Intent archivo = new Intent(Intent.ACTION_GET_CONTENT);
-        archivo.setType("image/*");
+        archivo.setType("*/*");
         startActivityForResult(archivo,request=0);
     }
 
@@ -765,6 +782,19 @@ public class RedactaremailActivity extends AppCompatActivity implements MultiSel
                 nombres.add(devolverNombre(mPhotoUri));
                 archivo.add(RealPath.getRealPathFromUri(mPhotoUri,this));
                 llenarTex();
+                for (String item:archivo){
+                    File t = new File(item);
+                    tamaño += t.length();
+                    Log.i("TAMAÑO",""+tamaño/1024000);
+                    if (tamaño/1024000 >= 5.0) {
+                        Toast.makeText(context, "Los Archivos no deben Pesar mas de 5MB", Toast.LENGTH_SHORT).show();
+                        tamaño = 0.0f;
+                        txv_adj.setText("");
+                        archivo.clear();
+                        nombres.clear();
+                        break;
+                    }
+                }
             }
         }
     }
