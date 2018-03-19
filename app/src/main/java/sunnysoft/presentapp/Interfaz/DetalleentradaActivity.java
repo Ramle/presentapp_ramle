@@ -90,6 +90,18 @@ public class DetalleentradaActivity extends AppCompatActivity {
         toolbar_title.setText(getResources().getText(R.string.txt_menu_entradas));
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        secundaria = (Toolbar) findViewById(R.id.toolbar_secundaria);
+        secundaria.setNavigationIcon(R.drawable.arrow_back);
+        TextView titulo_secundaria = (TextView) secundaria.findViewById(R.id.toolbar_secundaria_title);
+        titulo_secundaria.setText("Ver Entrada");
+        secundaria.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(DetalleentradaActivity.this, ModulosActivity.class);
+                startActivity(i);
+            }
+        });
+
         Bundle datos = getIntent().getExtras();
         if (datos != null){
             url = datos.getString("DetailUrl");
@@ -281,17 +293,7 @@ public class DetalleentradaActivity extends AppCompatActivity {
 
         //Tooblar
 
-        secundaria = (Toolbar) findViewById(R.id.toolbar_secundaria);
-        secundaria.setNavigationIcon(R.drawable.arrow_back);
-        TextView titulo_secundaria = (TextView) secundaria.findViewById(R.id.toolbar_secundaria_title);
-        titulo_secundaria.setText("Ver Entrada");
-        secundaria.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(DetalleentradaActivity.this, ModulosActivity.class);
-                startActivity(i);
-            }
-        });
+
 
 
         /*Toolbar toolbarfecha = (Toolbar) findViewById(R.id.toolbarfecha);

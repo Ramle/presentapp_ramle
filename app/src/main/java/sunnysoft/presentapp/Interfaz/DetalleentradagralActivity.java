@@ -13,8 +13,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -162,6 +166,8 @@ public class DetalleentradagralActivity extends AppCompatActivity {
         dataresponsables = (TextView) findViewById(R.id.dataresponsables);
         img_persona = (ImageView) findViewById(R.id.img_persona);
 
+        final LayoutInflater inflater = LayoutInflater.from(this);
+
 
         // Invoke RESTful Web Service with Http parameters
         RequestHandle post = client.get(DetalleentradagralActivity.this, url, entity, "application/json", new AsyncHttpResponseHandler() {
@@ -231,6 +237,7 @@ public class DetalleentradagralActivity extends AppCompatActivity {
                     }
 
                     mTagGroup.setTags(tags);
+                    LinearLayout lin = (LinearLayout)findViewById(R.id.contenedor);
 
                     for(int j=0; j < jsonarray_field.length(); j++) {
 
@@ -240,7 +247,19 @@ public class DetalleentradagralActivity extends AppCompatActivity {
                         nameField       = jsonobject_fields.getString("name");
                         contentField       = jsonobject_fields.getString("content");
 
-                        saveFieldEntradas(new FieldsEntradas(nameField, contentField, j + 1));
+                        /////////ACA///////////////
+                        Log.i("TITUTLO",nameField);
+                        Log.i("CONTENIDO",contentField);
+                        View v = inflater.inflate(R.layout.list_items_verfieldsentradas,lin,true);
+                        TextView titulo = (TextView) v.findViewById(R.id.campotitulo);
+                        TextView contenido = (TextView)v.findViewById(R.id.campodetalle);
+                        titulo.setId(j);
+                        contenido.setId(j+1);
+                        titulo.setText(nameField);
+                        contenido.setText(contentField);
+                        /////////////////////////////
+
+                        /*saveFieldEntradas(new FieldsEntradas(nameField, contentField, j + 1));
 
 
                         // Inicializar el adaptador con la fuente de datos.
@@ -249,6 +268,24 @@ public class DetalleentradagralActivity extends AppCompatActivity {
                         //Relacionando la lista con el adaptador
                         mfieldsEntradasList.setAdapter(mfieldsEntradaAdapter);
 
+                        ////////////////////////////////////////////////////////////
+
+                        ListAdapter adapter = mfieldsEntradasList.getAdapter();
+
+                        int totalHeight = mfieldsEntradasList.getPaddingTop() + mfieldsEntradasList.getPaddingBottom();
+
+                        for (int i=0; i<adapter.getCount();i++){
+                            View listItem = adapter.getView(i,null,mfieldsEntradasList);
+                            if (listItem instanceof ViewGroup){
+                                listItem.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));
+                            }
+                            listItem.measure(0,0);
+                            totalHeight += listItem.getMeasuredHeight();
+                        }
+                        ViewGroup.LayoutParams params = mfieldsEntradasList.getLayoutParams();
+                        params.height = totalHeight + (mfieldsEntradasList.getDividerHeight() * (mfieldsEntradaAdapter.getCount() - 1));
+                        mfieldsEntradasList.setLayoutParams(params);
+*/
                     }
 
 

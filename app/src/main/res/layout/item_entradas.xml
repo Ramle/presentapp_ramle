@@ -64,6 +64,7 @@
                 android:id="@+id/tag_group_entradas"
                 style="@style/TagGroup"
                 android:layout_below="@+id/detalleverentradas"
+                android:layout_marginBottom="5dp"
                 android:layout_marginEnd="32dp"
                 android:layout_marginStart="32dp"
                 app:atg_borderColor="@color/color_inputs_primarios"

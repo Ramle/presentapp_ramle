@@ -7,6 +7,32 @@
     android:background = "#FFFFFF"
     tools:context="sunnysoft.presentapp.Interfaz.DetalleentradagralActivity">
 
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <include
+                android:id="@+id/detalle"
+                layout="@layout/content_detalleentradagral"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                tools:ignore="NotSibling" />
+        </LinearLayout>
+    </ScrollView>
+
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="0dp"
@@ -30,43 +56,9 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
     </android.support.design.widget.AppBarLayout>
 
-    <ScrollView
-        android:id="@+id/scroll"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <android.support.constraint.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <include
-                    layout="@layout/content_detalleentradagral"
-                    android:layout_width="0dp"
-                    android:layout_height="500dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_below="@+id/toolbarfecha"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginStart="10dp"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
-                    tools:ignore="NotSibling" />
-            </android.support.constraint.ConstraintLayout>
-        </LinearLayout>
-    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>
