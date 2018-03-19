@@ -19,4 +19,6 @@
 
     <color name="color_notificacion">#dc9233</color>
     <color name="negro_opaco">#5d000000</color>
+    <color name="gris">#aaa</color>
+
 </resources>

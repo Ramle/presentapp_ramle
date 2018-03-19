@@ -10,9 +10,12 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.widget.GridView;
@@ -56,6 +59,9 @@ public class MenuActivity extends AppCompatActivity {
     String email;
     String url;
 
+    CardView cardviewuser;
+    ConstraintLayout Constraint;
+
     String nombremenu;
     String nombremenu2;
     int notification_count;
@@ -94,7 +100,9 @@ public class MenuActivity extends AppCompatActivity {
 
         // recibe datos de otra activity
 
-       Bundle datos = getIntent().getExtras();
+
+
+        Bundle datos = getIntent().getExtras();
 
 
         // Inicia base de datos
@@ -111,10 +119,42 @@ public class MenuActivity extends AppCompatActivity {
         logo =Resultados.getString(Resultados.getColumnIndex("logo"));
         user_image =Resultados.getString(Resultados.getColumnIndex("user_image"));
 
+        //Toast.makeText(MenuActivity.this, " "+ getResources().getDisplayMetrics().densityDpi, Toast.LENGTH_LONG).show();
+
         //Iniciar de componentes
 
         menlogocol = (ImageView) findViewById(R.id.menlogocol);
         menimageuser = (ImageView) findViewById(R.id.menimageuser);
+        cardviewuser = (CardView) findViewById(R.id.cardView);
+        Constraint = (ConstraintLayout) findViewById(R.id.constraintLayout2);
+        //
+
+
+
+        if(getResources().getDisplayMetrics().densityDpi <= DisplayMetrics.DENSITY_HIGH){
+
+            menlogocol.getLayoutParams().width = 160;
+            menlogocol.getLayoutParams().height = 75;
+            menlogocol.setAdjustViewBounds(true);
+            menlogocol.setTop(170);
+
+
+            menimageuser.getLayoutParams().width = 140;
+            menimageuser.getLayoutParams().height = 140;
+
+            cardviewuser.setTop(40);
+
+
+            cardviewuser.getLayoutParams().width = 140;
+            cardviewuser.getLayoutParams().height = 140;
+            cardviewuser.setRadius(70);
+
+            Constraint.getLayoutParams().height = 500;
+
+
+            menimageuser.setAdjustViewBounds(true);
+
+        }
 
         lbl_nombre = (TextView) findViewById(R.id.lbl_nombre);
         lbl_profecion = (TextView) findViewById(R.id.lbl_profecion);
@@ -130,7 +170,7 @@ public class MenuActivity extends AppCompatActivity {
         Log.e("url", url);
         // setear imagenes
         new MenuActivity.DownloadImage().execute(logo);
-        new MenuActivity.DownloadImage2().execute(user_image);
+        // new MenuActivity.DownloadImage2().execute(user_object.getString("user_image"));
 
         // setear textos principales
 

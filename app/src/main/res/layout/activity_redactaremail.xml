@@ -78,11 +78,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:ems="10"
+                    android:layout_marginTop="10dp"
                     android:background="@drawable/inputs_terciario"
+                    android:ems="10"
                     android:hint="Asunto"
                     android:inputType="text|textMultiLine"
+                    android:padding="5dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
@@ -95,7 +96,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="0dp"
+                    android:layout_marginTop="5dp"
                     android:orientation="vertical"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -105,38 +106,48 @@
                 <Button
                     android:id="@+id/enviarmail"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
                     android:background="@drawable/inputs_secundarios"
                     android:text="Enviar"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toStartOf="@+id/btn_adj"
                     app:layout_constraintTop_toBottomOf="@+id/editText4"
                     tools:ignore="MissingConstraints" />
 
                 <Button
                     android:id="@+id/btn_adj"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
                     android:background="@drawable/inputs_secundarios"
                     android:onClick="seleccionArchivo"
-                    android:text="Adjuntar"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:paddingEnd="5dp"
+                    android:paddingStart="5dp"
+                    android:text="Adjuntar archivos"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/editText4" />
 
                 <EditText
                     android:id="@+id/editText4"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="80dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="24dp"
-                    android:ems="10"
-                    android:hint="Redacta tu email"
+                    android:layout_marginTop="10dp"
                     android:background="@drawable/inputs_terciario"
+                    android:ems="10"
+                    android:hint="Redacta tu e-mail"
                     android:inputType="text|textMultiLine"
+                    android:padding="5dp"
+                    android:textAlignment="viewStart"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/editText3"
@@ -156,43 +167,44 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/btn_adj" />
 
-                <RelativeLayout
+                <android.support.constraint.ConstraintLayout
                     android:id="@+id/relativeLayout6"
-                    android:layout_width="343dp"
-                    android:layout_height="40dp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
+                    android:background="@drawable/inputs_terciario"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.555"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:background="@drawable/inputs_terciario"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
                         android:id="@+id/txvpara"
                         android:layout_width="wrap_content"
                         android:layout_height="16dp"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true"
+                        android:layout_marginStart="10dp"
                         android:paddingLeft="10dp"
                         android:text="Para"
                         android:textStyle="bold"
-                        tools:layout_editor_absoluteX="28dp"
-                        tools:layout_editor_absoluteY="8dp" />
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <com.guna.libmultispinner.MultiSelectionSpinner
                         android:id="@+id/mySpinnerusers3"
                         android:layout_width="222dp"
                         android:layout_height="32dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
                         android:layout_marginEnd="15dp"
                         android:text="Selección múltiple"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
                         tools:ignore="MissingConstraints,UnknownId"
                         tools:layout_editor_absoluteX="146dp"
                         tools:layout_editor_absoluteY="8dp" />
-                </RelativeLayout>
+                </android.support.constraint.ConstraintLayout>
             </android.support.constraint.ConstraintLayout>
         </LinearLayout>
 
